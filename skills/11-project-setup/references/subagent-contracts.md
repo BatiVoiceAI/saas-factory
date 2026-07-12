@@ -27,23 +27,25 @@ STATUT       : écrire status/provision-<resource>.md (format ci-dessous).
 - horodatage : AAAA-MM-JJ
 ```
 > **Aucun secret dans le statut** (`safety-rails.md` §4). Les clés vont en env au câblage (`secrets-wiring.md`).
-> **État de ressource ≠ verdict de run.** Le champ `état` ne prend **que** `PENDING | DONE | FAILED | ROLLED_BACK`. Une ressource créée avec réserve (email non encore vérifié, DNS en propagation) reste **`DONE`** + `concerns` non vide. **`DONE_WITH_CONCERNS` n'est jamais un état de ressource** : c'est le verdict de sortie de l'étape (niveau run), posé par la vérif finale (`provisioning-plan.md` §machine à états, `verification-checklist.md`).
+> **État de ressource ≠ verdict de run.** Le champ `état` ne prend **que** `PENDING | DONE | FAILED | ROLLED_BACK` ; une ressource créée avec réserve reste **`DONE`** + `concerns` non vide. `DONE_WITH_CONCERNS` = verdict de **run** uniquement, jamais dans un `status/` — **définition canonique : `provisioning-plan.md` §machine à états** (ne pas la redéfinir ici).
 
 ---
 
 ## `provisioner-repo` (GitHub + CI) — parallélisable
-- **OBJECTIF** : repo `org/<slug>` privé, arbre scaffané poussé, workflows CI présents.
+- **OBJECTIF** : repo `org/<slug>` privé, arbre scaffané poussé, workflows CI présents. Le nom du repo est **dérivé du slug projet** (`<slug>`, règle de dérivation : `scaffold-procedure.md`) — **jamais un autre nom**.
 - **IDEMPOTENCE** : `get repo org/<slug>` → existe : réutilise, ne push que si distant vide ; absent : `create repository`.
 - **DoD** :
   - [ ] repo existe, privé, arbre poussé (dernier commit visible distant).
+  - [ ] remote `origin` du repo local = `org/<slug>` (cohérence slug ↔ remote vérifiée **avant** tout push).
   - [ ] `.github/workflows/*` présents (lint/test/build/deploy).
   - [ ] aucun secret dans l'historique poussé.
   - [ ] `status/provision-repo.md` = `DONE` + URL.
 - **ROLLBACK** : repo créé mais push échoué → garder le repo, retry le push (ne pas supprimer si réparable).
-- **RED-FLAGS** : repo au bon nom dans une **autre org** → conflit, ne pas pousser. Refuser de pousser si un secret est détecté dans l'arbre.
+- **RED-FLAGS** : repo au bon nom dans une **autre org** → conflit, ne pas pousser. Remote `origin` déjà configuré vers un repo **incohérent avec le slug** (repo d'un autre projet) → **refuser de pousser**, loguer le conflit — leçon `speechflow-booking` : un exemple a été poussé sous l'identité d'un autre projet faute de ce check. Refuser de pousser si un secret est détecté dans l'arbre.
 
 ## `provisioner-db` (Supabase + migrations + RLS) — parallélisable
 - **OBJECTIF** : projet Supabase pour `<slug>`, migrations appliquées (tables + **RLS**).
+- **TYPE** : réglages d'enrollment par type de produit — `interne` : signup désactivé + invitations ; `perso` : compte unique seedé ; `public` : confirmation exigée. Matrice unique + obligation de log des allègements : `provisioning-plan.md` §« Routage par type de produit ».
 - **COMPÉTENCE** : consulter `supabase` + `supabase-postgres-best-practices` **avant** d'écrire/valider une policy RLS.
 - **IDEMPOTENCE** : `list projects` match `<slug>` → réutilise `ref` ; migrations **par nom** (saute celles déjà passées). `confirm_cost` **auto** avant `create_project`.
 - **DoD** :
@@ -61,7 +63,7 @@ STATUT       : écrire status/provision-<resource>.md (format ci-dessous).
 - **IDEMPOTENCE** : `get domain status` → `verified` : réutilise ; sinon `add domain` → Resend renvoie **ses** records de vérification (DKIM/SPF/DMARC/MX), que l'agent publie en appelant **directement le MCP Cloudflare**. Ces records sont **distincts** du record de routage `<slug>.<domaine>` (possédé par `provisioner-hosting`) → **aucune** dépendance envers hosting, **pas de cycle**.
 - **DoD** :
   - [ ] domaine ajouté, records de vérification (DKIM/SPF/DMARC/MX) publiés via Cloudflare (par cet agent).
-  - [ ] statut `verified` → ressource `DONE` ; sinon propagation lente → ressource **`DONE` + `concerns`** (jamais `DONE_WITH_CONCERNS` au niveau ressource ; le run tranchera). Attente **bornée**.
+  - [ ] statut `verified` → ressource `DONE`. **Poll de vérification BORNÉ : max 10 tentatives / 5 min au total** (~30 s d'intervalle), jamais au-delà. À la borne sans `verified`, solde **honnête** : domaine ajouté + records publiés (propagation en cours) → ressource **`DONE` + `concerns`** ; `add domain`/API réellement en échec → **`FAILED`** franc. Dans les deux cas **NON bloquant** (hosting n'attend jamais l'email) ; le verdict `DONE_WITH_CONCERNS` reste au niveau run (`provisioning-plan.md`).
   - [ ] clé Resend consommée depuis `~/.saas-factory/.env`, jamais logée.
   - [ ] `status/provision-email.md` renseigné.
 - **ROLLBACK** : domaine ajouté mais non vérifié → garder (re-jouable), état `DONE` + `concerns` (ou `FAILED` si l'`add domain` lui-même a échoué).
@@ -69,16 +71,17 @@ STATUT       : écrire status/provision-<resource>.md (format ci-dessous).
 
 ## `provisioner-hosting` (DNS routage + host + lie le repo) — après repo+db (email non-bloquant)
 - **OBJECTIF** : `<slug>.<domaine>` résout vers l'hébergeur, projet host lié au repo (auto-deploy).
+- **TYPE** : `perso` → **pas de record DNS public**, host sur l'URL par défaut du provider ; `interne` → sous-domaine **optionnel selon config**. Matrice unique + obligation de log des allègements : `provisioning-plan.md` §« Routage par type de produit ».
 - **COMPÉTENCE** : consulter `cloudflare` (+ `wrangler` si CF Pages) **avant** la config DNS.
 - **IDEMPOTENCE** : DNS `get record` sur le **record de routage `<slug>.<domaine>`** → **UPSERT** ; host `list projects` → réutilise ; lien repo idempotent. Ne touche **que** le record de routage — **pas** aux records de vérification email (DKIM/SPF/DMARC/MX), qui appartiennent à `provisioner-email`.
 - **DÉPENDANCES** : ne démarre que si `repo` **et** `db` sont `DONE`. **`email` n'est PAS une dépendance** : qu'il soit `DONE`, `DONE` + `concerns` ou `FAILED`, hosting démarre quand même (email non-bloquant pour le déploiement).
 - **DoD** :
-  - [ ] record DNS `<slug>.<domaine>` en place (UPSERT, pas de doublon).
-  - [ ] projet host créé/réutilisé, **repo GitHub lié** (deploy auto sur push).
+  - [ ] record DNS `<slug>.<domaine>` en place (UPSERT, pas de doublon) — **si le type le prévoit** (`perso` : pas de DNS public, URL par défaut du provider, allègement logué).
+  - [ ] projet host créé/réutilisé, **repo GitHub lié** (deploy auto sur push) — app GitHub absente côté Vercel → repli **deploy-hook + step CI** (séquence : `mcp-map.md` §Hébergement), `concerns` logué.
   - [ ] env vars host posées à l'étape câblage (pas ici).
   - [ ] `status/provision-hosting.md` = `DONE` + URL du sous-domaine + host id.
 - **ROLLBACK** : sous-domaine créé mais host non lié → garder (orphelin bénin) ou supprimer si sûr ; jamais bloquant.
-- **RED-FLAGS** : record DNS existant pointant vers une **cible tierce vivante** → ne pas UPSERT à l'aveugle, loguer conflit. Domaine absent de la config → host sur URL par défaut + `[SÉCU]`.
+- **RED-FLAGS** : record DNS existant pointant vers une **cible tierce vivante** → ne pas UPSERT à l'aveugle, loguer conflit. Domaine absent de la config → host sur URL par défaut + `[SÉCU]`. Sonde HTTP du domaine renvoyant `403`/`1010`/challenge → **signal WAF, pas un échec** : vérifier via l'API du host, loguer en `concerns` (`mcp-map.md` §modes d'échec), jamais de faux `FAILED`.
 
 ---
 

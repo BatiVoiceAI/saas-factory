@@ -33,7 +33,7 @@ Source des secrets : `~/.saas-factory/` (config + `.env`) et les **sorties des p
   - clé serveur (`service_role`, `stripe_secret`) dirigée vers une var **exposée client** → refuser.
   - écrire un secret dans le repo, un artefact, un `status/`, ou le log → interdit.
   - un secret demandé mais absent de `~/.saas-factory/` → repli honnête (loguer, ne pas fabriquer).
-- **Routage** : valeur OK + scope OK → injecte (overwrite idempotent). Manquante → loger `[SÉCU]` + `DONE_WITH_CONCERNS`. Mauvais scope → **STOP** cette var, ne jamais downgrade en public.
+- **Routage** : valeur OK + scope OK → injecte (overwrite idempotent). Manquante → loger `[SÉCU]` ; le **run** de l'étape sortira `DONE_WITH_CONCERNS` (verdict niveau run — définition canonique : `provisioning-plan.md` §machine à états). Mauvais scope → **STOP** cette var, ne jamais downgrade en public.
 
 ## Idempotence
 Les secrets s'injectent **par nom** → overwrite. Un 2ᵉ run réinjecte les mêmes valeurs sans effet de bord. Un secret déjà présent avec une valeur correcte n'a pas besoin d'être touché, mais l'overwrite reste sûr (idempotent).

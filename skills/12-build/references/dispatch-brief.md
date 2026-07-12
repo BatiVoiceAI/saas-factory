@@ -19,8 +19,14 @@ Le sous-agent ne voit **pas** la conversation. Tout le contexte utile doit être
 - **Budget d'itération** (du plan §7) + critère de sortie (`DONE_WITH_CONCERNS` si épuisé).
 - **Ne pas sortir de la zone** ; toute dépendance hors-zone → `BLOCKED` + remonte, jamais franchir.
 - **Pas de secret** en dur/loggé/commité ; variables d'env.
-- **Respecter** `tech/architecture.md`, `_shared/stack-defaults.md`, `DESIGN.md` ; toute feature à **surface UI** respecte en plus les **interdits binaires** de `_shared/design-doctrine.md` (la landing : + `_shared/landing-playbook.md`).
+- **Respecter** `tech/architecture.md`, `_shared/stack-defaults.md`, `DESIGN.md` ; toute feature à **surface UI** respecte en plus les **interdits binaires** de `_shared/design-doctrine.md` (la landing : + `_shared/landing-playbook.md`) et applique le **volet arsenal** de son brief (voir ci-dessous).
 - **Repli honnête** si bloqué (clé/accès manquant) : le dire, ne pas bluffer.
+
+## Volet arsenal (features à surface UI)
+Pour toute feature à **surface UI**, le brief (`briefs/NN-<slug>.md`) contient un **volet arsenal** dérivé de `DESIGN.md` + `_shared/design-doctrine.md` §Arsenal — le dev UI ne décide pas ça tout seul en cours de route :
+- **Animations** : lesquelles exactement (élément, déclencheur, ce qu'elles **communiquent**), avec quelle lib — **Motion par défaut** (MIT) ; **GSAP** seulement si la recette du `DESIGN.md` exige une scène orchestrée (dépendance npm, jamais vendoré) — sous les règles anti-slop de l'arsenal : durées 150-400 ms, pas de fade-in généralisé, 1-2 effets signature max par page, `prefers-reduced-motion`.
+- **Blocs à dupliquer** : source exacte (vendorable MIT/Apache/ISC, LICENSE + PROVENANCE) et consigne de **re-thémage** obligatoire — tokens + polices + radius + contenu remplacés, le bloc ne doit **plus ressembler à son origine**.
+- **og-image** : **générée en code** (`next/og`, tokens du thème : display + couleur de marque) si la feature touche une page publique — jamais d'image statique bricolée ni d'image IA.
 
 ## Squelette de dispatch (à instancier)
 ```
@@ -34,7 +40,9 @@ Tu es feature-dev. Implémente UNE feature en TDD + recette, dans ton worktree.
 - Modèle       : <rapide | standard | capable>
 - Budget       : <N tours> ; épuisé → DONE_WITH_CONCERNS + remonte
 Invariants : TDD strict · pas de secret · reste dans la zone · respecte archi/DESIGN
-(+ doctrine anti-slop `_shared/design-doctrine.md` si surface UI) ·
+(+ doctrine anti-slop `_shared/design-doctrine.md` si surface UI, et applique le
+volet arsenal du brief : animations Motion/GSAP prescrites · blocs dupliqués RE-THÉMÉS ·
+og-image en code) ·
 si bloqué (clé/dépendance) → BLOCKED dans status, ne bluffe pas.
 ```
 
@@ -45,6 +53,7 @@ si bloqué (clé/dépendance) → BLOCKED dans status, ne bluffe pas.
 - [ ] Critères d'acceptation présents (le dev a une recette → un critère d'arrêt).
 - [ ] Modèle **explicite**, routé selon la nature de la tâche (`org-hierarchy.md`).
 - [ ] Budget d'itération + critère de sortie rappelés.
+- [ ] Feature UI → **volet arsenal** présent dans le brief (animations + lib prescrites, blocs à dupliquer/re-thémer avec source, og-image en code si page publique).
 - [ ] Aucun secret dans le prompt (ni valeur de clé, ni token).
 
 ## Matrice de décision — forme du contenu

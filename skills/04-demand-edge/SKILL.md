@@ -26,7 +26,7 @@ Deux jobs, un seul fichier :
 
 Pourquoi une surcouche maison : les moteurs produisent de la **matière** ; le **jugement** (« demande plausible ? edge réel ? ») t'appartient. C'est le rôle CEO ; on ne le sous-traite pas.
 
-**HARD GATE / frontière (anti-doublon).** L'étape 3 **formalise** l'angle · toi tu **nommes + tranches**. Toi tu **produis** le verdict edge · l'étape 5 le **pèse** dans la décision. Ne décide **pas** Go ici.
+**HARD GATE / frontière (anti-doublon).** L'étape 3 a formalisé l'angle candidat (phrase Onliness candidate comprise) : tu la **reprends**, tu la **précises** (la niche) et tu **tranches** — LA frontière qui compte : **le verdict edge (réel / faible / absent) t'appartient**. Toi tu **produis** le verdict · l'étape 5 le **pèse** dans la décision. Ne décide **pas** Go ici.
 
 ## Entrées / sortie (contrat)
 - **Lit :** `research/market.md` (le **review-mining** de l'étape 2, dont `research/raw/`) + `research/positioning.md` (l'angle candidat formalisé).
@@ -45,12 +45,8 @@ Pourquoi une surcouche maison : les moteurs produisent de la **matière** ; le *
 3. **Features réclamées** — ce que les clients demandent et n'ont pas. Signal le plus direct.
 4. **Signaux de churn** — pourquoi les gens **partent**. Le seul « comportement » observable par proxy.
 
-### Verdict de demande (rubrique déterministe)
-| Verdict | Ce qu'il faut voir |
-|---|---|
-| **Fort** | Volume élevé **et** ≥1 douleur partagée bloquante/rédhibitoire **et** features réclamées convergentes **et** churn documenté. |
-| **Moyen** | Marché actif mais douleurs surtout « agacement », **ou** signaux réels mais concentrés sur 1 seul concurrent. |
-| **Faible** | Peu d'avis, pas de douleur partagée nette, peu ou pas de features réclamées. |
+### Verdict de demande (libellés — source unique en référence)
+Trois verdicts possibles : **Fort / Moyen / Faible**. La rubrique déterministe complète (conditions exhaustives, matrice de départage, bandes de volume) vit dans `references/demand-signal-procedure.md` §2 — **source unique**, à appliquer sans négocier. En un mot : Fort exige volume élevé + douleur partagée sévère + features convergentes + churn ; au moindre doute entre deux crans, **descends**.
 
 Formule **humble** : « demande **plausiblement** {forte/moyenne/faible} », preuves à l'appui (quote + source + date).
 

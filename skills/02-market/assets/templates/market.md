@@ -12,6 +12,13 @@ Pour chacun :
 ## Prix — paysage
 {Modèles, paliers, métrique de valeur, **whitespace tarifaire** (là où personne ne se place).}
 
+## Taille servable & dynamique
+<!-- Produite ICI (étape 2) — l'étape 5 en HÉRITE pour l'axe Marché du verdict : elle ne recalcule ni n'improvise jamais. -->
+- **Taille servable** — [Estimate] bottom-up : {nb d'acteurs cibles} × {prix observés en W1} = {fourchette €/an}. **Hypothèse de calcul écrite** (d'où vient le nb d'acteurs, quel prix retenu) — jamais un chiffre nu.
+- **Dynamique** — {fragmenté / en consolidation / dominé} + {croissance / stagnation / déclin}, avec l'indice observé (funding, entrants récents, volume d'avis dans le temps…).
+
+> Pas de donnée pour estimer ? **Data gap déclaré** dans `confidence.md` — n'invente pas : l'étape 5 traitera l'axe Marché en conséquence.
+
 ## Matrice comparative
 | Feature / critère | Concurrent A | Concurrent B | Concurrent C | Statu quo |
 |---|---|---|---|---|

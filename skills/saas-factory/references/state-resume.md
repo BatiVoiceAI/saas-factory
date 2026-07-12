@@ -44,6 +44,13 @@ Le master est le **tenant de l'état** : c'est lui qui garantit qu'on peut **rep
 
 Puis **résume en 2 lignes** où on en est et annonce la prochaine phase / porte.
 
+## Écrivain unique de `state.md` (règle canonique — les phases y renvoient)
+Un seul processus écrit `.saas-factory/state.md` à un instant donné : **l'orchestrateur en charge** — le master entre les phases, l'orchestrateur de phase pendant sa phase. **Jamais** un skill expert ni un sous-agent : ils produisent leurs artefacts (`research/*`, `product/*`, `tech/*`, `status/*`, `seo/*`, `metrics/*`…) et rapportent ; l'orchestrateur seul consigne, à la frontière d'étape. C'est ce qui évite les MAJ concurrentes/incohérentes quand plusieurs agents tournent en parallèle (format : `_shared/state-schema.md`).
+
+**Exception unique, documentée : `01-discover`.** Première étape d'un projet neuf, exécutée sans aucun parallélisme : elle peut **initialiser** `state.md` et y inscrire le `type` capté si l'orchestrateur de P1 ne l'a pas encore créé. Dès la sortie de l'étape 1, l'orchestrateur reprend la main (il vérifie/complète cette entrée) et la règle générale s'applique sans autre exception.
+
+Les fichiers de phase **renvoient** à ce paragraphe — la règle ne se redéfinit nulle part ailleurs.
+
 ## Interdits d'état (sécurité)
 - **Jamais de secret / clé** dans `.saas-factory/state.md` ni dans aucun artefact de projet (`_shared/safety-rails.md` §4). Les accès infra vivent dans `~/.saas-factory/` (config + `.env` chmod 600) ou côté connecteur MCP/OAuth.
 - Jamais de secret loggé, commité, ni collé en conversation.

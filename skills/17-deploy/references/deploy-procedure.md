@@ -54,6 +54,7 @@ Règle : la porte de publication existe **exactement quand** il y a une action �
 - Secrets présents en **env** (depuis `~/.saas-factory/`), **aucun en dur / commité / loggé** (`safety-rails.md` §4).
 - Migrations BDD prod prêtes et **idempotentes** (rejouables sans casse).
 - Rollback **testé** en une commande : re-promotion **N-1** (redéploiement) **ou** **dépublication → preview URL privée** au premier ship (pas de N-1). Voir `canary-rollback.md` + `preflight-checklist.md`.
+- **Services tiers & déclencheurs soldés** : décisions « déférées » des ADR/plan résolues, scheduler branché **+ exécution prouvée**, email transactionnel réel parti (config prod), confirmation d'email réactivée, redirect URLs prod posées, events du funnel (`user_signed_up` + `activation_completed`) **émis en staging** (PostHog live-events), plan noindex/redirect de `*.vercel.app`. → checklist §E de `preflight-checklist.md`.
 
 Critère de passage → **checklist exhaustive + catalogue de cas limites dans `preflight-checklist.md`**. Ne pas passer à l'étape 2 tant qu'un item est rouge ou inconnu.
 
@@ -66,6 +67,7 @@ Critère de passage → **checklist exhaustive + catalogue de cas limites dans `
 | Secret en dur détecté (`grep`) | STOP → migrer en env, **rotationner la clé exposée**, puis reprendre. |
 | Migration non idempotente | Réécrire en idempotent (`IF NOT EXISTS`, garde de version) avant apply. |
 | Rollback non testé | Tester d'abord : déployer N-1 en staging (redéploiement), ou répéter la **dépublication → preview** (premier ship) — sinon pas de filet. |
+| Décision « déférée » non soldée / cron jamais invoqué / email de test non parti / funnel muet en staging | STOP → solder via la section E du pré-vol (`preflight-checklist.md`). Le tracking ou l'instrumentation manquants se **codent en Phase 4** (12-build), pas ici. |
 | `CONCERNS` non bloquants | Documenter dans le log, continuer. On ne les cache pas. |
 
 ---
@@ -103,6 +105,8 @@ Règle de rédaction du plan : **chaque ligne est vérifiable**. Pas de « ~ »,
 
 `AskUserQuestion` : « On publie en prod ? » → **OK explicite requis**. C'est le feu vert **technique** au cutover, au-delà du « ship » produit de l'étape 15.
 
+La **même** `AskUserQuestion` valide aussi le **Critère de KILL** proposé (`{métrique live + seuil + fenêtre}`) : c'est un livrable de sortie de l'étape 17, écrit dans `state.md` **avant** de voir les chiffres — jamais dans une question séparée ni après coup. Détail → `publication-gate.md`.
+
 **Ne jamais** publier sans réponse claire. Une réponse floue, conditionnelle, ou qui déplace le sujet = **pas un OK** → on reste à la porte.
 
 Recette forcing-question complète (Ask exact / Push-until / Red-flags / MOU-vs-FORT / routage) → **`publication-gate.md`**.
@@ -111,7 +115,7 @@ Recette forcing-question complète (Ask exact / Push-until / Red-flags / MOU-vs-
 
 ## 4. Apply (via MCP infra) — ordre strict
 
-L'ordre n'est pas cosmétique : chaque sous-étape est un point de rollback. On applique dans cet ordre parce que **la BDD doit être prête avant le code, et le DNS ne bascule qu'après un code sain en prod**.
+L'ordre n'est pas cosmétique : chaque sous-étape 1-4 est un point de rollback. On applique dans cet ordre parce que **la BDD doit être prête avant le code, et le DNS ne bascule qu'après un code sain en prod**. La sous-étape 5 (filet post-launch) n'est pas un point de rollback : c'est le **filet** qui surveille la prod après coup.
 
 ```
 1. Migrations prod  ─►  2. Promotion staging→prod  ─►  3. DNS cutover  ─►  4. Tracking
@@ -124,6 +128,12 @@ L'ordre n'est pas cosmétique : chaque sous-étape est un point de rollback. On 
 2. **Promotion** (Vercel / CF Pages) — déployer la version **validée** (celle testée en staging, même commit) en production. Ne jamais re-builder « juste avant » : on promeut l'artefact testé, pas un nouveau.
 3. **DNS cutover** (Cloudflare) — le domaine pointe sur la prod. **Abaisser le TTL avant** (ex. 60s) pour une bascule/retour rapide, le remonter après stabilisation.
 4. **Tracking** — activer PostHog (funnel activation) + Sentry (erreurs) **avant** le canary, pour que le health check ait des données à lire.
+5. **Filet post-launch** — entre le canary de 15 min et le premier bilan (étape 18), personne ne regarde la prod : le fondateur doit apprendre une panne par un **signal**, pas par un client mécontent. Trois gestes, dans la foulée du tracking :
+   - **Alert rule Sentry** sur le parcours cœur : « erreur sur les routes du parcours cœur → email au fondateur » (l'alerte par défaut « tout Sentry » noie ; celle-ci vise le cœur).
+   - **Backups Supabase actés** : vérifier l'état réel (backups quotidiens actifs ? PITR ? rétention ?) et l'**écrire dans `deploy/log.md`** — un backup supposé n'est pas un backup.
+   - **Uptime monitor si `type=public`** : un check HTTP externe sur le domaine prod (gratuit suffit) avec alerte email. Interne/perso : optionnel, à noter si sauté.
+
+   Non bloquant pour le cutover lui-même, mais **bloquant pour clore l'étape** : pas de « déployé » déclaré sans filet posé (ou son absence explicitement actée dans `deploy/log.md`).
 
 ### Matrice de décision — pendant l'apply
 
@@ -133,6 +143,7 @@ L'ordre n'est pas cosmétique : chaque sous-étape est un point de rollback. On 
 | Promotion | Le DNS n'a pas encore basculé → rien de neuf n'est exposé (N-1 en redéploiement, ou toujours non-public au 1er ship). Log + diagnostic. |
 | DNS cutover | Restaurer/retirer l'enregistrement (TTL bas → propagation rapide) : repointer sur **N-1** (redéploiement) ou **retirer** l'entrée → retour preview (1er ship). Le build neuf existe mais le domaine ne le sert plus. |
 | Tracking | **Non bloquant pour le service** mais bloquant pour la Phase 6 : logger, réessayer, guider si accès manque (`safety-rails.md` §6). Ne pas déclarer « déployé » sans tracking si `type=public`. |
+| Filet post-launch (alert rule / backups / uptime) | Non bloquant pour le cutover, **bloquant pour clore l'étape** : poser le filet ou acter honnêtement son absence dans `deploy/log.md` — jamais un « déployé » silencieusement sans filet. |
 
 Détail des runbooks de rollback par sous-étape → **`canary-rollback.md`**.
 

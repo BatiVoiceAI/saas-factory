@@ -15,9 +15,9 @@ Toute l'étape se joue sur **une bifurcation unique** au mouvement 1, puis conve
             ▼                                                     ▼
    ┌──────────────────┐                              ┌──────────────────────┐
    │ COULOIR IMPORT   │                              │ COULOIR GÉNÉRATION    │
-   │ dépôt fichier/   │                              │ 3 RECETTES complètes  │
-   │ dossier          │                              │ (doctrine §Recettes)  │
-   │ extraire tokens  │                              │ rendues → 1 choix     │
+   │ dépôt fichier/   │                              │ SHOTGUN : 3 VARIANTES │
+   │ dossier          │                              │ CODÉES (3 recettes ≠) │
+   │ extraire tokens  │                              │ screenshots → 1 choix │
    │                  │                              │ (SEULE décision UI)   │
    └────────┬─────────┘                              └───────────┬──────────┘
             │            direction + éventuels tokens fixés       │
@@ -48,7 +48,7 @@ Toute l'étape se joue sur **une bifurcation unique** au mouvement 1, puis conve
 ```
 _shared/design-doctrine.md ─(recettes, leviers, interdits)──────┐
 research/idea-brief.md ─(type, cible)──────────┐                │
-research/positioning.md ─(feel marque, catégorie)┼──▶ 3 recettes → direction ─▶ DESIGN.md
+research/positioning.md ─(feel marque, catégorie)┼──▶ 3 variantes codées (shotgun) → direction ─▶ DESIGN.md
 product/product-spec.md ─(feel, non-goals)──────┘                              │
                                                                                ▼
 product/product-spec.md ─(features Must, workflow cœur, auth, dashboard)─▶ liste écrans ─▶ design/mockups/
@@ -76,15 +76,16 @@ But : décider en **une** question si on **importe** une identité existante ou 
 - **Critère de passage :** couleurs primaires extraites + chaque token importé tracé dans le Decisions log (`source: import`).
 - **Mode dégradé :** fichier illisible / format inconnu → le dire, extraire ce qui est lisible (au minimum les couleurs si visibles), **basculer le reste en génération**. Jamais bloquer sur un parsing.
 
-### 1.c — Couloir GÉNÉRATION (réponse « non »)
+### 1.c — Couloir GÉNÉRATION (réponse « non ») — PATTERN SHOTGUN
 1. **Sélectionner 3 recettes candidates** dans `_shared/design-doctrine.md` §Recettes selon le **type / cible / positionnement** (M2 puis M3 de `matrices-decision.md`). **Jamais deux recettes du même registre** — trois directions vraiment différentes, pas trois nuances du même thème.
 2. **Adapter chaque recette à la niche** : couleur de marque tirée du feel de `positioning.md` (en respectant les interdits doctrine — jamais indigo/violet), neutres teintés assortis. La paire de polices et les motifs de layout viennent de la recette, on ne les improvise pas.
-3. **Rendre visuellement** chaque recette : titre en **display réelle de la recette** + échantillons de couleurs + **mini-aperçu rendu** (bouton, carte, extrait de hero dans le registre). **Jamais des palettes nues ni des hex bruts** : l'utilisateur compare des **directions complètes** (polices + palette + layout), il choisit **en regardant**.
-4. L'utilisateur en retient **une**. C'est la **seule** décision design de toute l'étape.
-- **Critère de passage :** une recette unique retenue (registre + paire de polices + couleur de marque), tracée dans le Decisions log (`source: générée`, + rationale « choisie visuellement parmi 3 recettes doctrine »).
-- **Mode dégradé :** l'utilisateur ne tranche pas / « fais au mieux » → choisir la recette **la plus alignée au positionnement** (feel de marque de `positioning.md`, recette prioritaire de M2), l'annoncer, marquer `[Assumption]`, avancer. Ne pas relancer 3 fois.
+3. **Coder RÉELLEMENT les 3 variantes (shotgun)** : pour chaque recette candidate, générer **en code** (React/HTML, mêmes exigences de fidélité que le mouvement 3) un **hero + 1 section clé** (la section la plus parlante du produit : workflow cœur ou features), avec la **display réelle** de la recette, sa palette, ses motifs de layout, et — si la recette en appelle un — son pattern d'animation (doctrine §Arsenal, blocs dupliqués déjà **re-thémés**). **Diversité forcée** : 3 registres différents ET 3 squelettes de hero différents (2 colonnes / asymétrique typographique / bento…) ; zéro marqueur de slop sur chaque variante (une variante qui en coche un est re-générée avant présentation).
+4. **Rendre et screenshoter** chaque variante (desktop) et présenter les 3 screenshots **côte à côte**. Jamais des palettes nues, des hex bruts ni des vignettes abstraites : le fondateur compare du **RÉEL** — du code rendu — et choisit **en regardant**.
+5. L'utilisateur en retient **une**. C'est la **seule** décision design de toute l'étape. La variante retenue est **conservée** (`design/mockups/variants/`) : son hero et sa section servent de **graine** au mouvement 3 ; les deux écartées sont archivées, jamais recyclées telles quelles.
+- **Critère de passage :** 3 variantes codées + rendues + screenshotées (3 registres différents, 0 marqueur de slop chacune) ; une recette unique retenue (registre + paire de polices + couleur de marque), tracée dans le Decisions log (`source: générée`, + rationale « choisie sur rendu réel parmi 3 variantes codées — shotgun »).
+- **Mode dégradé :** rendu/screenshot impossible (pas d'environnement de rendu) → coder quand même les 3 variantes et les présenter en aperçu HTML statique ouvrable localement ; jamais de repli vers des hex bruts. L'utilisateur ne tranche pas / « fais au mieux » → choisir la recette **la plus alignée au positionnement** (feel de marque de `positioning.md`, recette prioritaire de M2), l'annoncer, marquer `[Assumption]`, avancer. Ne pas relancer 3 fois.
 
-**Pourquoi limiter à ça :** la direction est le **seul** choix vraiment subjectif ; une recette embarque déjà polices + palette + motifs de layout **cohérents entre eux** (design-doctrine.md), et spacing, géométrie, motion et composants se dérivent proprement une fois la recette fixée (elle contraint contraste et hiérarchie).
+**Pourquoi limiter à ça :** la direction est le **seul** choix vraiment subjectif ; une recette embarque déjà polices + palette + motifs de layout **cohérents entre eux** (design-doctrine.md), et spacing, géométrie, motion et composants se dérivent proprement une fois la recette fixée (elle contraint contraste et hiérarchie). **Pourquoi coder les 3 variantes :** un aperçu abstrait fait choisir un fantasme, un rendu réel fait choisir un produit ; et le coût est amorti — la variante retenue est du code réutilisable au mouvement 3, pas un artefact jeté.
 
 ---
 
@@ -132,15 +133,19 @@ But : produire les **maquettes des écrans clés** en **code de production** (Re
 ### Sous-procédure
 1. **Dériver la liste des écrans** depuis `product/product-spec.md` via la **matrice M4** (`matrices-decision.md`) : features **Must** + landing + auth + dashboard. **Workflow cœur d'abord.**
 2. **Ordonner** (ordre de la matrice M4) : écran(s) du workflow cœur → dashboard/coquille → autres écrans Must → landing → auth. On maquette d'abord ce qui **porte la valeur**, pas la page marketing.
-3. **Générer en code** via `frontend-design` (React/HTML production) — **pas** un outil de maquette navigateur : autonome, fiable, respecte exactement le `DESIGN.md`.
+3. **Générer en code** via `frontend-design` (React/HTML production) — **pas** un outil de maquette navigateur : autonome, fiable, respecte exactement le `DESIGN.md`. **Partir de la variante shotgun retenue** (mouvement 1.c) : son hero et sa section clé sont la graine, on les étend, on ne repart pas de zéro.
 4. **Fidélité stricte** : chaque écran importe les **mêmes tokens** et les **mêmes composants** que `DESIGN.md`. Un écran qui invente une couleur ou un radius hors système est un **défaut** (voir `checklists-modes-echec.md`).
-5. **La landing suit `_shared/landing-playbook.md`** — c'est le contrat, pas une inspiration :
+5. **Mobiliser l'arsenal créatif** (`_shared/design-doctrine.md` §Arsenal) — création + duplication :
+   - **DUPLIQUER** les structures éprouvées : blocs vendorables (MIT/Apache/ISC + PROVENANCE) et squelettes de sections — puis **RE-THÉMER systématiquement** (tokens + polices + radius + contenu remplacés) au point que le bloc ne ressemble plus à son origine. Un bloc aux couleurs/polices d'origine = défaut.
+   - **Animations selon la recette** : Motion par défaut (micro-interactions, transitions d'état) ; GSAP **seulement** si la recette exige une scène orchestrée — et toujours sous les **règles d'animation anti-slop** de l'arsenal (une animation = un changement d'état communiqué, durées 150-400 ms, pas de fade-in généralisé, 1-2 effets signature max par page, `prefers-reduced-motion`).
+   - **og-image générée en code** (`next/og`, tokens du thème : display + couleur de marque) pour la landing — jamais d'image statique bricolée ni d'image IA.
+6. **La landing suit `_shared/landing-playbook.md`** — c'est le contrat, pas une inspiration :
    - **Structure canonique** : les 11 sections dans l'ordre imposé (navbar → hero → micro-preuve → problème → comment ça marche → features jobs → preuve [conditionnelle] → pricing → FAQ → CTA final → footer complet), avec les motifs de layout de la recette (hero 2 colonnes aligné gauche, bento asymétrique, section sombre de rupture…).
    - **Copy spécifique**, jamais générique : headline via les formules du playbook, instanciée avec le job du client (`positioning.md`) ; prix réels de `product/pricing.md` (jamais de tiers inventés) ; features orientées jobs. **Zéro lorem / placeholder / TODO**, zéro buzzword interdit.
    - **Testimonials = section conditionnelle** : rendue uniquement si l'intake fournit des témoignages réels ; sinon bloc « preuve honnête » du playbook (stat sourcée, garantie, badge de lancement, ligne fondateur). **Jamais de testimonials, logos ou stats inventés.**
    - **Visuel hero = screenshot/mockup réel** de l'app (l'écran le plus parlant généré en 1-4) dans un cadre à bordure 1px — jamais d'illustration abstraite ou d'image IA.
-6. **Écrire dans `design/mockups/`** (un fichier par écran, nommé par l'écran).
-- **Critère de passage :** tous les écrans **Must** + landing + auth + dashboard présents ; chacun rend sans dépendance externe non déclarée ; zéro token hors `DESIGN.md` ; landing conforme au playbook (structure + copy) ; **zéro marqueur de slop** sur les écrans.
+7. **Écrire dans `design/mockups/`** (un fichier par écran, nommé par l'écran).
+- **Critère de passage :** tous les écrans **Must** + landing + auth + dashboard présents ; chacun rend sans dépendance externe non déclarée ; zéro token hors `DESIGN.md` ; landing conforme au playbook (structure + copy) ; **zéro marqueur de slop** sur les écrans ; **zéro bloc dupliqué non re-thémé** ; animations conformes aux règles de l'arsenal (aucun fade-in généralisé).
 - **Mode dégradé :** PRD sans liste d'écrans exploitable → dériver le **minimum** (workflow cœur + dashboard + auth + landing), le dire, marquer `[Assumption]`, ne pas inventer de features non specifiées.
 
 **Pourquoi du code plutôt qu'un outil de maquette :** autonome (pas de dépendance navigateur), respecte le `DESIGN.md` au pixel près, **réutilisable directement** en Phase 3 — le mockup EST le point de départ du build.

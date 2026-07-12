@@ -45,6 +45,30 @@ erDiagram
 
 Lecture : le `tenant_id` effectif (`org_id`) est **toujours** dérivé de la session ; `event` est écrit par le backend (donnée non fiable si écrite par le client).
 
+## Invariants d'intégrité DB (contraintes, jamais des checks applicatifs)
+Règle dure : **tout invariant violable par 2 écritures concurrentes est porté par une contrainte DB** — `EXCLUDE` (GiST), `CHECK` ou unique composite — **jamais un check applicatif seul**. Un `SELECT` de vérification suivi d'un `INSERT` est une course : deux requêtes simultanées passent toutes les deux le check et violent l'invariant. Seule la contrainte tient sous concurrence. Invariant métier-critique → `[SÉCU]`.
+
+| Invariant (exemple) | Contrainte DB | Jamais |
+|---|---|---|
+| Pas de chevauchement (réservation, planning, allocation) | `EXCLUDE USING gist (resource_id WITH =, plage WITH &&)` | check de disponibilité côté app avant insert |
+| Unicité par tenant (slug, email, référence) | unique composite `(tenant_id, champ)` | « on vérifie avant d'insérer » |
+| Borne métier (quantité ≥ 0, date dans une fenêtre) | `CHECK (…)` | validation zod seule |
+| Un seul actif par parent (abonnement courant, défaut) | index unique partiel `WHERE actif` | flag géré par le code |
+
+- **Recette** : pour chaque règle du PRD du type « jamais deux X en même temps / au plus N / dans la fenêtre Y » et chaque cas limite « concurrence », écris la **contrainte SQL** dans la section 3.3 — elle entre en migration à l'étape 11 et devient un test de concurrence en Phase 4.
+- La validation applicative (zod, RPC) **s'ajoute** pour les messages d'erreur ; elle ne **remplace** jamais la contrainte.
+
+## Accès public anonyme (surface exposée sans login)
+Dès qu'une table, vue ou fonction est accessible au rôle `anon` (page publique, formulaire sans compte), la surface est **attaquable par script** — elle se conçoit ici, pas au build. Tout ce bloc est `[SÉCU]`.
+
+- **Lecture anonyme** : jamais de `GRANT SELECT` sur la table — une **vue ou fonction `SECURITY DEFINER` à colonnes explicites, SANS PII** (pas d'email / téléphone / nom de clients ; colonnes listées une à une, jamais `SELECT *`).
+- **Écriture anonyme** : jamais d'insert direct — un **endpoint serveur** (route API / RPC) qui **valide** l'entrée + **rate-limit**.
+- **Toute fonction grantée à `anon` ⇒ checklist anti-abus OBLIGATOIRE** (les trois, pas « au choix ») :
+  1. **Bornes temporelles** — l'action n'est valable que dans une fenêtre métier (ex. réservable ≤ `now() + 60 jours`) ;
+  2. **Plafonds par client** — au plus N objets actifs par identifiant client (email / téléphone) ;
+  3. **Rate-limit IP** — au niveau endpoint / middleware.
+- Sans ces trois gardes, un script remplit la ressource de n'importe quel tenant = **DoS métier trivial**. Chaque garde est documentée en section 3.3 (elle devient contrainte / code / test aux étapes 11 et Phase 4).
+
 ## Cas limites de données (à lister explicitement)
 Chacun est un test futur (Phase 4) — non listé ici = test manquant plus tard.
 
@@ -53,7 +77,7 @@ Chacun est un test futur (Phase 4) — non listé ici = test manquant plus tard.
 | Suppression d'un parent | cascade ou restrict ? | propriété → cascade ; référence → restrict + message |
 | Orphelins | une ligne peut-elle perdre son tenant ? | FK non-null + `on delete cascade` |
 | Unicité | quel champ est unique **par tenant** (pas global) ? | contrainte unique composite `(tenant_id, champ)` |
-| Concurrence | 2 écritures simultanées sur la même ligne | `updated_at` / version, ou verrou optimiste |
+| Concurrence | 2 écritures simultanées (même ligne ou invariant inter-lignes) | même ligne : `updated_at` / version ; invariant : contrainte DB (§ Invariants d'intégrité DB) |
 | Idempotence | événement externe rejoué (webhook) | clé d'idempotence unique (id d'événement) |
 | Soft vs hard delete | garder l'historique ? | `deleted_at` si le PRD veut de la corbeille/audit |
 | Volumétrie haute | une table grossit sans borne (events, logs) | pagination, index, purge/archivage planifié |
@@ -63,6 +87,8 @@ Chacun est un test futur (Phase 4) — non listé ici = test manquant plus tard.
 - **Sur-modélisation** : 12 tables pour un MVP à 2 features → reviens aux entités que les US **nomment**. Explicite > malin.
 - **`tenant_id` client-fourni** : faille d'isolation classique → dérive-le du JWT, taggue `[SÉCU]`.
 - **RLS oubliée sur une table tenantée** : fuite inter-clients → deny-by-default, revue à la DoD.
+- **Invariant en check applicatif** : « on vérifie avant d'insérer » cède sous concurrence → contrainte `EXCLUDE`/`CHECK`/unique composite (§ Invariants d'intégrité DB), taggue `[SÉCU]`.
+- **Surface `anon` sans garde** : fonction grantée à `anon` sans bornes temporelles / plafonds / rate-limit → checklist anti-abus obligatoire (§ Accès public anonyme), taggue `[SÉCU]`.
 - **Entité fantôme** : une table sans US qui la justifie → supprime (choix orphelin).
 - **Modèle figé trop tôt** : si une US n'a pas d'entité pour la porter, **itère** avant de figer les modules (M3 boucle interne).
 

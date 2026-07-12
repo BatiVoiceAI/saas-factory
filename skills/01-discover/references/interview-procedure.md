@@ -37,7 +37,7 @@ L'entretien a un **état courant**. Il ne **monte** d'un cran qu'une fois le **c
  [S11 ÉCRITURE idea-brief]
      │
      ▼
- [S12 PORTE DE SORTIE] récap + confirmation → state.md → étape 2 (ou route)
+ [S12 PORTE DE SORTIE] récap + Critère de KILL pré-rempli + confirmation → state.md → étape 2 (ou route)
 ```
 
 ## Sous-procédures (par état)
@@ -97,8 +97,9 @@ L'entretien a un **état courant**. Il ne **monte** d'un cran qu'une fois le **c
 - **Passage** : voir `definition-of-done.md` (checklist complète avant la porte).
 
 ### S12 — Porte de sortie
-- **Fais** : récap (reformulation + type/route + cible + problème) + **demande confirmation** (`AskUserQuestion`). Puis mets à jour `.saas-factory/state.md`.
-- **Passage** : décision explicite reçue. **Ne franchis jamais sans réponse.**
+- **Fais d'abord (pré-enregistrement du KILL)** : pose la question « **Qu'est-ce qui te ferait abandonner ce projet ?** » — un signal concret, pas un ressenti (« si personne ne s'inscrit en X semaines », « si la cible n'a pas ce budget », « si l'intégration Y est impossible »). Note la réponse **avec ses mots** dans le brief, section « Critère de KILL (pré-rempli) ». Pourquoi maintenant : posé **avant** d'avoir vu le moindre chiffre, ce critère ne pourra pas être déplacé après coup — 17-deploy le convertira en critère mesurable (métrique live + seuil + fenêtre) et 19-retro le confrontera aux chiffres réels.
+- **Fais ensuite** : récap (reformulation + type/route + cible + problème) + **demande confirmation** (`AskUserQuestion`). Puis mets à jour `.saas-factory/state.md`.
+- **Passage** : Critère de KILL noté (ou « à préciser » assumé) + décision explicite reçue. **Ne franchis jamais sans réponse.**
 
 ## Data-flow (ce que la Découverte alimente en aval)
 ```

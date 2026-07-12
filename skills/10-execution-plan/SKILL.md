@@ -38,7 +38,7 @@ Le plan **sert les agents**, pas un humain : c'est un **graphe de tâches optimi
 ## Contrat d'artefacts
 | Lit | Écrit |
 |---|---|
-| `product/*`, `tech/architecture.md`, `tech/decisions.md`, `DESIGN.md`, `_shared/blocks/`, `_shared/validation-cascade.md` | `tech/execution-plan.md` (template `assets/templates/execution-plan.md`), `.saas-factory/state.md` |
+| `product/*`, `tech/architecture.md`, `tech/decisions.md`, `DESIGN.md`, `_shared/blocks/`, `_shared/validation-cascade.md`, `skills/11-project-setup/references/scaffold-procedure.md` (matrice de câblage — pour tagger `[pré-câblé]`) | `tech/execution-plan.md` (template `assets/templates/execution-plan.md`), `.saas-factory/state.md` |
 
 ## Garde-fous / honnêteté (le « complet » se joue ici)
 - **Traçabilité.** Chaque tâche du graphe se rattache à une feature/US et à un module de `tech/architecture.md`. Une tâche orpheline (sans source fonctionnelle ni technique) → supprime-la ou justifie-la.

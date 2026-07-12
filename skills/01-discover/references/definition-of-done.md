@@ -18,6 +18,7 @@ Chaque ligne : le champ, son critère de passage, le red-flag qui le recale.
 | **Écosystème** | secteur · géo/langue · réglementaire · intégrations (chacun rempli ou « rien de particulier ») | intégrations en survol non nommées |
 | **Signal préliminaire** | noté **avec son poids** (fort/faible), ou « aucun » | enthousiasme poli compté comme demande |
 | **Non-goals** | ≥1, ou déduits « à confirmer » | liste de rêve déguisée |
+| **Critère de KILL (pré-rempli)** | question « qu'est-ce qui te ferait abandonner ? » posée à la porte, réponse notée **avec ses mots** (signal concret) | absent ; ou reformulé en langage d'agent ; ou un ressenti (« si je n'y crois plus ») accepté sans pousser vers un signal observable |
 | **Archétype** | pressenti (défaut web-saas) + note si doute | absent |
 | **Hygiène** | **zéro secret / clé** dans le fichier | un secret recopié |
 
@@ -39,10 +40,11 @@ Chaque ligne : le champ, son critère de passage, le red-flag qui le recale.
 ```
 
 ## Porte de sortie (légère mais bloquante)
-1. **Récapitule** en clair : reformulation + type/route + cible + problème.
+1. **Pré-enregistre le Critère de KILL** : « Qu'est-ce qui te ferait abandonner ce projet ? » — pousse jusqu'à un signal concret, note la réponse avec ses mots dans le brief (section dédiée).
+2. **Récapitule** en clair : reformulation + type/route + cible + problème.
    > Exemple de formulation : « On part sur un SaaS **public**, cible **le plombier solo ~5 devis/semaine**, problème **la ressaisie des devis le soir (~1h, erreurs)** — c'est bien ça ? »
-2. **Demande confirmation** (`AskUserQuestion`). **Ne franchis jamais sans réponse.**
-3. **Route selon la décision** :
+3. **Demande confirmation** (`AskUserQuestion`). **Ne franchis jamais sans réponse.**
+4. **Route selon la décision** :
 
 | Réponse à la porte | Action |
 |---|---|

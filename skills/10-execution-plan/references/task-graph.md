@@ -32,7 +32,7 @@ Chaque **feature** (du PRD) → une ou plusieurs **tâches**. Chaque tâche :
 - est mappée à une **zone de code** (module / dossier précis) ;
 - a une **taille agent-friendly** : assez petite pour tenir dans le contexte d'un sous-agent, assez grande pour être cohérente.
 
-Sépare les tâches de **câblage de bloc** (réutilisation `_shared/blocks/`, rapides) des tâches de **build custom** (la verticale). Le split lui-même est fait à l'étape [2] — voir `reuse-vs-build.md`.
+Sépare les tâches de **câblage de bloc** (réutilisation `_shared/blocks/`, rapides) des tâches de **build custom** (la verticale). Le split lui-même est fait à l'étape [2] — voir `reuse-vs-build.md`. Les tâches de câblage dont le bloc est posé par le scaffold (étape 11) portent le tag **`[pré-câblé]`** dans le graphe : leur test rouge d'entrée cible le **delta** (config / extension), jamais le déjà-fait (règle complète : `reuse-vs-build.md §Tâches « pré-câblées au scaffold »`).
 
 ### Recette de découpage (déterministe)
 1. Prends une feature Must/Should. Relis ses **user stories** et ses **critères d'acceptation**.

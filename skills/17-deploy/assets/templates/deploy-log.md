@@ -7,6 +7,7 @@
 - Coût acté : {montant / « aucun coût nouveau »}
 - Réversibilité : {rollback en une commande — re-promotion N-1, ou dépublication → preview URL privée au 1er ship — + DNS restaurable (TTL)}
 - **Porte humaine** : validée le {…} (OK explicite référençant domaine + SHA + coût)
+- **Critère de KILL** validé à la même porte : {métrique live + seuil + fenêtre — écrit dans state.md}
 
 ## Apply (ce qui a été fait)
 | Action | Provider | Résultat | Réversible ? |

@@ -120,12 +120,13 @@ Sorties → `research/raw/competitor-profiles.md`, `research/raw/pricing-intelli
 
 - **B1 review-mining** : mine G2, Capterra, TrustRadius, Product Hunt, App Store pour chaque concurrent. Extrais les **patterns** : ce qu'on loue, ce dont on se plaint, les features réclamées. Range **par concurrent** et **par thème de douleur**. **Cite en verbatim.**
 - **B2 forum-mining** : Reddit, Indie Hackers, Hacker News, Quora, communautés de niche. Cherche plaintes sur l'existant, threads « what do you use for X? », histoires de migration, contournements. Construis une **carte de langage** (les mots exacts des clients) et repère les **signaux de churn** (pourquoi on quitte chaque concurrent).
+- **Traçabilité par verbatim (obligatoire, les deux fichiers)** : chaque verbatim consigné porte **l'URL de sa page source** + le marqueur « **ouvert via WebFetch : oui / non** » (« oui » = la page a été réellement ouverte, pas seulement lue en snippet de résultat de recherche). Un verbatim sans URL n'existe pas pour l'aval ; un « non » sera plafonné à l'étape 4 (`[snippet — non vérifié]`, cf. `04/references/adversarial-verification.md`).
 
 Sorties → `research/raw/review-mining.md`, `research/raw/forum-mining.md`.
 
 > ⚠️ **CONSERVE LE BRUT.** Ces deux fichiers sont **réutilisés tels quels par l'étape 4** (demande & edge). Ne les résume pas destructivement, ne les jette pas après synthèse. Verbatims + volumes d'avis + notes = matière première de l'inférence de demande en aval.
 
-**Critère de passage W2 :** pour chaque concurrent majeur, ≥1 thème de louange + ≥1 thème de plainte, avec verbatims ; carte de langage amorcée ; volume d'avis noté (ou trou déclaré).
+**Critère de passage W2 :** pour chaque concurrent majeur, ≥1 thème de louange + ≥1 thème de plainte, avec verbatims ; **chaque verbatim porte son URL + le marqueur WebFetch oui/non** ; carte de langage amorcée ; volume d'avis noté (ou trou déclaré).
 
 ### Wave 3 — Signaux GTM (tranche marché uniquement)
 
@@ -157,9 +158,10 @@ La synthèse crée la valeur : ce n'est pas du formatage, c'est du **pattern-mat
 3. **Repère les contradictions** entre sources et dis **laquelle croire** (tiers, cf. verification).
 4. **Faiblesse concurrent = ouverture OBSERVÉE, jamais souhaitée.** Applique la recette `forcing-questions.md` §Ouverture (MOU vs FORT) : une ouverture ne se retient que si elle est *récurrente* (partagée par plusieurs concurrents ou plusieurs avis) et *ancrée dans les données*. Sinon → data gap, pas ouverture.
 5. **N'invente pas de différenciation.** Pas trouvé d'axe net → on le dit ; l'edge est le boulot de l'étape 4, le positionnement celui de l'étape 3.
+6. **Produis la section « Taille servable & dynamique »** : [Estimate] **bottom-up** — nb d'acteurs cibles × prix observés en W1, avec l'**hypothèse de calcul écrite** (jamais un chiffre nu) ; tranche la **dynamique** (fragmenté / en consolidation / dominé + croissance / stagnation / déclin) avec son indice. C'est la donnée dont **l'étape 5 hérite** pour l'axe Marché du verdict — sans elle, le Go/No-Go tourne à vide. Pas de donnée → data gap déclaré, pas d'invention.
 
 Écris `research/market.md` selon `assets/templates/market.md`. Mapping des champs dans `output-mapping.md`.
-**Critère de passage P3 :** chaque ouverture retenue est reliée à ≥1 plainte + un prix ; contradictions tranchées ; aucune faiblesse « souhaitée ».
+**Critère de passage P3 :** chaque ouverture retenue est reliée à ≥1 plainte + un prix ; contradictions tranchées ; aucune faiblesse « souhaitée » ; **section « Taille servable & dynamique » remplie (ou data gap déclaré)**.
 
 ---
 

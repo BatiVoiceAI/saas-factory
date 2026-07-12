@@ -31,6 +31,17 @@ Le pré-vol est **bloquant**. Aucune ligne de l'apply ne démarre tant que cette
 - [ ] Domaine **vérifié** côté provider (sinon → repli honnête, guide, pas de faux cutover).
 - [ ] KYC/paiement du provider **en règle** si le plan facturé le requiert (sinon STOP + guide).
 
+### E. Services tiers & déclencheurs (le premier ship casse ici)
+Leçon de run : un produit peut passer A-D et sortir avec un worker jamais déclenché, zéro email parti et un funnel muet. Cette section vérifie que **ça tourne en vrai**, pas que le code existe.
+
+- [ ] **Décisions « déférées » soldées** : relire les ADR (`tech/decisions.md`) et le plan (`tech/execution-plan.md`) — chaque décision marquée « déférée / à trancher / TODO » est **résolue** (choix acté) ou **re-portée explicitement** avec raison tracée dans `deploy/log.md`. Une décision déférée non soldée = **pas d'apply** (ex. réel : choix de scheduler « déféré » jamais tranché → aucun email n'est jamais parti).
+- [ ] **Scheduler réellement branché** : le bloc crons est **présent** dans la config du provider (ex. `vercel.json` `{"crons":[…]}` + `CRON_SECRET` en env) **et** une exécution a été **prouvée** — log d'invocation réelle du endpoint cron en staging, pas « le worker est dans le code ».
+- [ ] **Email transactionnel réel parti** depuis la config prod : domaine d'envoi **vérifié** (Resend), un envoi de test effectué avec la clé prod, statut `delivered` **constaté** — pas « le code l'envoie ».
+- [ ] **Confirmation d'email réactivée** : l'autoconfirm du staging (posé par 11-project-setup) est **désactivé** pour la prod — un signup réel exige la confirmation par email.
+- [ ] **Redirect URLs prod posées** côté auth (Supabase) : le domaine prod est dans la liste des URLs de redirection autorisées — sinon les liens de connexion renvoient vers localhost/staging.
+- [ ] **Events du funnel émettent en staging** (bloquant) : `user_signed_up` + `activation_completed` (le moment magique du PRD) sont **visibles dans PostHog live-events** après un parcours de test — un funnel muet au ship rend la Phase 6 aveugle dès le premier tour.
+- [ ] **`*.vercel.app` noindex/redirigé** : la neutralisation du domaine technique est **préparée** au pré-vol et **appliquée après le cutover** (noindex ou redirect 308 vers le domaine prod) — il ne doit pas concurrencer le domaine prod dans l'index.
+
 ## Recette forcing-question — « est-ce vraiment prêt ? »
 
 Quand un item est ambigu, on ne suppose pas. On tranche par question.
@@ -57,6 +68,9 @@ Quand un item est ambigu, on ne suppose pas. On tranche par question.
 | Provider demande une vérif KYC pour le plan payant | Repli honnête (§6) : s'arrêter, produire le guide pas-à-pas, ne pas simuler le passage en prod. |
 | Le livret a un `WAIVED` sur un parcours secondaire | OK si documenté et non-cœur ; interdit sur le parcours d'activation. |
 | Secret trouvé dans l'historique git (pas juste le HEAD) | Rotationner la clé (elle est compromise), purge d'historique en option, ne pas juste supprimer au HEAD. |
+| Décision ADR « déférée » retrouvée au pré-vol | La solder **maintenant** : trancher, ou re-porter explicitement avec raison tracée. Jamais franchir l'apply sur un « on verra ». |
+| Le cron « existe dans le code » mais aucune invocation loggée | Pas branché : ajouter le bloc crons côté provider + prouver une exécution en staging avant l'apply. |
+| PostHog reçoit des pageviews mais aucun event du funnel | `capture()` jamais câblé : retour Phase 4 (12-build) pour instrumenter, re-vérifier en staging — pas de ship avec un funnel muet. |
 
 ## Mode d'échec le plus courant
 « Le pré-vol paraissait vert mais le build promu n'était pas le build testé. » → Prévention : **figer le SHA** en tête de pré-vol et promouvoir *cet* artefact à l'étape 4, jamais un rebuild de dernière minute.

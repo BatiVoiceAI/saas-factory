@@ -91,4 +91,4 @@ Sur `FAILED`, décider ressource par ressource. **On ne défait que ce que CE ru
 | Orphelin DNS | sous-domaine créé, host jamais lié | UPSERT au retry, ou suppression sûre ; jamais bloquant |
 | Rollback trop large | suppression d'une ressource préexistante | interdit — ne défaire que ce que ce run a créé |
 | Faux `DONE` | statut écrit avant vérif de l'artefact | le statut `DONE` n'est écrit qu'après confirmation de l'existence réelle |
-| Boucle de retry | re-jouer sans limite | 1 seule retry auto (`safety-rails.md` §7), puis `DONE_WITH_CONCERNS` |
+| Boucle de retry | re-jouer sans limite | 1 seule retry auto (`safety-rails.md` §7), puis ressource `FAILED` → le **run** sort `DONE_WITH_CONCERNS` (définition canonique : `provisioning-plan.md`) |

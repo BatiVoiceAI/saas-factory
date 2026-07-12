@@ -170,6 +170,45 @@ Règle plugin (rappel) : **vendoring MIT / Apache-2.0 / ISC uniquement**, avec f
 
 ---
 
+## Arsenal créatif — création + duplication
+
+**Principe (fondateur) :** on ne cherche pas à être « plus créatif » — on s'équipe d'**outils qui rendent plus puissant en créativité**, par deux voies seulement : la **CRÉATION** (ce qui porte l'identité : thème, copy, visuels) et la **DUPLICATION** (ce qui est déjà résolu ailleurs : structures, blocs, patterns d'animation). Demander « plus de créativité » à un LLM produit de la médiane ; lui donner un arsenal + des contraintes produit du distinctif.
+
+### Outils (licences vérifiées)
+
+| Outil | Licence | Verdict | Usage |
+|---|---|---|---|
+| **Motion** (ex-Framer Motion, motion.dev) | MIT | **dépendance par défaut** côté React | micro-interactions, transitions d'état, presence enter/exit, layout animations |
+| **GSAP** + tous plugins (ScrollTrigger, SplitText…) | GSAP Standard — gratuite depuis 3.13 (rachat Webflow), usage commercial inclus, mais **pas MIT** | dépendance npm OK ; **JAMAIS vendoré** (règle vendoring MIT/Apache/ISC) | scènes scroll orchestrées, timelines, typo animée — **seulement si la recette le justifie** |
+| **next/og / @vercel/og** (moteur Satori) | Next.js MIT ; Satori MPL-2.0 | dépendance (`next/og` est inclus dans Next.js) ; ne pas vendorer Satori | **og-images générées en code** avec les tokens du thème (display + couleur de marque du `DESIGN.md`) — jamais d'og-image statique bricolée ni d'image IA |
+| **Galeries de blocs code** (shadcn blocks, HyperUI, Magic UI, templates Vercel MIT…) | MIT / Apache-2.0 / ISC — **à vérifier par bloc** | **duplication** selon la règle vendoring (LICENSE + PROVENANCE) | squelettes de sections, dashboards, pricing — toujours **re-thémés** (règles ci-dessous) |
+| **Galeries d'inspiration** (Mobbin, Godly, Land-book, Landingfolio…) | contenu propriétaire | **référence de patterns uniquement** : on duplique la **structure** observée, jamais le code, les assets ni le copy | choisir un squelette de section éprouvé avant de coder |
+| **Nano Banana** (Gemini 2.5 Flash Image) | API Google (clé en env, jamais en dur) | création de **visuels de marque** : logo, favicon, illustrations d'états vides | **jamais à la place d'un screenshot produit** (interdit n°17), jamais pour une fausse preuve (n°18) |
+
+### Règles CRÉER vs DUPLIQUER
+
+| On DUPLIQUE (déjà résolu ailleurs) | On CRÉE (l'identité — jamais dupliquée) |
+|---|---|
+| structures éprouvées : blocs, squelettes de sections, layouts pricing/FAQ/footer | le **thème** : tokens, paire de polices, couleur de marque, radius |
+| patterns d'animation (stagger d'entrée, number ticker, reveal ciblé) | le **copy** : headline, features orientées jobs, FAQ |
+| plomberie UI : auth, tables, formulaires (blocs du châssis) | les **visuels de marque** et les screenshots produit |
+
+1. **Tout template ou bloc dupliqué est RE-THÉMÉ** : tokens + polices + radius + contenu remplacés, au point de **ne plus ressembler à son origine**. Un bloc qui sort avec ses couleurs/polices d'origine = échec (équivalent du marqueur n°20).
+2. La duplication porte sur la **structure** (grille, hiérarchie, ordre des éléments), jamais sur l'identité (thème, copy, images). C'est la combinaison structure éprouvée × identité créée qui rend distinctif.
+3. Licences : le code dupliqué suit la règle vendoring (MIT/Apache-2.0/ISC + LICENSE + PROVENANCE). Les galeries d'inspiration ne fournissent **aucun** code ni asset à copier.
+
+### Règles d'animation anti-slop
+
+1. **Une animation = un changement d'état communiqué** (feedback d'action, direction d'attention, apparition motivée). Une animation qui ne communique rien est **supprimée**.
+2. **INTERDIT** : fade-in décoratif généralisé (toutes les sections qui « apparaissent » au scroll), parallax gratuit, hover inerte, boucles infinies hors loading, animation d'entrée sur chaque carte d'une grille.
+3. **Durées** : micro-interactions 150-250 ms ; entrées/transitions 300-400 ms ; jamais > 500 ms hors scène scroll volontaire (registre brutal/créatif).
+4. **Easing** : ease-out pour les entrées, ease-in-out pour les déplacements ; jamais linear (hors marquee), jamais bounce/elastic hors R5.
+5. **Routage lib** : Motion par défaut (état, presence, micro-interactions) ; GSAP **seulement** quand la recette exige une scène orchestrée (scroll storytelling, typo animée — typiquement R5, éventuellement une landing R3). Jamais les deux libs pour le même type d'effet sur la même page.
+6. **Budget** : 1-2 effets « signature » max par page (même règle que Magic UI) ; le reste = micro-interactions fonctionnelles.
+7. **`prefers-reduced-motion` respecté** : toute animation non essentielle désactivée.
+
+---
+
 ## Checklist de review anti-slop
 
 Utilisée par le Designer-agent (étape 13) et la QA (étape 14), sur screenshot **desktop + mobile**, avant tout merge de page. Chaque point : OUI = fail.
@@ -215,3 +254,7 @@ Utilisée par le Designer-agent (étape 13) et la QA (étape 14), sur screenshot
 - https://www.alexchristou.co.uk/posts/comparing-ai-design-tools-bolt-v0-lovable
 - https://www.designsystemscollective.com/design-systems-lovable-bolt-v0-and-replit-50a0a197bc35
 - https://adminlte.io/blog/shadcn-ui-block-libraries/
+- https://gsap.com/blog/3-13/ (GSAP + tous les plugins gratuits, usage commercial inclus) et https://gsap.com/licensing/ (GSAP Standard — pas MIT)
+- https://github.com/motiondivision/motion (Motion, MIT)
+- https://github.com/vercel/satori (MPL-2.0) et https://vercel.com/docs/og-image-generation (`next/og` / @vercel/og)
+- https://vercel.com/templates et https://mobbin.com / https://godly.website / https://land-book.com (galeries — inspiration de structure uniquement)

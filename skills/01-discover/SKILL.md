@@ -93,7 +93,7 @@ Déduis l'**archétype de build** (par défaut **web-saas** — `_shared/archety
 > Détection du **stade** et de l'**archétype** (tables *condition → action*) : `references/decision-matrices.md`. Cas limites & modes d'échec (idée-solution, cible « tout le monde », type mouvant…) : `references/edge-cases.md`.
 
 ## Écriture de l'artefact — `research/idea-brief.md`
-Selon `assets/templates/idea-brief.md`. Structuré pour servir d'**input direct à l'étape 2 ET aux moteurs réutilisés en aval** (dont `office-hours`), donc respecte les champs : Idée reformulée · Problème & douleur (qui/quand/conséquence) · Cible (persona précis) · Alternative actuelle (dont concurrents nommés) · Type + route · Stade · Écosystème (secteur, géo/langue, réglementaire, intégrations) · Signal préliminaire · Contraintes · Non-goals préliminaires · Archétype détecté. Jamais de secret ni de clé dans le brief.
+Selon `assets/templates/idea-brief.md`. Structuré pour servir d'**input direct à l'étape 2 ET aux moteurs réutilisés en aval** (dont `office-hours`), donc respecte les champs : Idée reformulée · Problème & douleur (qui/quand/conséquence) · Cible (persona précis) · Alternative actuelle (dont concurrents nommés) · Type + route · Stade · Écosystème (secteur, géo/langue, réglementaire, intégrations) · Signal préliminaire · Contraintes · Non-goals préliminaires · Critère de KILL (pré-rempli à la porte S12) · Archétype détecté. Jamais de secret ni de clé dans le brief.
 
 ## Routage par type (à inscrire dans le brief et `state.md`)
 - **public** → étapes 2 · 3 · 4 · 5 complètes.
@@ -101,7 +101,7 @@ Selon `assets/templates/idea-brief.md`. Structuré pour servir d'**input direct 
 - **perso** → **saute** 2 · 3 · 4 ; étape 5 **allégée** (« cet outil te sert à toi — on build ? »).
 
 ## Porte de sortie (légère)
-Récapitule : reformulation + type/route + cible + problème, et **demande confirmation** avant la suite (« On part sur un SaaS *public*, cible *X*, problème *Y* — c'est bien ça ? »). Ne franchis pas sans réponse. Mets à jour `.saas-factory/state.md` (étape courante, type/route, archétype).
+**Avant le récap, pré-enregistre le Critère de KILL** : demande « qu'est-ce qui te ferait abandonner ce projet ? » (un signal concret) et note la réponse avec ses mots dans le brief — posé avant tout chiffre, il ne pourra pas être déplacé après coup (17-deploy le rendra mesurable, 19-retro le confrontera aux faits). Puis récapitule : reformulation + type/route + cible + problème, et **demande confirmation** avant la suite (« On part sur un SaaS *public*, cible *X*, problème *Y* — c'est bien ça ? »). Ne franchis pas sans réponse. Mets à jour `.saas-factory/state.md` (étape courante, type/route, archétype).
 
 > Checklist qualité du brief (Definition-of-Done), auto-vérif avant la porte, et routage de la décision : `references/definition-of-done.md`.
 

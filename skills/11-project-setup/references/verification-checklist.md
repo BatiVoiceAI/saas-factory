@@ -15,7 +15,9 @@ La passe qui décide si l'étape 11 sort `DONE`, `DONE_WITH_CONCERNS`, ou reste 
 | Billing *(si activé)* | list products (metadata slug) | produits en mode test présents | non-applicable ≠ échec |
 
 > **Propagation ≠ échec.** DNS/email lents à propager → la ressource **est créée**, elle propage : son état reste **`DONE` + `concerns`** (pas `FAILED`). Le déploiement (Phase 5) reverifiera.
-> **Niveau de `DONE_WITH_CONCERNS`.** Dans la colonne « Sinon » ci-dessus, `DONE_WITH_CONCERNS` désigne la **contribution au verdict de l'étape** (niveau run), pas un état de ressource : une périphérie non-verte laisse sa ressource en `DONE` + `concerns` (ou `FAILED`) et fait basculer **le run** en `DONE_WITH_CONCERNS`. Les états de ressource restent `PENDING | DONE | FAILED | ROLLED_BACK` (`provisioning-plan.md`).
+> **403/1010/challenge sur la sonde HTTP = signal WAF (Cloudflare), pas un échec.** Vérifier l'état réel via l'**API du host** (statut du dernier deploy) : deploy vert → loguer le WAF en `concerns` — **jamais de faux `FAILED`** (`mcp-map.md` §modes d'échec).
+> **Niveau de `DONE_WITH_CONCERNS`.** Dans la colonne « Sinon » ci-dessus, `DONE_WITH_CONCERNS` désigne la **contribution au verdict de run**, jamais un état de ressource (la ressource reste `DONE` + `concerns` ou `FAILED`) — **définition canonique : `provisioning-plan.md` §machine à états**.
+> **Type ≠ public : sondes ajustées.** Les sondes suivent la matrice `provisioning-plan.md` §« Routage par type de produit » — `perso` : pas de sous-domaine, sonde sur l'**URL par défaut du provider** + compte unique seedé présent ; `interne` : signup désactivé + invitations opérationnelles attendus. Chaque allègement doit apparaître dans `tech/provisioning-log.md` : **un allègement non logué = échec de la vérif** (jamais silencieux).
 
 ## Definition of Done — étape 11 complète
 ### Bloquant (sinon l'étape ne peut pas sortir `DONE`)

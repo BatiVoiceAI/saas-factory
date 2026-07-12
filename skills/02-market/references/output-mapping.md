@@ -30,6 +30,7 @@ Le moteur écrit nativement dans `{projet}/` (competitors-report, competitive-ma
 | → Prix (modèle, paliers, métrique de valeur) | W1 A2 (pricing intelligence) |
 | → Position (segment/angle) | W1 A1 + W3 (canal dominant) |
 | **Prix — paysage** + **whitespace** | W1 A2 + `decision-matrices.md` §Whitespace |
+| **Taille servable & dynamique** | [Estimate] bottom-up : W1 A1 (nb d'acteurs cibles) × W1 A2 (prix observés), hypothèse écrite ; dynamique déduite des profils + signaux W3 — **l'étape 5 en hérite** |
 | **Matrice comparative** | W1 A1 (features) — 1 colonne par concurrent **+ colonne Statu quo** |
 | **Ouvertures observées** | synthèse : manque récurrent ↔ plainte ↔ prix (FORT uniquement) |
 
@@ -60,7 +61,7 @@ Le moteur écrit nativement dans `{projet}/` (competitors-report, competitive-ma
 | **`raw/forum-mining.md`** | **carte de langage + churn** | **étape 4 (demande & edge)** |
 | `raw/gtm.md` | canaux / signaux santé (tranche marché) | référence |
 
-> **Non négociable :** l'étape 4 puise dans `raw/review-mining.md` et `raw/forum-mining.md` **plutôt que de re-scraper**. Un résumé destructif de ces fichiers casse le chaînage. Garde le brut : verbatims exacts, volume d'avis par concurrent, note moyenne, dates.
+> **Non négociable :** l'étape 4 puise dans `raw/review-mining.md` et `raw/forum-mining.md` **plutôt que de re-scraper**. Un résumé destructif de ces fichiers casse le chaînage. Garde le brut : verbatims exacts, **URL par verbatim + marqueur « ouvert via WebFetch oui/non »**, volume d'avis par concurrent, note moyenne, dates. C'est ce marqueur que la vérif adversariale de l'étape 4 relit pour distinguer verbatim vérifié et `[snippet — non vérifié]`.
 
 ## Ce qu'on N'écrit PAS ici (rappel HARD GATE)
 

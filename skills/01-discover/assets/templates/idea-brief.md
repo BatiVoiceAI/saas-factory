@@ -42,6 +42,10 @@
 - <non-goal 1>
 - <non-goal 2>
 
+## Critère de KILL (pré-rempli)
+<!-- Posé à la porte S12, AVANT d'avoir vu le moindre chiffre : « qu'est-ce qui te ferait abandonner ? ». Avec les mots de l'utilisateur — un signal concret, pas un ressenti. Converti en critère mesurable (métrique live + seuil + fenêtre) à la sortie de 17-deploy ; confronté aux chiffres par 19-retro. -->
+<La réponse de l'utilisateur, ou « à préciser »>
+
 ## Archétype détecté
 <!-- Archétype de build pressenti (cf. _shared/archetypes/). Pressenti, pas verrouillé. -->
 <ex. web-saas>

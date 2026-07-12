@@ -55,10 +55,23 @@ Les ressources **provider-only** (DNS=Cloudflare, email=Resend/Postmark, paiemen
 
 > **Exemple (BDD).** *managed cloud* = `confirm_cost` → `create_project` → migrations (tables + RLS). *self-host* (instance Supabase **déjà existante**) = **PAS** de `create_project` → **migrations seules** appliquées sur l'instance via API/`psql`, `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` en `.env`. Même sonde d'idempotence, même log, même rollback — seule la séquence d'appels change.
 
+## Routage par type de produit (public / interne / perso)
+Le **`type`** du projet (lu dans `research/idea-brief.md` ; défaut prudent = `public`) module le provisioning. Le skip-set étape × type (quelles étapes s'exécutent) vit dans la table canonique `skills/saas-factory/references/routing.md` — ici, uniquement le **détail provisioning**. Cette matrice est la **seule source** de l'étape 11 : les contrats (`subagent-contracts.md`) et la carte MCP (`mcp-map.md`) y **renvoient** sans la dupliquer.
+
+| Réglage | `public` | `interne` | `perso` |
+|---|---|---|---|
+| DNS / URL | sous-domaine public `<slug>.<domaine>` (Cloudflare) | sous-domaine **optionnel selon config** : `config.domain` présent → `<slug>.<domaine>` ; sinon URL par défaut du provider | **URL par défaut du provider** (ex. `<slug>.vercel.app`) — **PAS de record DNS public** : `provisioner-hosting` saute l'appel Cloudflare |
+| Signup / comptes | signup ouvert + confirmation email (`mailer_autoconfirm=false`) | **signup désactivé** (`disable_signup=true`) + **invitations** (`auth.admin.inviteUserByEmail` : sponsor + utilisateurs listés) | **compte unique seedé au provisioning** (`provisioner-db` crée le compte du fondateur via l'API admin) ; page signup absente |
+| Indexation | indexable (SEO = étape 16) | **noindex** (`X-Robots-Tag: noindex` — bloc access-gate sélectionné par l'étape 9 quand type ≠ public) | **noindex** (idem) |
+| Email | complet : confirmation + transactionnel | câblé (les invitations partent via le SMTP Auth) ; transactionnel selon le PRD | allégé : `mailer_autoconfirm=true` ; transactionnel seulement si le produit en a besoin |
+| Billing | si le projet vend (`providers.billing = stripe`) | sauté (rien n'est vendu) | sauté |
+
+> **Allègements LOGUÉS, jamais silencieux.** Chaque réglage allégé ou appel sauté par cette matrice = **une ligne dans `tech/provisioning-log.md`** (« allègement type=`<type>` : `<réglage>` — `<raison>` »). « Déploiement interne ≠ déploiement bâclé » : l'allègement est un choix **tracé**, pas une omission — la vérif finale (`verification-checklist.md`) refuse un allègement non logué.
+
 ## Chaque sous-agent reçoit (dans son prompt de délégation)
 - La **config globale** (providers connectés, domaine, hébergeur) **+ la branche à emprunter** (managed vs self-host, lue dans `config.json`).
 - Le **contexte projet** (nom, slug, + modèle de données pour la BDD).
-- Pour **`provisioner-db`** (étape Auth) : le **type de projet** (`public` / `interne` / `perso`, lu dans `research/idea-brief.md`) qui pilote `mailer_autoconfirm` (**public ⇒ confirmation exigée** = `false` ; `interne`/`perso`/`mode:"local"` ⇒ `true` ; défaut prudent = `false`) ; l'**URL publique** `https://<slug>.<domain>` (déterministe : slug + domaine) ; **`EMAIL_FROM`** (`config.email_from`, défaut `noreply@<domain>`) + `smtp_sender_name` = nom du projet. Ces valeurs sont **déterministes** (constantes Resend + `config.json` + `.env`) — `provisioner-db` **ne dépend pas** de la sortie runtime de `provisioner-email` (dont le rôle est de **vérifier** le domaine d'envoi : contrainte d'**ordre** pour la délivrabilité, pas un canal de données).
+- Pour **`provisioner-db`** (étape Auth) : le **type de projet** (`public` / `interne` / `perso`, lu dans `research/idea-brief.md`) qui pilote `mailer_autoconfirm` (**public ⇒ confirmation exigée** = `false` ; `interne`/`perso`/`mode:"local"` ⇒ `true` ; défaut prudent = `false`) **et l'enrollment** (`interne` : signup désactivé + invitations ; `perso` : compte unique seedé — matrice §« Routage par type de produit », allègements logués) ; l'**URL publique** `https://<slug>.<domain>` (déterministe : slug + domaine) ; **`EMAIL_FROM`** (`config.email_from`, défaut `noreply@<domain>`) + `smtp_sender_name` = nom du projet. Ces valeurs sont **déterministes** (constantes Resend + `config.json` + `.env`) — `provisioner-db` **ne dépend pas** de la sortie runtime de `provisioner-email` (dont le rôle est de **vérifier** le domaine d'envoi : contrainte d'**ordre** pour la délivrabilité, pas un canal de données).
 - Sa **consigne d'idempotence** (détecter l'existant, ne pas doubler).
 - Son **fichier de statut** `status/provision-<resource>.md`.
 - Pour la branche self-host : **l'URL d'instance + le token** (`.env`) à appeler via `Bash`/curl (jamais en chat, jamais dans le status/).
@@ -99,7 +112,7 @@ Chaque ressource traverse la même machine. L'orchestrateur ne « croit » jamai
 
 **Budget de retry** : 1 seule reprise automatique par ressource (`_shared/safety-rails.md` §7). Au 2ᵉ échec → on ne boucle pas : `FAILED` + log + on continue les ressources indépendantes.
 
-> **`DONE_WITH_CONCERNS` n'est PAS un état de ressource.** Les seuls états d'une ressource (dans `status/provision-<resource>.md`) sont `PENDING | DONE | FAILED | ROLLED_BACK`. Une ressource créée mais avec réserve (ex. email ajouté mais pas encore vérifié, DNS en propagation) reste **`DONE`** avec un champ **`concerns`** non vide. `DONE_WITH_CONCERNS` est **strictement le verdict de sortie de l'étape 11** (niveau run) : il est posé par la vérif finale (`verification-checklist.md`) quand toutes les ressources **cœur** sont `DONE` mais qu'au moins une ressource **périphérique** est `FAILED` ou porte des `concerns`. Ne jamais écrire `DONE_WITH_CONCERNS` dans un fichier `status/` de ressource.
+> **Définition canonique — `DONE_WITH_CONCERNS` n'est PAS un état de ressource.** Les seuls états d'une ressource (dans `status/provision-<resource>.md`) sont `PENDING | DONE | FAILED | ROLLED_BACK`. Une ressource créée mais avec réserve (ex. email ajouté mais pas encore vérifié, DNS en propagation) reste **`DONE`** avec un champ **`concerns`** non vide. `DONE_WITH_CONCERNS` est **strictement le verdict de sortie de l'étape 11** (niveau run) : il est posé par la vérif finale (`verification-checklist.md`) quand toutes les ressources **cœur** sont `DONE` mais qu'au moins une ressource **périphérique** est `FAILED` ou porte des `concerns`. Ne jamais écrire `DONE_WITH_CONCERNS` dans un fichier `status/` de ressource. **Cette définition vit ICI et nulle part ailleurs** — les autres fichiers de l'étape (contrats, vérif, secrets, mcp-map, idempotence) y font **renvoi** sans la redéfinir.
 
 ## Data-flow — qui produit quoi pour qui
 ```
@@ -134,6 +147,7 @@ Condition lue au lancement de l'étape 11 → action.
 | ressource forkée en **self-host** (provider = Gitea/Forgejo, Supabase self-hosted, Coolify) | router sur la **branche API self-host** (URL + token `.env`), **pas** le MCP officiel ; même machine à états |
 | self-host : URL d'instance ou token absent de `.env` | **repli honnête** : ressource `FAILED`, raison précise (creds self-host manquants), guide `infra-setup` ; jamais de faux succès |
 | domaine absent de la config | sauter le sous-domaine, host sur URL par défaut du provider, `[SÉCU]` dans le log |
+| `type` = `interne` ou `perso` (idea-brief) | appliquer la matrice §« Routage par type de produit » (DNS, enrollment, email, billing) — **chaque allègement logué** dans `tech/provisioning-log.md` |
 
 ## Modes d'échec de l'orchestration (≠ échec d'une ressource)
 

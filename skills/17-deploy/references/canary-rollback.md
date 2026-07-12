@@ -45,7 +45,7 @@ Fenêtre T par défaut : **5–15 min** de surveillance active après le cutover
 ## Procédure canary (dans l'ordre)
 
 1. **Smoke HTTP** : pages clés (landing, login, app, pricing si public) → attendre `200`. Une non-200 sur page clé = échec.
-2. **Parcours cœur en prod** : dérouler *le* parcours d'activation réel (pas seulement charger le home). Ex. niche-agnostique : arriver → s'inscrire → première action de valeur → confirmation.
+2. **Parcours cœur en prod** : dérouler *le* parcours d'activation réel (pas seulement charger le home). Ex. niche-agnostique : arriver → s'inscrire → première action de valeur → confirmation. Le parcours **inclut la réception réelle de l'email de connexion** (OTP / lien magique / confirmation) : statut Resend `delivered` **+** email arrivé dans une boîte réelle — une session créée sans email reçu (autoconfirm résiduel) est un **faux vert**, pas un passage.
 3. **Erreurs Sentry** : lire le flux sur la fenêtre T. Au **premier lancement** (pas de baseline), juger sur les **seuils absolus** (0 sur le cœur, < 1 erreur/min hors-cœur, crash-free ≥ 99 %). En **redéploiement**, comparer aussi à la baseline N-1 (> 5× = échec). Toute erreur sur le parcours cœur = échec, baseline ou pas.
 4. **Core Web Vitals** : Lighthouse / `unlighthouse` sur les pages clés. Un CWV hors cible franc = échec (dégrade la conversion **et** le SEO de l'étape 16).
 5. **Verdict** : SAIN → Phase 6 · DÉGRADÉ → prolonger + diagnostiquer · ÉCHEC → rollback immédiat.
@@ -57,6 +57,7 @@ Fenêtre T par défaut : **5–15 min** de surveillance active après le cutover
 | Tous signaux dans « sain » | SAIN | Logger, clore, → Phase 6. |
 | Un signal en « dégradé », non-cœur | DÉGRADÉ | Prolonger T, diagnostiquer. Ne pas clore tant que non résolu. |
 | Signal sur le parcours cœur en dégradé | traiter comme ÉCHEC | Rollback : le cœur prime. |
+| Email de connexion jamais reçu (Resend muet, bounce, ou reçu nulle part) | ÉCHEC | Le parcours cœur **commence** à la connexion : sans email reçu, personne n'entre. Rollback ou fix config email (domaine/clé/redirect URLs) avant re-tenter. |
 | Un seuil dur « échec » franchi | ÉCHEC | **Rollback immédiat** (re-promotion N-1, ou **dépublication** au 1er ship) + log + diagnostic avant re-tenter. |
 | Tracking absent → canary aveugle | bloquant | Réparer le tracking (étape 4.4) avant de conclure ; ne pas déclarer sain à l'aveugle. |
 
@@ -95,6 +96,7 @@ Puis **log honnête** dans `deploy/log.md` : ce qui a basculé, ce qui est resta
 | Mode d'échec | Prévention |
 |---|---|
 | « Canary vert » alors que seul le home a été testé | Toujours dérouler le **parcours cœur** complet en prod, pas juste des 200. |
+| « Canary vert » avec une session créée mais **aucun email parti** (autoconfirm résiduel) | Exiger la **réception réelle** de l'email de connexion : statut Resend `delivered` + boîte réelle — jamais la seule session. |
 | TTL DNS haut → rollback DNS lent (heures) | **Abaisser le TTL avant** le cutover (ex. 60s), le remonter après stabilisation. |
 | Rollback échoue car N-1 non redéployable (redéploiement) | Tester le rollback **en pré-vol** (`preflight-checklist.md`), pas le jour J. |
 | Premier lancement : on cherche un « N-1 » qui n'existe pas | Au 1er ship le repli **n'est pas** une re-promotion : c'est la **dépublication** (retrait DNS/alias → preview URL privée). La tester en pré-vol comme le vrai plan de rollback. |

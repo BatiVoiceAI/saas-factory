@@ -8,6 +8,7 @@ La **première** étape, séquentielle, dont tout dépend. Elle crée l'arbre lo
 3. **`git init`** + `.gitignore` (env, node_modules, .next, secrets). Commit vide initial `chore: scaffold`.
 4. **Poser la structure** de l'archétype (arbre `web-saas` ci-dessous).
 5. **Câbler les blocs** décidés « réutiliser » à l'étape 9 (matrice de câblage plus bas) : poser code + points d'accroche + `.env.example` (**noms** de variables, jamais de valeurs).
+5 bis. **Annoter le plan d'exécution** (réconciliation 10/11) : pour chaque tâche de `tech/execution-plan.md` couverte — même partiellement — par un bloc câblé ici, ajouter la mention « **pré-câblée au scaffold (étape 11)** ». La Phase 4 (12-build) traite ces tâches en **vérification/extension** du code posé, pas en TDD from scratch (sinon : faux tests rouges sur du code déjà existant, double travail masqué).
 6. **Générer le `CLAUDE.md`** racine depuis `assets/templates/project-claude-md.md`, rempli avec les données réelles du projet.
 7. **Poser `.saas-factory/`** (état pipeline) + `README.md` minimal.
 8. **Commit** `chore: wire blocks + CLAUDE.md`. Prêt pour le push (étape 2, `provisioner-repo`).
@@ -61,6 +62,7 @@ Décision interne (aucune question utilisateur).
 - [ ] `git init` fait, ≥1 commit, `.gitignore` couvre env/secrets/build.
 - [ ] Arbre de l'archétype présent.
 - [ ] Tous les blocs « réutiliser » du split étape 9 câblés (code + accroche + noms d'env).
+- [ ] Tâches du plan couvertes par les blocs câblés **annotées « pré-câblée au scaffold (étape 11) »** dans `tech/execution-plan.md` (étape 5 bis).
 - [ ] Aucun bloc « build » pré-implémenté (juste dossier + TODO).
 - [ ] `.env.example` = **noms uniquement**, zéro valeur.
 - [ ] `CLAUDE.md` racine généré et rempli (aucun secret).
@@ -77,4 +79,5 @@ Décision interne (aucune question utilisateur).
 | Bloc fantôme | câblage d'un bloc absent du split | ne câbler que ce que l'étape 9 liste |
 | Feature pré-buildée | verticale implémentée ici | STOP — HARD GATE, laisser en TODO Phase 4 |
 | `CLAUDE.md` vide/générique | template non rempli avec les vraies données | remplir depuis `tech/*` + `product/*`, jamais laisser les `{placeholders}` |
+| Chevauchement 10/11 masqué | la Phase 4 « re-builde » en faux TDD une tâche déjà couverte par un bloc câblé | annoter « pré-câblée au scaffold (étape 11) » dans `tech/execution-plan.md` (étape 5 bis) ; 12-build vérifie/étend au lieu de refaire |
 | Migrations absentes | `supabase/migrations/` vide | dériver le SQL du modèle de données étape 9 (tables + RLS) avant le scaffold DB |

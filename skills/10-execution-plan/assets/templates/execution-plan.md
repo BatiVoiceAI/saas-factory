@@ -8,14 +8,16 @@
 ## 2. Réutilisation vs build (80/20)
 | Module | Réutilise un bloc | ou Custom (verticale) |
 |---|---|---|
-| … | `_shared/blocks/{bloc}` | — |
+| … | `_shared/blocks/{bloc}` `[pré-câblé]` | — |
 | … | — | build custom |
+
+> Tag **`[pré-câblé]`** sur chaque module dont le bloc est posé par le scaffold de l'étape 11 — en Phase 4, la tâche = vérifier + configurer + delta, pas de test rouge sur le déjà-fait (`references/reuse-vs-build.md`).
 
 ## 3. Walking skeleton (à faire en premier)
 {La tranche verticale mince : auth → action cœur → persistance → affichage. Les tâches qui la composent.}
 
 ## 4. Graphe de tâches
-> Chaque tâche : 1 test rouge d'entrée, 1 zone de code dominante, committable seule (voir `references/task-graph.md`).
+> Chaque tâche : 1 test rouge d'entrée, 1 zone de code dominante, committable seule (voir `references/task-graph.md`). Pour une tâche `[pré-câblé]`, le test rouge porte sur le **delta** (config / extension), pas sur ce que le scaffold livre déjà.
 
 | # | Tâche (TDD) | Feature | Zone de code | Dépend de | Réutilise / Custom | Test rouge d'entrée |
 |---|---|---|---|---|---|---|

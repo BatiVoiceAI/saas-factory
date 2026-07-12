@@ -29,8 +29,9 @@ La profondeur vit ici — ouvre la bonne au bon moment, ne les précharge pas to
 
 ## Calibrer la cérémonie (dès le départ) — détail dans `references/routing.md`
 Le `type` capté à l'**étape 1** (public / interne / perso) **route** toute la suite. Propage-le dans l'état (`Type / route` + `Ambition`) dès la fin de P1 ; chaque phase l'applique ensuite.
-- **Perso / interne** → pipeline **court** (validation allégée → produit léger → build → deploy). On saute marché (2-4) et SEO (16).
+- **Perso / interne** → pipeline **court** (validation allégée → produit léger → build → deploy).
 - **SaaS public sérieux** → pipeline **complet**, toutes les portes.
+- Le skip-set exact (étape × type) et les portes actives par type vivent à UN seul endroit : la **matrice canonique** de `references/routing.md` — route selon elle, ne la recopie nulle part.
 - Le routage saute des **étapes**, jamais des **phases** : on traverse toujours les 6 orchestrateurs.
 
 ## Le pipeline — 6 phases enchaînées (délégation model-driven)

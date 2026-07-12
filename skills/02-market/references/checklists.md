@@ -22,6 +22,7 @@ Filet de sécurité de l'étape 2. À passer avant de déclarer la photo marché
 **Review-mining (le plus important pour l'aval)**
 - [ ] `raw/review-mining.md` + `raw/forum-mining.md` **écrits et conservés bruts**
 - [ ] verbatims + volume d'avis + note moyenne + dates présents
+- [ ] **par verbatim : URL de la source + marqueur « ouvert via WebFetch oui/non »** (un « non » = snippet, plafonné à l'étape 4)
 - [ ] carte de langage amorcée ; signaux de churn notés
 
 **Synthèse**
@@ -29,6 +30,7 @@ Filet de sécurité de l'étape 2. À passer avant de déclarer la photo marché
 - [ ] aucune faiblesse **souhaitée** ; aucune force concurrent minimisée (anti-cheerleading)
 - [ ] contradictions entre sources tranchées et justifiées
 - [ ] matrice comparative écrite, lignes « personne ne sert bien » surlignées
+- [ ] section **« Taille servable & dynamique »** remplie : [Estimate] bottom-up (nb acteurs × prix observés) avec **hypothèse écrite** + dynamique tranchée (ou data gap déclaré) — **l'étape 5 en hérite**
 - [ ] `research/market.md` conforme au template
 
 **Confiance**

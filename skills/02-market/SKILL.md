@@ -2,7 +2,7 @@
 name: 02-market
 description: >-
   Étape 2 (Phase 1 · validation) de SaaS Factory — Marché & concurrents (rôle CEO/Analyste). Exécute un teardown concurrentiel systématique + review-mining (avis clients) avec vérification adversariale, en pilotant le moteur vendoré startup-competitors, et produit market.md + confidence.md. Se déclenche pour « analyser le marché », « teardown concurrents », « qui sont les concurrents », après qu'un idea-brief existe.
-allowed-tools: Read, Write, Edit, Bash, WebSearch, WebFetch, Task
+allowed-tools: Read, Write, Edit, Bash, WebSearch, WebFetch, Task, AskUserQuestion
 ---
 
 # SaaS Factory — Étape 2 : Marché & concurrents (rôle CEO / Analyste)
@@ -46,7 +46,7 @@ Le moteur démarre par un Intake (interview). **On le court-circuite** : l'utili
 ## Procédure (les phases du moteur, exécutées)
 1. **Intake** — alimenté par l'idea-brief, pas de ré-interview.
 2. **Profondeur** — calibre le tier (Light / Standard / Deep) selon la complexité du marché ; par défaut, accepte la reco du moteur.
-3. **3 vagues** : Wave 1 (profils + prix) · Wave 2 (**review-mining** G2/Capterra/Reddit — **conserve le brut**, l'étape 4 s'en resservira) · Wave 3 (signaux GTM, dont on ne garde que ce qui éclaire marché/concurrents).
+3. **3 vagues** : Wave 1 (profils + prix) · Wave 2 (**review-mining** G2/Capterra/Reddit — **conserve le brut**, l'étape 4 s'en resservira ; **par verbatim : URL de la source + marqueur « ouvert via WebFetch oui/non »**) · Wave 3 (signaux GTM, dont on ne garde que ce qui éclaire marché/concurrents).
 4. **Synthèse** — un manque n'a de valeur qu'une fois relié à une plainte récurrente et à un prix.
 5. **Vérification adversariale** (`verification-agent`) — classe les sources en tiers, note la confiance, sépare haute vs basse confiance.
 
@@ -54,7 +54,7 @@ Le moteur démarre par un Intake (interview). **On le court-circuite** : l'utili
 
 ## Sorties — rediriger vers NOS chemins
 Le moteur écrit nativement dans `{projet}/`. **On consolide dans deux fichiers** (templates `assets/templates/`) :
-- `research/market.md` (template `market.md`) — concurrents nommés (directs + adjacents « good enough »), forces + faiblesses cadrées comme **nos ouvertures** (à confirmer étape 4, **jamais inventées**), prix + whitespace, matrice comparative.
+- `research/market.md` (template `market.md`) — concurrents nommés (directs + adjacents « good enough »), forces + faiblesses cadrées comme **nos ouvertures** (à confirmer étape 4, **jamais inventées**), prix + whitespace, **taille servable & dynamique** ([Estimate] bottom-up : nb d'acteurs × prix observés, avec hypothèse — l'étape 5 en **hérite** pour l'axe Marché du verdict), matrice comparative.
 - `research/confidence.md` (template `confidence.md`) — sources en tiers, score de confiance par affirmation + ce qui la confirmerait/infirmerait, findings haute vs basse confiance, **data gaps déclarés**.
 - `research/raw/` — les fichiers de vagues, **surtout le review-mining** : sortie **load-bearing** dont l'étape 4 puise directement plutôt que de re-scraper. Ne les jette pas.
 - `.saas-factory/state.md` — mets à jour (étape 2 faite, tier de recherche retenu).

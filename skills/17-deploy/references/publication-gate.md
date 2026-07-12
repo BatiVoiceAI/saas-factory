@@ -6,12 +6,21 @@ Rappel : l'autorisation durable d'`infra-setup` (§1 bis) couvre le **provisioni
 
 ## Ce que la porte présente (avant de demander l'OK)
 
-Le plan de l'étape 2, rendu lisible d'un coup d'œil : domaine cible, version promue (SHA), changement DNS, tracking activé, **coût chiffré**, et **comment on revient en arrière**. Pas d'apply avant que l'humain ait vu ces 6 lignes.
+Le plan de l'étape 2, rendu lisible d'un coup d'œil : domaine cible, version promue (SHA), changement DNS, tracking activé, **coût chiffré**, **comment on revient en arrière**, et le **Critère de KILL proposé** (voir ci-dessous). Pas d'apply avant que l'humain ait vu ces 7 lignes.
+
+## Livrable de la porte — le Critère de KILL (même AskUserQuestion)
+
+Pilier de la porte 19 (« jamais de kill au feeling ») : le champ `Critère de KILL` de `state.md` doit être écrit **avant** de voir les chiffres — sinon il sera rédigé après coup pour se donner raison (le déplacement de poteaux que 19-retro combat). Le moment du cutover est le dernier instant honnête pour le pré-enregistrer.
+
+- **Format** : `{métrique live + seuil + fenêtre}` — ex. « aucun `activation_completed` de non-testeur en 4 semaines », « rétention D30 < 5 % à 8 semaines », « 0 conversion sur 200 visiteurs qualifiés ».
+- **Proposé par l'agent** : dérivé du moment magique (PRD) et de l'hypothèse pricing (étape 6). Si un critère a déjà été posé en amont (S12 de 01-discover, dans `state.md`), le **re-présenter tel quel** pour confirmation — jamais le réécrire en douce.
+- **Validé dans la MÊME `AskUserQuestion` que l'OK de publication** — pas une question séparée, pas « plus tard » : la porte n'est complète que si les deux sont actés ensemble.
+- **Écrit dans `.saas-factory/state.md`** (champ `Critère de KILL`) au franchissement de la porte. C'est ce que 19-retro confrontera aux chiffres.
 
 ## Recette forcing-question — l'OK de cutover
 
 - **Ask exact** (via `AskUserQuestion`) :
-  « Je vais rendre **{app.domaine.com}** public sur la version **`{SHA}`**, basculer le DNS, activer le tracking. Coût : **{montant}**. Rollback : **{une commande vers N-1}**. **On publie ?** »
+  « Je vais rendre **{app.domaine.com}** public sur la version **`{SHA}`**, basculer le DNS, activer le tracking. Coût : **{montant}**. Rollback : **{une commande vers N-1}**. Critère de KILL proposé : **{métrique live + seuil + fenêtre}**. **On publie, et ce critère te va ?** »
 - **Push-until (critère de sortie)** : on ne quitte la porte vers l'apply **que** sur un **oui non ambigu qui référence le bon périmètre**. Tant que la réponse est floue/conditionnelle/hors-sujet → on reste à la porte et on reformule.
 - **Red-flags (réponses à NE PAS traiter comme un OK)** :
   - « Vas-y » sans avoir vu le plan / le coût → re-présenter le plan d'abord.
@@ -19,6 +28,7 @@ Le plan de l'étape 2, rendu lisible d'un coup d'œil : domaine cible, version p
   - « Je pense que oui » / « probablement » → pas explicite, repousser.
   - « OK pour tout, ne me redemande plus » → l'autorisation durable ne couvre pas le cutover ; on garde **cette** porte. Expliquer poliment.
   - Silence / réponse à côté → **ne pas** interpréter comme un accord.
+  - OK de publication donné mais Critère de KILL esquivé (« on verra », « pas besoin ») → la porte n'est **pas complète** : re-proposer un défaut raisonnable dérivé du PRD/pricing, obtenir la validation dans la même porte.
   - OK obtenu, puis le périmètre change (domaine, coût, version) → **l'OK est caduc**, redemander.
 - **MOU-vs-FORT** :
   - MOU : « Oui on peut lancer. » (ne dit pas *quoi*, ni conscience du coût)
@@ -46,7 +56,8 @@ Le plan de l'étape 2, rendu lisible d'un coup d'œil : domaine cible, version p
 
 | Réponse humaine | Route |
 |---|---|
-| OK explicite + périmètre correct | → **APPLY** (étape 4). |
+| OK explicite + périmètre correct + Critère de KILL validé | → écrire le critère dans `state.md` → **APPLY** (étape 4). |
+| OK publication mais Critère de KILL refusé / flou | Proposer un défaut `{métrique + seuil + fenêtre}` dérivé du PRD/pricing → re-demander **dans la même porte**. |
 | OK mais « change X d'abord » | Traiter X → re-présenter le plan mis à jour → **redemander**. |
 | NON / pas maintenant | STOP. Rester en staging/preview. Proposer quoi débloquer. |
 | Flou / à côté | Reformuler l'Ask exact, ne pas avancer. |

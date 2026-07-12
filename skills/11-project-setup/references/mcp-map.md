@@ -102,9 +102,15 @@ self-host = Supabase self-hosted DÉJÀ EXISTANT (SUPABASE_URL + SUPABASE_SERVIC
 managed = Vercel (REST/MCP) :
 1. list projects → match nom          (sonde)
 2. create project                     (si absent)
-3. link GitHub repo                    (auto-deploy sur push)
+3. sonde « app GitHub installée côté Vercel ? »   (l'intégration GitHub↔Vercel n'est PAS garantie —
+     tester avant le link : GET de l'intégration, ou link qui renvoie une erreur explicite)
+     → présente : link GitHub repo (auto-deploy sur push)
+     → ABSENTE : REPLI deploy-hook/CI — créer un Deploy Hook Vercel + step CI (workflow du scaffold)
+       qui l'appelle sur push : le deploy-sur-push est conservé ; loguer en `concerns`
+       (« link GitHub↔Vercel indisponible, deploy via hook CI ») — PAS un FAILED
 4. set env vars                        (à l'étape câblage secrets)
-5. attach domaine <slug>.<domaine>
+5. attach domaine <slug>.<domaine>     (selon type — perso : pas de DNS public, URL par défaut ;
+                                        matrice : provisioning-plan.md §Routage par type de produit)
 
 self-host = API Coolify (Bash/curl, COOLIFY_URL + COOLIFY_API_TOKEN en .env) :
 1. GET  /api/v1/applications → match nom   (sonde)
@@ -122,8 +128,11 @@ self-host = API Coolify (Bash/curl, COOLIFY_URL + COOLIFY_API_TOKEN en .env) :
      → c'est provisioner-email qui possède ces appels DNS (records propres à l'email),
        distincts du record de routage <slug>.<domaine> de provisioner-hosting.
        Aucune dépendance envers hosting → pas de cycle, email reste parallèle & non-bloquant.
-4. poll verified                       (1 attente bornée ; sinon ressource DONE + concerns,
-                                        non-bloquant — jamais DONE_WITH_CONCERNS au niveau ressource)
+4. poll verified                       (BORNÉ — borne exacte : contrat provisioner-email,
+                                        subagent-contracts.md ; non vérifié à la borne → solde
+                                        honnête NON-bloquant, états : provisioning-plan.md
+                                        §machine à états — jamais de poll infini, jamais de
+                                        verified simulé)
 ```
 
 **Stripe (billing, optionnel)**
@@ -147,7 +156,7 @@ Un provider peut ne pas être connecté (config partielle). Règle : **repli hon
 | Stripe | billing | non-applicable si `billing ≠ stripe` ; sinon non-bloquant (mode test plus tard) |
 | Clé Google (Nano Banana, visuels) | génération d'images par projet | non-applicable si `visuals ≠ "nano-banana"` ; `"none"`/absent → génération d'images **désactivée** (repli honnête §6, pas de visuels fantômes) ; `"nano-banana"` sans clé Google (LLM non-Google, ex. GPT-4o → clé LLM ne couvre pas Nano Banana) → retomber sur `"none"` + guide. **Non-bloquant** |
 
-**Cœur vs périphérie** : repo + BDD sont **cœur** (leur absence arrête le provisioning distant → fallback). DNS/email/billing/visuels sont **périphériques** (on continue, on loge, on marque `DONE_WITH_CONCERNS`).
+**Cœur vs périphérie** : repo + BDD sont **cœur** (leur absence arrête le provisioning distant → fallback). DNS/email/billing/visuels sont **périphériques** (on continue, on loge ; le **run** sort `DONE_WITH_CONCERNS` — définition canonique : `provisioning-plan.md` §machine à états).
 
 ## Modes d'échec MCP + traitement
 
@@ -156,5 +165,7 @@ Un provider peut ne pas être connecté (config partielle). Règle : **repli hon
 | `confirm_cost` oublié | `create_project` refusé | toujours confirmer avant (auto, autorisation durable) |
 | Token scope insuffisant | 403 sur create/env | repli honnête, loguer le scope manquant, ne pas bricoler un contournement |
 | Rate limit provider | 429 | backoff borné (1 retry), puis `FAILED` non silencieux |
-| DNS pas encore propagé | domaine ne résout pas à la vérif | attente bornée, sinon `DONE_WITH_CONCERNS` (propagation ≠ échec de création) |
+| DNS pas encore propagé | domaine ne résout pas à la vérif | attente bornée, sinon ressource `DONE` + `concerns` → run `DONE_WITH_CONCERNS` (propagation ≠ échec de création) |
+| Intégration GitHub↔Vercel absente | link repo refusé/impossible (app GitHub non installée côté Vercel) | **sonde avant le link** ; repli **deploy-hook + step CI** (deploy sur push conservé), `concerns` logué — pas de `FAILED` |
+| WAF devant le domaine | `403` / erreur `1010` / page challenge sur la sonde HTTP (Cloudflare) | **signal WAF, pas un échec** : vérifier l'état réel via l'**API du host** (statut du dernier deploy) ; deploy vert → loguer le WAF en `concerns` — **jamais de faux `FAILED`** |
 | MCP hallucine une API | appel inexistant | consulter les skills de compétence (`reference-skills.md`) avant tout SQL/DNS |
