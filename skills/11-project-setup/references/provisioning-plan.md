@@ -42,7 +42,18 @@ Ordre exact (câblés « ensemble ») :
 - **(b) Supabase Auth — après les migrations BDD.** Une fois la BDD `DONE`, configurer Auth via l'**API Management Supabase** (`PATCH https://api.supabase.com/v1/projects/{ref}/config/auth`, header `Authorization: Bearer $SUPABASE_ACCESS_TOKEN`) : `smtp_host=smtp.resend.com`, `smtp_port` (465 SSL / 587 STARTTLS), `smtp_user=resend`, `smtp_pass=$RESEND_API_KEY`, `smtp_sender_name` (nom du projet), `smtp_admin_email=noreply@<domain>`, `site_url` + `uri_allow_list` (ex. `https://<slug>.<domaine>/auth/callback`, **déterministe** depuis la config — pas besoin d'attendre hosting), et `mailer_autoconfirm` (**`false`** = confirmation email requise, projet public ; **`true`** = dev/perso, auto-confirmé sans email). **Self-host** (GoTrue) : mêmes réglages via variables d'env de l'instance (`GOTRUE_SMTP_HOST/PORT/USER/PASS/SENDER_NAME/ADMIN_EMAIL`, `GOTRUE_MAILER_AUTOCONFIRM`, `GOTRUE_SITE_URL`, `GOTRUE_URI_ALLOW_LIST`). **Idempotent** : lire la config Auth actuelle, ne patcher que si différente.
 - **(c) Les deux flux sur le même domaine générique.** Confirmation (Auth SMTP) **et** transactionnel (API Resend) partent de `mail.<domain>` / `noreply@<domain>`, même compte Resend — câblés dans le même run, pas de domaine par projet.
 
-**Secrets** : `RESEND_API_KEY` et `SUPABASE_ACCESS_TOKEN` restent en `.env` (chmod 600) — jamais en chat, log, ni fichier `status/`. `EMAIL_FROM` et le domaine d'envoi **ne sont pas** des secrets.
+### Enrollment par type — l'autorité du « déploiement privé », posée ICI
+Le refus des comptes anonymes est **authoritative côté Supabase** (pas seulement côté app : le châssis, bloc `auth` + `access-gate`, n'est que la **cohérence + défense en profondeur**). `provisioner-db` applique, selon le `type` (matrice §« Routage par type de produit » — **source unique** du QUOI ; ici le COMMENT opératoire) :
+
+- **`public`** : `disable_signup = false` (signup ouvert). Rien à restreindre.
+- **`interne`** : `disable_signup = true` (`PATCH .../config/auth`, API Management) — c'est LE refus qui fait foi. Puis, selon la stratégie retenue (idea-brief) :
+  - **invitations** (défaut) : `auth.admin.inviteUserByEmail` (`POST .../auth/v1/admin/invite`) pour le **sponsor + chaque utilisateur listé** ; les invitations partent via le SMTP Auth (Resend) déjà câblé en (b) ;
+  - **allowlist de domaine** : garder `disable_signup = false` **mais** poser `AUTH_ALLOWED_EMAIL_DOMAINS` en **env host** (l'app filtre à l'enrollment) ; durcissement optionnel = auth hook « before user created » refusant les domaines hors liste.
+- **`perso`** : `disable_signup = true` + **compte unique seedé** — `auth.admin.createUser` (`POST .../auth/v1/admin/users`, e-mail du fondateur, `email_confirm: true`) ; aucune page ni flux de signup (le châssis 404 `/signup`).
+
+Le châssis lit **`APP_ACCESS_MODE`** (`public|interne|perso`) et, en mode domaine, **`AUTH_ALLOWED_EMAIL_DOMAINS`** depuis l'**env host** — posés au câblage env depuis le `type`, pour aligner l'app sur le réglage Supabase. **Self-host** (GoTrue) : `GOTRUE_DISABLE_SIGNUP=true`, invitations/seed via l'API admin de l'instance. **Idempotent** : lire la config Auth + `list users` avant de poser (ne pas ré-inviter, ne pas re-seeder). **Chaque réglage d'enrollment = une ligne loguée** dans `tech/provisioning-log.md` (« enrollment type=`<type>` : `disable_signup=true` + N invitations » / « compte seedé `<founder>` ») — jamais silencieux.
+
+**Secrets** : `RESEND_API_KEY` et `SUPABASE_ACCESS_TOKEN` restent en `.env` (chmod 600) — jamais en chat, log, ni fichier `status/`. `EMAIL_FROM`, le domaine d'envoi, `APP_ACCESS_MODE` et `AUTH_ALLOWED_EMAIL_DOMAINS` **ne sont pas** des secrets.
 
 ## Routage par provider (managed vs self-host)
 Le plan **route par provider** pour chaque ressource **forkée** (repo, BDD, hébergement) : le provisioner lit `~/.saas-factory/config.json` (**profil** + **provider**) et choisit sa branche.

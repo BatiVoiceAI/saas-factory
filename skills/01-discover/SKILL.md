@@ -28,6 +28,7 @@ Tant que le brief n'est pas écrit, tu ne proposes **aucune solution**, tu n'éc
 ## Entrée / sortie (contrat)
 - **Lit** : l'idée de l'utilisateur, en langage libre.
 - **Écrit** : `research/idea-brief.md` (selon `assets/templates/idea-brief.md`) + `.saas-factory/state.md` (étape courante, type/route, archétype). Jamais de secret ni de clé.
+- **Amorce l'aval** : le brief capte **de quoi lancer les 3 vagues de l'étape 2** sans ré-interroger — surtout les **concurrents connus** (Q4 Alternative actuelle, dont le statu quo Excel/papier/rien) et une **catégorie/marché assez précise pour cadrer une recherche** (déduite de Problème + Écosystème). L'étape 2 branche ces champs sur l'Intake du moteur `startup-competitors` (cf. `02-market/references/intake-mapping.md`) ; un champ flou ici = une recherche floue là-bas.
 
 ## Principe des questions (le cœur du déterminisme ici)
 La qualité du brief dépend entièrement de la conduite de l'entretien. Quatre règles :

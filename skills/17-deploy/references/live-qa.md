@@ -13,7 +13,7 @@ canary OK ──> dispatch agents/live-qa.md ──> rapport (deploy/live-qa-rep
 ```
 
 ## 1. Dispatch du live-QA (contrat)
-Prompt de délégation : **URL prod**, PRD + user-stories (les workflows à rejouer), `qa/test-booklet.md` (les cas déjà validés en local — à rejouer sur prod pour le cœur), **type de projet** (public/interne/perso — cf. matrice plus bas), rappel accès `.env` (service_role Supabase, clé Resend) et règles de données de test (`+liveqa@`, préfixe `[test]`, nettoyage). L'agent teste **routes, parcours 2 rôles, OTP réel, boucles email (statut Resend), effets en base, smoke RLS/cron** — détail dans `agents/live-qa.md`.
+Prompt de délégation : **URL prod**, PRD + user-stories (les workflows à rejouer), `qa/test-booklet.md` (les cas déjà validés en local — à rejouer sur prod pour le cœur), **type de projet** (public/interne/perso — cf. matrice plus bas), rappel accès `.env` (service_role Supabase, clé Resend) et règles de données de test (`+liveqa@`, préfixe `[test]`, nettoyage). L'agent teste **routes, parcours 2 rôles, OTP réel, boucles email (statut Resend), effets en base, smoke RLS/cron**, et — si `type ≠ public` — le **refus du signup anonyme + `noindex` + redirection de bord** (cf. matrice) — détail dans `agents/live-qa.md`.
 
 ## 2. Boucle de correction — budget **3 cycles**
 Pour chaque échec du rapport, dans l'ordre bloquant → majeur → mineur :
@@ -32,6 +32,7 @@ Pour chaque échec du rapport, dans l'ordre bloquant → majeur → mineur :
 | Routes + metadata + légal | ✅ tout | ✅ (légal N/A) | statuts seulement |
 | Parcours cœur 2 rôles | ✅ | ✅ (rôles internes) | ✅ 1 rôle |
 | OTP réel + email Resend | ✅ | ✅ | ✅ (léger) |
+| **Signup anonyme refusé + noindex** | N/A (signup ouvert) | ✅ **preuve** : 0 ligne `auth.users` + `X-Robots-Tag: noindex` + redirection de bord | ✅ **preuve** (idem) |
 | Boucles fermées | ✅ toutes (email client) | ✅ **toutes** (canal adapté : email pro / in-app — dès qu'il y a contrepartie, la boucle est testée) | ✅ dérivées par action (trace toujours ; email si échéance/contrepartie) |
 | Smoke RLS/cron | ✅ | ✅ | si multi-données |
 | Mobile + desktop | ✅ | desktop d'abord | selon usage |
@@ -39,6 +40,7 @@ Pour chaque échec du rapport, dans l'ordre bloquant → majeur → mineur :
 ## 4. DoD de la recette
 - [ ] Rapport `deploy/live-qa-report.md` complet : chaque parcours du PRD a un verdict **avec preuve** (screenshot / ID email Resend / ligne DB).
 - [ ] **0 bloquant** ; majeurs/mineurs restants **consignés et annoncés**.
+- [ ] **(interne/perso) Signup anonyme refusé — prouvé sur la prod réelle** : e-mail aléatoire non enrôlé → **0 compte créé** (`auth.users`) + **0 OTP** (Resend) ; `X-Robots-Tag: noindex` présent ; visiteur non authentifié redirigé vers `/login`. Miroir de la porte pré-vol §F (`preflight-checklist.md`) — ici rejoué sur la **prod**, avec preuve.
 - [ ] Boucles fermées **prouvées** (les emails partent vraiment — statut Resend, pas « le code les envoie »).
 - [ ] Données de test **nettoyées** (aucun `+liveqa@` / `[test]` résiduel en base).
 - [ ] `.saas-factory/state.md` : `recette_live: PASS` (ou `PASS_WITH_CONCERNS` + liste).
@@ -50,3 +52,4 @@ Pour chaque échec du rapport, dans l'ordre bloquant → majeur → mineur :
 | Fix-ping-pong | le cycle 3 re-casse ce que le cycle 2 a réparé | stop, rollback ou consignation — ne jamais dépasser le budget « pour finir » |
 | Données de test orphelines | `[test]` visibles par de vrais utilisateurs | le nettoyage fait partie du DoD, pas une politesse |
 | Faux vert par autoconfirm | OTP « passe » parce que l'email n'est pas vérifié en vrai | toujours vérifier le **statut Resend** de l'email, pas seulement la session |
+| « Privé » resté ouvert | un e-mail inconnu crée un compte / atteint le dashboard sur un `interne`/`perso` | `disable_signup` non posé **ou** `APP_ACCESS_MODE` resté `public` en env host → retour 11-project-setup / config env + re-preuve ; ne jamais livrer un interne ouvert (P0.5) |

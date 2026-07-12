@@ -24,10 +24,10 @@ Les étapes se passent le relais **par des fichiers sur disque**, pas par la con
 | Étape | Lit | Écrit |
 |---|---|---|
 | 1 Découverte | idée de l'utilisateur | `research/idea-brief.md` |
-| 2 Marché & concurrents | `idea-brief` | `research/market.md`, `research/confidence.md` |
+| 2 Marché & concurrents | `idea-brief` | `research/market.md` (dont §Fiabilité & confiance — ex-`confidence.md`, fusionné §5) |
 | 3 Positionnement | `market`, `idea-brief` | `research/positioning.md` |
 | 4 Demande & edge | `market` (review-mining), `positioning` | `research/demand-signals.md` |
-| 5 Opportunité & décision | tous les précédents | `research/opportunity-brief.md`, `research/opportunity-summary.md` (+ `research/post-mortem.md` si No-Go) |
+| 5 Opportunité & décision | tous les précédents | `research/opportunity-brief.md` (bloc §Décision en tête = le POURQUOI ; ex-`opportunity-summary.md` fusionné §5) (+ `research/post-mortem.md` si No-Go) |
 
 Ne mets **jamais** de secret ou de clé API dans ces fichiers.
 

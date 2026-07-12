@@ -95,7 +95,7 @@ Pourquoi cet ordre : l'UVP (3) n'a de sens qu'après avoir figé le problème (1
 - **Source :** décision de modèle prise ici, **détaillée dans `product/pricing.md`** (voir `references/pricing-procedure.md`).
 - **Ici, dans le canvas :** ne poser que le **type** (abonnement récurrent freemium / free-trial + paliers) et l'**axe de scaling** en une ligne. Le détail des paliers va dans `pricing.md`, pas dans le canvas.
 - **Critère de passage :** le bloc renvoie explicitement à `pricing.md` et ne duplique pas la table des paliers.
-- **Types non publics :** `interne` → le bloc 6 se lit « **valeur captée** » et porte le **ROI interne** ~10 lignes (coût évité, temps gagné, seuil de rentabilité — SKILL.md §« Mode interne »), **sans** renvoi à `pricing.md` (non produit) ; `perso` → « pricing hors périmètre » assumé en une ligne.
+- **Type interne :** le bloc 6 se lit « **valeur captée** » et porte le **ROI interne** ~10 lignes (coût évité, temps gagné, seuil de rentabilité — SKILL.md §« Mode interne »), **sans** renvoi à `pricing.md` (non produit). *(En `perso`, on n'atteint jamais ce canvas : l'étape 06 est entièrement sautée — `routing.md` — donc pas de `business-model.md`.)*
 
 ### Bloc 7 — Structure de coûts `[esquisse]`
 - **Source :** esquisse. Postes typiques d'un micro-SaaS.
@@ -133,7 +133,7 @@ Pourquoi cet ordre : l'UVP (3) n'a de sens qu'après avoir figé le problème (1
 - [ ] Les blocs 1-4 et 9 **ne ré-interrogent pas** l'utilisateur (branchés Phase 1).
 - [ ] Solution = **3 features max**, chacune mappée à un problème du bloc 1.
 - [ ] UVP = **une phrase**, non interchangeable avec un concurrent.
-- [ ] Bloc 6 **renvoie** à `pricing.md` sans dupliquer la table des paliers (`public`) — ou porte le **ROI interne** (`interne`) / « hors périmètre » (`perso`).
+- [ ] Bloc 6 **renvoie** à `pricing.md` sans dupliquer la table des paliers (`public`) — ou porte le **ROI interne** (`interne`). *(En `perso`, l'étape 06 est sautée — `routing.md` : pas de `business-model.md`, cette DoD ne s'applique pas.)*
 - [ ] Bloc 7 identifie le **poste de coût qui scale avec l'usage**.
 - [ ] Bloc 8 : l'activation = le **job résolu**, pas une vanity metric.
 - [ ] Bloc 9 : avantage déloyal **réel** ou **absence assumée** (jamais fabriqué).

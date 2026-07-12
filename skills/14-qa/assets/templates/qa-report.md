@@ -17,5 +17,9 @@
 ## Sync-doc
 {écarts doc/code détectés et corrigés}
 
+## Portes de fin de build (bloquantes)
+- **Boucles fermées** (`_shared/boucles-fermees.md`) : {chaque action de valeur → acteur ET contrepartie reçoivent, vérifié en sandbox — OK / boucle muette bloquante}.
+- **Plan soldé** (P0.1, `references/plan-solde-gate.md`) : {registre `tech/plan-ledger.md` — chaque `[SÉCU]` fait/repoussé ; tests du plan committés ; ≥1 E2E cœur exécuté vert — OUVERTE / FERMÉE}.
+
 ## Verdict
 {**Conforme** → étape 15 (client humain)} | {**Non conforme** → non-conformités ci-dessus renvoyées à la cascade, budget d'itération}

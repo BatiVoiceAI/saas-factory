@@ -42,10 +42,13 @@ Un parcours d'intégration = une **suite d'étapes utilisateur** qui traverse **
 | **Auth → app** | Session, identité, rôles/permissions | Utilisateur connecté mais traité comme anonyme sur une page ; rôle non propagé. |
 | **Onboarding → feature cœur** | Préférences, plan choisi, données d'amorçage | Choix d'onboarding perdu ; feature démarre sur un état vide inattendu. |
 | **Feature A → Feature B** | Objet métier (devis, projet, doc…) | Objet créé en A introuvable/incomplet en B ; ID non passé. |
-| **Action → billing** | Quota, plan, compteur d'usage | Action autorisée au-delà du quota ; upgrade non reflété immédiatement. |
-| **Paiement → déblocage** | Statut d'abonnement, features premium | Payé mais premium toujours verrouillé (webhook non traité) ; double-charge. |
+| **Action de valeur → notification (boucle fermée)** | Trace durable à l'acteur **ET** avis à la contrepartie | **Email jamais envoyé** (mailer non branché, job `notification_jobs` posé mais jamais consommé) ; contrepartie jamais notifiée ; « confirmé à l'écran » mais rien ne part. → `_shared/boucles-fermees.md`, vérifié des **deux côtés** en sandbox. |
+| **Action → billing** *(public + billing)* | Quota, plan, compteur d'usage | Action autorisée au-delà du quota ; upgrade non reflété immédiatement. |
+| **Paiement → déblocage** *(public + billing)* | Statut d'abonnement, features premium | Payé mais premium toujours verrouillé (webhook non traité) ; double-charge. |
 | **État partagé (multi-onglet/refresh)** | Cache, state client, cookies | Deux onglets divergent ; refresh perd l'état ; retour navigateur casse le flux. |
 | **Async / webhook / job** | Résultat d'un traitement différé | UI dit « prêt » avant que le job ait fini ; résultat jamais rafraîchi. |
+
+> **Calibrage par type** : les jonctions *billing/paiement* ne s'appliquent qu'aux produits **public + billing** ; en **interne/perso**, elles sont remplacées par la vérification « **signup anonyme refusé** » (accès privé réel). La jonction **boucle fermée**, elle, est **universelle** — dès qu'une contrepartie existe, elle vaut pour les trois types. **Route selon `skills/saas-factory/references/routing.md`** (ligne `14-qa`) — ne recopie pas la matrice.
 
 ## 4. Data-flow d'un objet cœur (à vérifier de bout en bout)
 ```
@@ -69,6 +72,7 @@ Rejoue chaque parcours cœur avec **une** de ces perturbations à la fois :
 ## 6. Definition-of-done de la passe 2
 - [ ] Chaque parcours cœur du PRD joué **bout-en-bout, sans réinitialiser** entre features.
 - [ ] Chaque **jonction** du parcours vérifiée (l'objet/état arrive intact).
+- [ ] Chaque **action de valeur → boucle fermée** vérifiée des **deux côtés** (acteur + contrepartie reçoivent réellement — `_shared/boucles-fermees.md`) ; aucune boucle muette.
 - [ ] Au moins **une combinaison réaliste** (perturbation) testée par parcours cœur.
 - [ ] Le data-flow de l'**objet métier central** vérifié de création à consommation.
 - [ ] Tout bug de jonction → **régression E2E multi-features** générée + retour dev avec le **parcours complet** en contexte.
@@ -82,3 +86,4 @@ Rejoue chaque parcours cœur avec **une** de ces perturbations à la fois :
 | **Jonction non identifiée** | Un parcours « passe » mais une jonction jamais observée | Cartographie les jonctions **avant** (tableau §3), coche-les une par une. |
 | **Happy-path only en passe 2** | Aucune perturbation testée | Ajoute au moins une combinaison réaliste (§5) par parcours. |
 | **Contexte de bug amputé** | Retour dev avec juste l'écran final | Fournis le **parcours entier** : un bug de jonction se corrige avec l'amont, pas l'écran d'arrivée. |
+| **Boucle fermée non traquée** | Le parcours « passe » mais la notification n'est jamais vérifiée (jonction *action → notif* oubliée) | Traite la boucle comme une jonction à part entière : ouvre la boîte sandbox des **deux** rôles ; rien reçu = `FAIL` bloquant. |

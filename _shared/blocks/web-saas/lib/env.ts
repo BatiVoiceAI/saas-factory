@@ -16,6 +16,21 @@ const serverSchema = z.object({
   // --- Supabase (auth/crud) — requis côté serveur -----------------------
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
 
+  // --- Type de déploiement (blocs auth + access-gate) ------------------
+  // Pilote DEUX choses, jamais l'une sans l'autre :
+  //   1. l'enrollment (QUI peut entrer) — bloc `auth`, `lib/auth/enrollment.ts` ;
+  //   2. le gate d'accès (noindex + redirection de bord) — bloc `access-gate`.
+  // Le MÉCANISME d'auth reste l'OTP passwordless quel que soit le mode : ce
+  // réglage ne fait que restreindre l'enrollment et la surface publique.
+  // Défaut prudent = `public` (surface ouverte + indexable) ; posé par
+  // 11-project-setup selon le `type` du projet (public / interne / perso).
+  APP_ACCESS_MODE: z.enum(["public", "interne", "perso"]).default("public"),
+  // Allowlist de domaines e-mail pour l'enrollment `interne` PAR DOMAINE
+  // (ex. "acme.com,acme.io") : une adresse d'un domaine listé peut s'enrôler
+  // seule. Vide (défaut) = mode INVITATIONS (seuls les comptes pré-invités
+  // via `auth.admin.inviteUserByEmail` entrent). Sans objet en `public`/`perso`.
+  AUTH_ALLOWED_EMAIL_DOMAINS: z.string().min(1).optional(),
+
   // --- Notifications (bloc notifications) — optionnel -------------------
   RESEND_API_KEY: z.string().min(1).optional(),
   EMAIL_FROM: z.string().min(1).optional(),

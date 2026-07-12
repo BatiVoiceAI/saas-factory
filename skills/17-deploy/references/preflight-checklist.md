@@ -42,6 +42,15 @@ Leçon de run : un produit peut passer A-D et sortir avec un worker jamais décl
 - [ ] **Events du funnel émettent en staging** (bloquant) : `user_signed_up` + `activation_completed` (le moment magique du PRD) sont **visibles dans PostHog live-events** après un parcours de test — un funnel muet au ship rend la Phase 6 aveugle dès le premier tour.
 - [ ] **`*.vercel.app` noindex/redirigé** : la neutralisation du domaine technique est **préparée** au pré-vol et **appliquée après le cutover** (noindex ou redirect 308 vers le domaine prod) — il ne doit pas concurrencer le domaine prod dans l'index.
 
+### F. Accès & déploiement privé — `interne`/`perso` uniquement (le « privé » doit être PROUVÉ)
+Un outil « interne » dont un inconnu qui a l'URL peut créer un compte **n'est pas privé** (P0.5). Ces items ne s'appliquent **que si `type ≠ public`** ; pour un SaaS public, ils sont **non applicables** (signup ouvert par conception, à marquer N/A explicitement).
+
+- [ ] **`disable_signup=true` posé ET vérifié** côté Supabase (config Auth relue via l'API Management) — c'est l'**autorité** du refus, pas seulement le châssis (`APP_ACCESS_MODE` + `access-gate`).
+- [ ] **Signup anonyme REFUSÉ — preuve, pas déclaration** : depuis une session **vierge**, tenter de se connecter avec un e-mail **aléatoire non enrôlé** → **aucune nouvelle ligne dans `auth.users`** (compté avant/après) **ET aucun OTP envoyé** (aucun événement Resend pour cet e-mail) ; l'écran renvoie le refus. C'est LA preuve P0.5 (rejouée aussi en recette `live-qa.md`).
+- [ ] **Enrollment opérationnel** (le pendant positif) : au moins un compte **légitime** entre — invitation reçue (`interne`) ou compte fondateur seedé (`perso`) → OTP réel reçu → session ouverte. Un privé qui refuse **tout le monde** est cassé aussi.
+- [ ] **`X-Robots-Tag: noindex` présent** sur une réponse de l'app en prod (bloc `access-gate` actif) ; `APP_ACCESS_MODE` = `interne`/`perso` en env host, cohérent avec Supabase.
+- [ ] **Redirection de bord vérifiée** : un visiteur **non authentifié** sur une route applicative (ex. `/dashboard`) est renvoyé vers `/login` — aucun shell d'app exposé sans session.
+
 ## Recette forcing-question — « est-ce vraiment prêt ? »
 
 Quand un item est ambigu, on ne suppose pas. On tranche par question.
@@ -71,6 +80,8 @@ Quand un item est ambigu, on ne suppose pas. On tranche par question.
 | Décision ADR « déférée » retrouvée au pré-vol | La solder **maintenant** : trancher, ou re-porter explicitement avec raison tracée. Jamais franchir l'apply sur un « on verra ». |
 | Le cron « existe dans le code » mais aucune invocation loggée | Pas branché : ajouter le bloc crons côté provider + prouver une exécution en staging avant l'apply. |
 | PostHog reçoit des pageviews mais aucun event du funnel | `capture()` jamais câblé : retour Phase 4 (12-build) pour instrumenter, re-vérifier en staging — pas de ship avec un funnel muet. |
+| (interne/perso) signup anonyme **réussit** (compte créé pour un e-mail aléatoire) | `disable_signup` pas posé : retour 11-project-setup, poser le refus (API Management) + re-preuve. Jamais ship un « privé » resté ouvert (P0.5). |
+| (interne/perso) `APP_ACCESS_MODE` resté `public` en env host | Incohérence app↔Supabase : `access-gate` inerte (pas de noindex, pas de redirection de bord). Poser `APP_ACCESS_MODE=interne`/`perso` en env host + redéployer avant cutover. |
 
 ## Mode d'échec le plus courant
 « Le pré-vol paraissait vert mais le build promu n'était pas le build testé. » → Prévention : **figer le SHA** en tête de pré-vol et promouvoir *cet* artefact à l'étape 4, jamais un rebuild de dernière minute.

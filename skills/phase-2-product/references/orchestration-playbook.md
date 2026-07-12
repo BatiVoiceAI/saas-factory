@@ -23,7 +23,7 @@ Le relais se fait **par fichiers sur disque**, jamais par la conversation. Ne me
 
 L'existence d'un fichier ne prouve rien. À chaque artefact rendu par un expert, avant de le déclarer « fait » dans `state.md` :
 1. **Ouvre l'artefact reçu** (Read) — jamais de « croire sur parole ».
-2. **Checklist minimale par type** : sections requises présentes (ex. must/should/could/won't + success criteria dans `mvp-definition.md`), verdict/priorisation au format attendu (MoSCoW/RICE), **preuves non vides** (chaque feature justifiée par un élément Phase 1, pas de placeholders), taille plancher plausible (un PRD de 20 lignes n'est pas un PRD).
+2. **Checklist minimale par type** : sections requises présentes (ex. must/should/could/won't + success criteria dans `product-spec.md` § MVP — depuis la fusion §5, `mvp-definition.md`/`feature-prioritization.md` ne sont que des **renvois**, le contenu vit dans le PRD), verdict/priorisation au format attendu (MoSCoW/RICE, dans `product-spec.md` § Priorisation), **preuves non vides** (chaque feature justifiée par un élément Phase 1, pas de placeholders), taille plancher plausible (un PRD de 20 lignes n'est pas un PRD).
 3. **Stub / squelette → renvoi à l'étape** qui l'a produit, avec le **manque nommé** (section absente, justification vide, story sans critère), dans le budget d'itération — pas de porte présentée sur un artefact creux.
 
 ## Diagramme de flux
@@ -87,7 +87,7 @@ Une porte = une décision **explicite** de l'utilisateur, formulée en langage c
 
 ### 🚪 Porte PRD (fin de `07-product-spec`)
 - **Décide** : le périmètre MVP est-il le bon ? Les must-have sont-ils vraiment must ? Les non-goals sont-ils assumés ?
-- **Preuve présentée** : `product/mvp-definition.md` (must/should/could/won't + out-of-scope + success criteria).
+- **Preuve présentée** : `product/product-spec.md` § MVP (must/should/could/won't + out-of-scope + success criteria) — source unique depuis la fusion §5 (`mvp-definition.md` n'est qu'un renvoi).
 - **Issues** : `valide` → on passe à `08`. `ajuste` → retour ciblé (matrice ci-dessous).
 
 ### 🚪 Porte Charte (dans `08-design-system`)
@@ -99,7 +99,7 @@ Une porte = une décision **explicite** de l'utilisateur, formulée en langage c
 | Ce qui cloche à la porte | Reboucle sur | Ne touche pas |
 |---|---|---|
 | Le **pricing / modèle** n'a plus de sens vu le périmètre | `06-business-model` | le PRD déjà validé en dehors du point litigieux |
-| **Trop de features** dans le MVP / scope-creep | section priorisation de `07` (`feature-prioritization`, `mvp-definition`) | business-model |
+| **Trop de features** dans le MVP / scope-creep | `07` — `product-spec.md` § Priorisation + § MVP (source unique depuis la fusion §5) | business-model |
 | Une **feature manque** ou une user story est fausse | section concernée de `07` (`features/NN-*`, `user-stories`) | design |
 | Le besoin **Phase 1** n'est plus respecté (dérive) | remonter d'un cran : reboucle `07` en repartant de `research/opportunity-brief.md` ; si le doute porte sur la validation elle-même, **signale-le** — c'est un retour Phase 1, pas Phase 2 | — |
 | **Direction visuelle** rejetée | direction de `08` uniquement | PRD, business-model |

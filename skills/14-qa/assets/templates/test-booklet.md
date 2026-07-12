@@ -20,6 +20,21 @@
 | Checklist anti-slop (`_shared/design-doctrine.md`) passée, desktop + mobile | … | … |
 | **Verdict d'ensemble : « pro et complet » / « démo creuse »** | … | … |
 
+## Boucles fermées (étape 14 — les deux rôles vérifiés, `_shared/boucles-fermees.md`)
+| Action de valeur | Acteur reçoit (trace durable) | Contrepartie notifiée | Réversibilité (avis à l'autre partie) | Verdict |
+|---|---|---|---|---|
+| {créer l'entité — ex. résa} | {email sandbox reçu — preuve} | {gérant notifié — preuve} | {annulation par le salon → cliente avisée} | PASS/FAIL |
+| {annuler / modifier} | … | … | … | … |
+
+> Canal variable selon le type (email client / email pro / notif in-app / webhook) — **jamais l'existence** de la boucle. Une boucle muette = `FAIL` bloquant.
+
+## Porte « plan soldé, prouvé par exécution » (P0.1 — `references/plan-solde-gate.md`)
+| Condition | État | Preuve |
+|---|---|---|
+| Chaque `[SÉCU]` du plan tracé *fait (fichier) / repoussé (raison + décision humaine)* | OUVERTE/FERMÉE | `tech/plan-ledger.md` |
+| Tests du plan **committés** (fichiers, pas prose) | … | `git ls-files tests/ e2e/` |
+| **≥1 E2E du parcours cœur exécuté vert** (pas relu) | … | {trace Playwright} |
+
 ## Détail par feature
 ### {feature}
 - **Technique** (12/13) : {verdict + preuve}

@@ -67,7 +67,7 @@ Déclencheur : en synthèse, tu t'apprêtes à écrire une « ouverture observé
 | Ancrage | aucun prix associé | tous facturent l'export en add-on premium → whitespace |
 | Ton | « super opportunité ! » | « manque récurrent, à confirmer étape 4 » |
 
-- **Routage** : FORT → `market.md` §Ouvertures observées, labellisé `[Data]`, avec « à confirmer étape 4, jamais inventé ». MOU → `confidence.md` §Data gaps (« signal faible / à vérifier »). **Aucune** ouverture ne quitte cette étape comme *prouvée* — au mieux *observée, plausible*.
+- **Routage** : FORT → `market.md` §Ouvertures observées, labellisé `[Data]`, avec « à confirmer étape 4, jamais inventé ». MOU → `market.md` §Fiabilité (data gaps : « signal faible / à vérifier »). **Aucune** ouverture ne quitte cette étape comme *prouvée* — au mieux *observée, plausible*.
 
 ---
 

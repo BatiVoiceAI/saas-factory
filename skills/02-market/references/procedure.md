@@ -26,8 +26,8 @@ Rappel du **HARD GATE** (non négociable) : ici tu produis la **photo marché/co
                      │
                      ▼
    ┌───────────── 3 VAGUES (P2) ─────────────┐
-   │ W1 profils + prix                        │  → raw/competitor-profiles, raw/pricing-intelligence
-   │ W2 review-mining + forum-mining          │  → raw/review-mining, raw/forum-mining  (BRUT CONSERVÉ)
+   │ W1 profils DÉTAILLÉS + prix (table)      │  → raw/competitor-profiles, raw/pricing-intelligence
+   │ W2 review-mining + forum-mining + langage│  → raw/review-mining, raw/forum-mining  (BRUT CONSERVÉ)
    │ W3 signaux GTM (tranche marché only)     │  → raw/gtm (ce qui éclaire marché/concurrents)
    └─────────────────────────────────────────┘
                      │
@@ -43,7 +43,7 @@ Rappel du **HARD GATE** (non négociable) : ici tu produis la **photo marché/co
                      │
                      ▼
    ┌─────────────────────────────────────────┐
-   │ P3.5 VÉRIFICATION adversariale           │  → research/confidence.md
+   │ P3.5 VÉRIFICATION adversariale           │  → research/market.md §Fiabilité
    └─────────────────────────────────────────┘
                      │
                      ▼
@@ -108,25 +108,25 @@ Somme 3-9 → **Light (3-4)** · **Standard (5-7)** · **Deep (8-9)**. Le tier f
 
 Exécute les vagues **dans l'ordre** (chaque vague finie avant la suivante). Si l'outil `Task`/`Agent` est dispo, parallélise les agents *à l'intérieur* d'une vague ; sinon, séquentiel, même profondeur. Avant de lancer : lis `vendor/.../research-principles.md` (tiers de sources, cross-référencement, gestion des trous).
 
-### Wave 1 — Profils + prix
+### Wave 1 — Profils DÉTAILLÉS + prix
 
-- **A1 profils** : identifie et profile 5-8 concurrents **directs** + 2-3 **adjacents** (plateformes plus larges, alternatives manuelles, outils d'une catégorie voisine qui prennent le même budget — dont le **statu quo** : Excel, papier, rien). Va **au-delà de la page marketing** : avis, offres d'emploi, données de financement. Pour chacun : produit, features, taille équipe, funding, signaux de traction, forces, faiblesses.
-- **A2 prix** : reverse-engineer le modèle de prix de chaque concurrent — pas « 49 $/mois » mais la **métrique de valeur** (par siège ? à l'usage ? forfait ?), la différenciation des paliers, la psychologie tarifaire (ancrage, decoy, charm), le coût de changement (technique, contractuel, émotionnel). Table palier-par-palier.
+- **A1 profils** : identifie et profile les concurrents **directs** + **adjacents** (plateformes plus larges, alternatives manuelles, outils d'une catégorie voisine qui prennent le même budget — dont le **statu quo** : Excel, papier, rien) — **au quota** (`checklists.md` §Quotas). Va **au-delà de la page marketing** : avis, offres d'emploi (trajectoire), financement, changelog. Pour chacun, un **dossier détaillé** (cf. template `market.md` §Dossiers) : identité + traction, **description produit fonctionnelle réelle** (le job couvert, pas le slogan), features, signaux techniques/intégrations, funding, forces, faiblesses, menace. C'est ici que se joue la profondeur exigée — un vrai teardown, pas une fiche.
+- **A2 prix** : reverse-engineer le modèle de prix de chaque concurrent — pas « 49 $/mois » mais la **métrique de valeur** (par siège ? à l'usage ? forfait ?), la différenciation des paliers, la psychologie tarifaire (ancrage, decoy, charm), le coût de changement (technique, contractuel, émotionnel). **Table palier-par-palier** dans `market.md` §Prix.
 
-Sorties → `research/raw/competitor-profiles.md`, `research/raw/pricing-intelligence.md`.
-**Critère de passage W1 :** ≥5 acteurs profilés (directs+adjacents+statu quo), prix relevé ou trou déclaré pour chacun.
+Sorties → `research/raw/competitor-profiles.md`, `research/raw/pricing-intelligence.md` (brut) + `market.md` §Dossiers + §Prix (synthèse).
+**Critère de passage W1 :** quota concurrents atteint (§Quotas) — **dossier détaillé complet** par acteur majeur + prix relevé ou trou déclaré ; statu quo présent.
 
 ### Wave 2 — Review-mining (le cœur réutilisé à l'étape 4)
 
 - **B1 review-mining** : mine G2, Capterra, TrustRadius, Product Hunt, App Store pour chaque concurrent. Extrais les **patterns** : ce qu'on loue, ce dont on se plaint, les features réclamées. Range **par concurrent** et **par thème de douleur**. **Cite en verbatim.**
-- **B2 forum-mining** : Reddit, Indie Hackers, Hacker News, Quora, communautés de niche. Cherche plaintes sur l'existant, threads « what do you use for X? », histoires de migration, contournements. Construis une **carte de langage** (les mots exacts des clients) et repère les **signaux de churn** (pourquoi on quitte chaque concurrent).
-- **Traçabilité par verbatim (obligatoire, les deux fichiers)** : chaque verbatim consigné porte **l'URL de sa page source** + le marqueur « **ouvert via WebFetch : oui / non** » (« oui » = la page a été réellement ouverte, pas seulement lue en snippet de résultat de recherche). Un verbatim sans URL n'existe pas pour l'aval ; un « non » sera plafonné à l'étape 4 (`[snippet — non vérifié]`, cf. `04/references/adversarial-verification.md`).
+- **B2 forum-mining** : Reddit, Indie Hackers, Hacker News, Quora, communautés de niche. Cherche plaintes sur l'existant, threads « what do you use for X? », histoires de migration, contournements. Construis une **carte de langage** (les mots exacts des clients, rangés : problème / solution désirée / frustrations / déclencheurs de churn) et repère les **signaux de churn** (pourquoi on quitte chaque concurrent). La carte de langage se consigne dans `market.md` §Carte de langage (**l'étape 4 en hérite telle quelle**) ; le brut reste sous `raw/`.
+- **Traçabilité par verbatim (obligatoire, les deux fichiers + la §Carte de langage)** : chaque verbatim consigné porte **l'URL de sa page source** + le marqueur « **ouvert via WebFetch : oui / non** » (« oui » = la page a été réellement ouverte, pas seulement lue en snippet de résultat de recherche). Un verbatim sans URL n'existe pas pour l'aval ; un « non » sera plafonné à l'étape 4 (`[snippet — non vérifié]`, cf. `04/references/adversarial-verification.md`).
 
-Sorties → `research/raw/review-mining.md`, `research/raw/forum-mining.md`.
+Sorties → `research/raw/review-mining.md`, `research/raw/forum-mining.md` (brut) + `market.md` §Carte de langage (verbatims sourcés).
 
 > ⚠️ **CONSERVE LE BRUT.** Ces deux fichiers sont **réutilisés tels quels par l'étape 4** (demande & edge). Ne les résume pas destructivement, ne les jette pas après synthèse. Verbatims + volumes d'avis + notes = matière première de l'inférence de demande en aval.
 
-**Critère de passage W2 :** pour chaque concurrent majeur, ≥1 thème de louange + ≥1 thème de plainte, avec verbatims ; **chaque verbatim porte son URL + le marqueur WebFetch oui/non** ; carte de langage amorcée ; volume d'avis noté (ou trou déclaré).
+**Critère de passage W2 :** quota de verbatims atteint (`checklists.md` §Quotas — ≥3 par concurrent majeur, ≥12 au total) ; pour chaque concurrent majeur, ≥1 thème de louange + ≥1 thème de plainte ; **chaque verbatim porte son URL + le marqueur WebFetch oui/non** ; §Carte de langage remplie ; volume d'avis noté (ou trou déclaré).
 
 ### Wave 3 — Signaux GTM (tranche marché uniquement)
 
@@ -169,7 +169,7 @@ La synthèse crée la valeur : ce n'est pas du formatage, c'est du **pattern-mat
 
 Exécute `vendor/.../verification-agent.md` sur `market.md`. Il classe les sources en **tiers 1/2/3**, note la **confiance** par affirmation, sépare **haute vs basse confiance**, traque : affirmations non labellisées, contradictions internes, incohérences de score, **data gaps manquants**, fausse corroboration (même source citée deux fois).
 
-Écris `research/confidence.md` selon `assets/templates/confidence.md`.
+Écris le résultat dans la section **§Fiabilité & confiance de `market.md`** (ex-`confidence.md`, fusionné poids mort §5 — plus de fichier séparé). L'étape 5 lit cette section comme plafond de confiance du verdict.
 **Si issue critique** (une affirmation structurante repose sur du seul Tier 3, ou contradiction non résolue) → **pause**, présente à l'utilisateur : corriger d'abord ou continuer ?
 **Critère de passage P3.5 :** chaque affirmation structurante a un tier + un score + ce qui la confirmerait/l'infirmerait ; data gaps déclarés.
 
@@ -177,7 +177,7 @@ Exécute `vendor/.../verification-agent.md` sur `market.md`. Il classe les sourc
 
 ## SORTIE — état & passage de relais
 
-1. `research/market.md` + `research/confidence.md` écrits. `research/raw/*` conservés (surtout review/forum-mining).
+1. `research/market.md` écrit (dossier complet, dont §Carte de langage + §Fiabilité — plus de `confidence.md` séparé). `research/raw/*` conservés (surtout review/forum-mining).
 2. Mets à jour `.saas-factory/state.md` : étape 2 faite, **tier de recherche retenu**, mode (Live/KB).
 3. **Résume en 2 lignes** : concentration du marché (fragmenté / en consolidation / dominé) + les 1-2 ouvertures les plus nettes.
 4. Annonce l'étape 3 (`03-positioning`).

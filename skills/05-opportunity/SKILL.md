@@ -1,7 +1,7 @@
 ---
 name: 05-opportunity
 description: >-
-  Étape 5 (Phase 1 · validation) de SaaS Factory — Opportunité & décision (rôle CEO, la porte de sortie). Synthétise les étapes 1→4 en un brief d'opportunité complet + un résumé 1-2 pages non-technique (le POURQUOI), pose un verdict honnête et humble, et fait décider l'utilisateur : Go / Ajuster / No-Go. Se déclenche pour « est-ce que ça vaut le coup », « décision d'opportunité », « brief d'opportunité », après demand-signals.md.
+  Étape 5 (Phase 1 · validation) de SaaS Factory — Opportunité & décision (rôle CEO, la porte de sortie). Synthétise les étapes 1→4 en UN brief d'opportunité (avec un bloc POURQUOI non-technique en tête = ce que l'humain lit pour décider), pose un verdict honnête et humble, et fait décider l'utilisateur : Go / Ajuster / Go-test / No-Go. Se déclenche pour « est-ce que ça vaut le coup », « décision d'opportunité », « brief d'opportunité », après demand-signals.md.
 allowed-tools: Read, Write, Edit, AskUserQuestion, Bash
 ---
 
@@ -28,35 +28,36 @@ Le SKILL reste l'aperçu ; chaque étape a sa procédure exhaustive en `referenc
 ## Contrat (lit / écrit)
 | Lit (les 4 inputs) | Écrit |
 |---|---|
-| `research/idea-brief.md` (problème, cible, type/route) | `research/opportunity-brief.md` — **brief complet** (template `assets/templates/opportunity-brief.md`) |
-| `research/market.md` + `research/confidence.md` | `research/opportunity-summary.md` — **1-2 pages non-tech = le POURQUOI** (template `assets/templates/opportunity-summary.md`) |
-| `research/positioning.md` | `research/post-mortem.md` — **5 lignes**, uniquement si No-Go |
-| `research/demand-signals.md` | `research/go-test.md` — **seuil pré-enregistré + résultat**, uniquement si issue Go-test |
-| | `.saas-factory/state.md` — étape, décision, porte franchie |
+| `research/idea-brief.md` (problème, cible, type/route) | `research/opportunity-brief.md` — **le SEUL livrable de décision** (template `assets/templates/opportunity-brief.md`) : bloc §Décision (POURQUOI, non-tech) en tête **+** le détaillé traçable |
+| `research/market.md` (dont §Dossiers, §Prix, §Carte de langage, **§Fiabilité**) | `research/post-mortem.md` — **5 lignes**, uniquement si No-Go |
+| `research/positioning.md` | `research/go-test.md` — **seuil pré-enregistré + résultat**, uniquement si issue Go-test |
+| `research/demand-signals.md` | `.saas-factory/state.md` — étape, décision, porte franchie |
 
-Si un input attendu manque (selon le `type`), **dis-le** dans les livrables plutôt que de combler. Jamais de secret dans ces fichiers.
+Si un input attendu manque (selon le `type`), **dis-le** dans le livrable plutôt que de combler. Jamais de secret dans ces fichiers.
+> **Fusion poids mort §5.** `opportunity-summary` et `confidence` **n'existent plus en fichiers séparés** : le POURQUOI est le bloc §Décision **en tête** de l'`opportunity-brief` ; la confiance de la recherche est héritée de `market.md` §Fiabilité et reportée dans §Fiabilité du dossier du brief. Régime cible : `research/` = 5 fichiers (idea-brief, market, positioning, demand-signals, opportunity-brief) + raw/.
 
-## Pourquoi DEUX livrables (ne pas les confondre)
-- `opportunity-brief.md` = **la matière**, détaillée et traçable, pour que la **Phase 2** démarre sans re-fouiller. On y garde tout : chiffres, sources, nuances, risques.
-- `opportunity-summary.md` = **la décision**, distillée. Double emploi, pas orphelin : (a) **livrable de la porte** — ce que **l'humain lit** pour décider Go / Ajuster / No-Go ; (b) **entrée du cadrage Phase 2** — le POURQUOI qui ouvre le produit une fois le Go acté. Une seule question : *est-ce pertinent de continuer, oui ou non, et pourquoi ?* — en langage marché/fonctionnel qu'un **non-technique** comprend. Si le résumé oblige à ouvrir le brief pour trancher, il a raté sa mission.
+## Un seul livrable, deux fonctions (ne pas les confondre)
+L'`opportunity-brief.md` porte **deux registres dans un fichier** :
+- **§Décision — le POURQUOI** (en tête) = **la décision**, distillée, **non-technique**, **auto-suffisante**. Double emploi : (a) **ce que l'humain lit à la porte** pour décider Go / Ajuster / Go-test / No-Go ; (b) **entrée du cadrage Phase 2** — le POURQUOI qui ouvre le produit une fois le Go acté. Une seule question : *est-ce pertinent de continuer, oui ou non, et pourquoi ?* Si ce bloc oblige à descendre dans le détail pour trancher, il a raté sa mission.
+- **Le détaillé** (sous la ligne) = **la matière**, traçable, pour que la **Phase 2** démarre sans re-fouiller : chiffres, sources, nuances, concurrents cités, risques.
 
-Les deux disent la **même** vérité. Le résumé n'est pas une version « adoucie ».
+Les deux disent la **même** vérité. Le POURQUOI n'est **pas** une version « adoucie » du détail (test de cohérence obligatoire, cf. `references/writing-deliverables.md`).
 
 ## Procédure
 ### 1. Rassembler et confronter les 4 inputs
 Charge les quatre fichiers et **confronte-les** — c'est là que se cachent les décisions. Cherche les **contradictions** (ex. `demand-signals` dit « douleur forte » mais `market` montre 40 concurrents installés → problème réel *mais* créneau saturé). Une synthèse honnête **nomme** ces tensions ; elle ne moyenne pas les signaux pour un tiède rassurant. Vérifie le **`type`** : `public` = 4 inputs → étape complète ; `interne`/`perso` = étape **allégée** (voir bas), n'invente pas le marché manquant. → Procédure, matrice de confrontation et routage input-manquant : `references/synthesis-and-confrontation.md`.
 
-### 2. Écrire `research/opportunity-brief.md` (le détaillé)
-En citant la **source** et en **labellisant** chaque affirmation forte : Problème · Cible (resserrés par ce que la recherche a confirmé/démenti) · Marché (taille avec l'hypothèse de calcul, jamais un chiffre nu ; dynamique) · Concurrents clés (menace honnête High/Medium/Low, ce qu'ils font **bien**) · Demande (signal *par proxy* — « plausible », jamais « prouvée ») · Edge (ou absence assumée) · Risques (les vrais tueurs d'abord) · Pertinence (ta lecture argumentée) · Verdict + **Flags**. → Section-par-section (MOU→FORT) + DoD : `references/writing-deliverables.md`.
+### 2. Écrire le détaillé de `research/opportunity-brief.md`
+En citant la **source** (cite les concurrents nommément, avec leur prix et une preuve/verbatim de `market.md`) et en **labellisant** chaque affirmation forte : Problème · Cible (resserrés par ce que la recherche a confirmé/démenti) · Marché (taille avec l'hypothèse de calcul, jamais un chiffre nu ; dynamique) · Concurrents clés (menace honnête High/Medium/Low, ce qu'ils font **bien**) · Demande (signal *par proxy* — « plausible », jamais « prouvée ») · Edge (ou absence assumée) · Risques (les vrais tueurs d'abord) · **Fiabilité du dossier** (héritée de `market.md` §Fiabilité = plafond de confiance) · Pertinence · Verdict + **Flags** · **Annexe Mom-Test**. → Section-par-section (MOU→FORT) + DoD : `references/writing-deliverables.md`.
 
-### 3. Écrire `research/opportunity-summary.md` (le POURQUOI, 1-2 pages)
-**1 à 2 pages MAX**, **zéro jargon**. Structure : (1) Le problème en 1 phrase · (2) Ce qu'on a trouvé (marché/concurrents/demande, en clair) · (3) Le POURQUOI (le cœur : *pourquoi* continuer ou pas — un raisonnement, pas un score) · (4) Recommandation Go/Ajuster/No-Go + « à toi de décider » · (+) **Annexe hors pagination : kit interviews — 5 questions Mom-Test dérivées des pain themes** de `demand-signals.md`, pour que « à valider par toi » soit actionnable. → Recette forcing du bloc « POURQUOI », recette de l'annexe + test de cohérence brief↔résumé : `references/writing-deliverables.md`.
+### 3. Écrire le bloc **§Décision — le POURQUOI** (en tête du MÊME fichier)
+C'est ce que **l'humain lit à la porte** : **zéro jargon**, **auto-suffisant** (on décide sans descendre dans le détail). Structure : (1) Le problème en 1 phrase · (2) Ce qu'on a trouvé (marché/concurrents/demande, en clair) · (3) Le POURQUOI (le cœur : *pourquoi* continuer ou pas — un raisonnement, pas un score) · (4) Recommandation Go/Ajuster/Go-test/No-Go + « à toi de décider ». Le kit interviews Mom-Test reste en **annexe** (hors pagination). → Recette forcing du bloc « POURQUOI », recette de l'annexe + **test de cohérence POURQUOI↔détaillé** : `references/writing-deliverables.md`.
 
 ### 4. Poser le verdict — honnête ET humble
-Croise **marché × edge × demande × risques**. **On hérite, on ne re-cote pas** : Demande & Edge héritent des verdicts de l'étape 4 (table d'héritage, plafonnée par `confidence.md`) ; Marché hérite de `market.md` § « Taille servable & dynamique » ; Risques s'énumèrent via la mini-taxonomie (5 familles). Deux garde-fous : **anti-flagornerie** (prends position, bannis « intéressant » / « ça peut marcher » ; si l'idée doit mourir, dis-le + dis ce qui changerait ton avis) ; **humilité** (demande inférée des avis → « plausible », « à valider par toi », jamais une certitude). → Table d'héritage + cotation des axes + matrice de décision + clause « ce qui le ferait basculer » : `references/verdict-engine.md`.
+Croise **marché × edge × demande × risques**. **On hérite, on ne re-cote pas** : Demande & Edge héritent des verdicts de l'étape 4 (table d'héritage, plafonnée par `market.md` §Fiabilité) ; Marché hérite de `market.md` § « Taille servable & dynamique » ; Risques s'énumèrent via la mini-taxonomie (5 familles). Deux garde-fous : **anti-flagornerie** (prends position, bannis « intéressant » / « ça peut marcher » ; si l'idée doit mourir, dis-le + dis ce qui changerait ton avis) ; **humilité** (demande inférée des avis → « plausible », « à valider par toi », jamais une certitude). → Table d'héritage + cotation des axes + matrice de décision + clause « ce qui le ferait basculer » : `references/verdict-engine.md`.
 
 ### 5. LA PORTE — décision explicite via `AskUserQuestion`
-Présente le **résumé 1-2 pages** + ton **verdict**, puis demande explicitement l'une des **quatre** issues. **N'écris jamais la suite sans sa réponse.** → Machine à états, recette forcing de la porte (réponses à refuser) + routage détaillé : `references/gate-and-routing.md`.
+Présente le **bloc §Décision — le POURQUOI** (en tête du brief, non-technique, auto-suffisant) + ton **verdict**, puis demande explicitement l'une des **quatre** issues. **N'écris jamais la suite sans sa réponse.** → Machine à états, recette forcing de la porte (réponses à refuser) + routage détaillé : `references/gate-and-routing.md`.
 
 | Choix | Ce que ça déclenche |
 |---|---|
@@ -73,4 +74,4 @@ Présente le **résumé 1-2 pages** + ton **verdict**, puis demande explicitemen
 Mets à jour `.saas-factory/state.md` (étape 5 done, décision, porte franchie). Résume en 2 lignes et annonce la suite (Phase 2, reboucle, Go-test en cours, ou arrêt). → Table de clôture par issue (Go/Ajuster/Go-test/No-Go) : `references/gate-and-routing.md`.
 
 ## Cas `type = perso` ou `interne` — étape 5 **allégée**
-Pas d'analyse de marché → la question change : plus « le marché en veut-il ? » mais **« est-ce utile — assez pour justifier de le construire ? »**. Livrables réduits : pas de brief marché complet ; un **`opportunity-summary` court** centré sur le besoin réel (perso) ou le **fit** outils/process/sécurité (interne), l'effort vs le gain, les non-goals. La porte reste explicite (même Go/Ajuster/No-Go). Ne surdimensionne pas — la décision porte sur l'**utilité**. → Recadrage utilité/fit, forcing-questions dédiées + DoD : `references/lite-mode.md`.
+Pas d'analyse de marché → la question change : plus « le marché en veut-il ? » mais **« est-ce utile — assez pour justifier de le construire ? »**. Livrable réduit : l'`opportunity-brief` **limité à son bloc §Décision** centré sur le besoin réel (perso) ou le **fit** outils/process/sécurité (interne), l'effort vs le gain, les non-goals ; sections marché « non applicable (route allégée) ». La porte reste explicite (même Go/Ajuster/No-Go). Ne surdimensionne pas — la décision porte sur l'**utilité**. → Recadrage utilité/fit, forcing-questions dédiées + DoD : `references/lite-mode.md`.

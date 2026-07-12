@@ -2,7 +2,7 @@
 
 Playbook **court** de la 4e issue de la porte. Objectif : convertir « demande plausible, à valider par toi » en **test réel au coût minimal** — l'usine sait déjà construire des landings. Un Go-test réussi produit le premier signal **Tier 1/2** (inscriptions = comportement) de tout le pipeline ; tout ce qui précède est du proxy Tier 3.
 
-**Périmètre** : route `public` uniquement (un outil interne/perso ne se waitlist pas). Ce n'est **pas** un démarrage de Phase 2 : zéro build produit, la landing ne promet que ce que l'`opportunity-summary` dit.
+**Périmètre** : route `public` uniquement (un outil interne/perso ne se waitlist pas). Ce n'est **pas** un démarrage de Phase 2 : zéro build produit, la landing ne promet que ce que le bloc **§Décision** de l'`opportunity-brief` dit.
 
 ## HARD GATE — le seuil se pré-enregistre AVANT publication
 
@@ -41,6 +41,6 @@ Le seuil, la fenêtre et le canal de diffusion s'écrivent dans `research/go-tes
 
 ## Garde-fous
 
-- **Interviews en parallèle** : l'annexe Mom-Test de l'`opportunity-summary` (5 questions dérivées des pain themes) se joue pendant la fenêtre — deux signaux réels valent mieux qu'un.
+- **Interviews en parallèle** : l'annexe Mom-Test de l'`opportunity-brief` (5 questions dérivées des pain themes) se joue pendant la fenêtre — deux signaux réels valent mieux qu'un.
 - Une waitlist qui convertit reste une **intention**, pas un revenu : le Go issu d'un Go-test reste un Go **prudent** (willingness-to-pay non prouvée).
 - Jamais de secret/clé dans `go-test.md` ; landing sans collecte au-delà de l'email (pas de données sensibles).

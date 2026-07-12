@@ -29,8 +29,10 @@ Pourquoi une surcouche maison : les moteurs produisent de la **matière** ; le *
 **HARD GATE / frontière (anti-doublon).** L'étape 3 a formalisé l'angle candidat (phrase Onliness candidate comprise) : tu la **reprends**, tu la **précises** (la niche) et tu **tranches** — LA frontière qui compte : **le verdict edge (réel / faible / absent) t'appartient**. Toi tu **produis** le verdict · l'étape 5 le **pèse** dans la décision. Ne décide **pas** Go ici.
 
 ## Entrées / sortie (contrat)
-- **Lit :** `research/market.md` (le **review-mining** de l'étape 2, dont `research/raw/`) + `research/positioning.md` (l'angle candidat formalisé).
+- **Lit :** `research/market.md` (le dossier marché détaillé de l'étape 2) + `research/raw/` (review/forum-mining brut) + `research/positioning.md` (l'angle candidat formalisé). Dans `market.md`, tu **hérites** directement de : **§Carte de langage** (verbatims sourcés — tu ne re-mines pas), **§Dossiers concurrents détaillés** + **§Matrice** + **§Prix** (le paysage concurrentiel RÉEL contre lequel l'edge se juge), **§Fiabilité** (plafond de confiance).
 - **Écrit :** `research/demand-signals.md` (template `assets/templates/demand-signals.md`) — sortie **unique**, deux blocs — + `.saas-factory/state.md` (verdict demande, verdict edge).
+
+> **Anti-re-mining (non négociable) :** l'étape 2 a déjà miné les avis et bâti la carte de langage. Tu la **reprends telle quelle** ; tu n'ouvres pas de nouvelles pages. Un verbatim marqué WebFetch=non reste `[snippet — non vérifié]` (il n'étaie ni « demande Forte » ni « edge réel »).
 
 ## Deux principes qui gouvernent cette étape
 - **Signal par proxy → verdict humble.** L'IA ne fait pas d'interviews. Les avis concurrents sont un **proxy** (Tier 3). Conclusion possible : « demande **plausible** » — **jamais** « demande prouvée ». Toujours « à valider par toi ».
@@ -40,10 +42,11 @@ Pourquoi une surcouche maison : les moteurs produisent de la **matière** ; le *
 > Procédure exhaustive (passes, matrices, forcing-questions, DoD, cas limites, modes d'échec) → `references/demand-signal-procedure.md`.
 
 ### Quoi extraire de `market.md`, dans cet ordre (du volume vers la douleur)
-1. **Volume d'avis + notes moyennes** — par concurrent puis agrégé. Beaucoup d'avis = marché actif ; très peu = immature **ou** faible switching — dis lequel, ne devine pas.
-2. **Plaintes récurrentes** — les *pain themes* partagés par **plusieurs** concurrents + leur **sévérité** (agacement / bloquant / rédhibitoire). Une douleur partagée = problème **structurel** = vraie demande.
-3. **Features réclamées** — ce que les clients demandent et n'ont pas. Signal le plus direct.
-4. **Signaux de churn** — pourquoi les gens **partent**. Le seul « comportement » observable par proxy.
+Tu pars de la **§Carte de langage** (déjà rangée en problème / solution désirée / frustrations / churn) + du volume d'avis consigné en `raw/` — pas de re-mining.
+1. **Volume d'avis + notes moyennes** — par concurrent puis agrégé (`raw/review-mining.md`). Beaucoup d'avis = marché actif ; très peu = immature **ou** faible switching — dis lequel, ne devine pas.
+2. **Plaintes récurrentes** — les *pain themes* partagés par **plusieurs** concurrents + leur **sévérité** (agacement / bloquant / rédhibitoire), lus dans §Carte de langage « frustrations ». Une douleur partagée = problème **structurel** = vraie demande.
+3. **Features réclamées** — §Carte de langage « solution désirée » : ce que les clients demandent et n'ont pas. Signal le plus direct.
+4. **Signaux de churn** — §Carte de langage « déclencheurs de churn » : pourquoi les gens **partent**. Le seul « comportement » observable par proxy.
 
 ### Verdict de demande (libellés — source unique en référence)
 Trois verdicts possibles : **Fort / Moyen / Faible**. La rubrique déterministe complète (conditions exhaustives, matrice de départage, bandes de volume) vit dans `references/demand-signal-procedure.md` §2 — **source unique**, à appliquer sans négocier. En un mot : Fort exige volume élevé + douleur partagée sévère + features convergentes + churn ; au moindre doute entre deux crans, **descends**.
@@ -57,7 +60,7 @@ Applique `vendor/startup-skill/startup-competitors/references/verification-agent
 ## BLOC 2 — Edge
 > Procédure exhaustive (machine à états, matrice de tranche, test de défendabilité, forcing-questions, sortie « pas d'edge », DoD, modes d'échec) → `references/edge-procedure.md`.
 
-1. **Reprends l'angle candidat** de `positioning.md` (phrase Onliness candidate comprise) + les **manques concurrents** de `market.md`.
+1. **Reprends l'angle candidat** de `positioning.md` (phrase Onliness candidate comprise) + les **manques concurrents** de `market.md` — jugés contre le **paysage RÉEL détaillé** (§Dossiers concurrents détaillés + §Matrice + §Prix), pas contre une idée vague de la concurrence. Un « manque » qu'un dossier détaillé contredit n'en est pas un.
 2. **Formule l'axe** : reprends la phrase de l'étape 3, précise la niche — une phrase orientée client : *le seul {catégorie} qui {différenciateur} pour {niche}*.
 3. **Tranche** : trois verdicts possibles — **Edge réel / Edge faible / Pas d'edge**. Les critères des trois, la matrice de départage et le test de défendabilité vivent dans `references/edge-procedure.md` §2 — **source unique**. En un mot : Edge réel = manque **partagé** (≥2 concurrents) + **réclamé** dans les avis + **défendable** (pas copiable en un sprint).
 4. **Si pas d'edge : dis-le, net.** N'invente rien. Écris que le produit reste **viable à features égales, bien exécuté sur une niche** — et renvoie l'arbitrage « on y va quand même ? » à l'étape 5.

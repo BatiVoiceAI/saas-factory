@@ -46,7 +46,7 @@ Règles de reprise :
 
 La porte est **portée par `05-opportunity`** (`skills/05-opportunity/references/gate-and-routing.md`), mais l'orchestrateur garantit la règle : **on ne franchit jamais une porte sans décision explicite de l'utilisateur, en langage clair + une preuve.**
 
-- **La preuve** = `research/opportunity-summary.md` (1-2 pages non-tech = le POURQUOI). L'utilisateur ne lit **jamais** un artefact technique pour décider.
+- **La preuve** = le bloc **§Décision** en tête de `research/opportunity-brief.md` (non-tech = le POURQUOI ; ex-`opportunity-summary.md`, fusionné §5). L'utilisateur ne lit **jamais** un artefact technique pour décider.
 - **La décision** = `AskUserQuestion` à trois issues : **Go / Ajuster / No-Go**. Pas de franchissement implicite, pas de « je suppose que c'est go ».
 - **Le verdict reste humble** : demande *plausible*, jamais *prouvée* (signal par proxy, cf. `conventions.md` principe n°3). Un résumé qui rassure à tort est un échec.
 - **En sortie de porte**, écrire la ligne dans « Portes franchies » de `state.md` (décision + date), puis router selon l'issue (§4).
@@ -70,6 +70,6 @@ Règles de retour arrière :
 
 ## 5. Issues terminales
 
-- **Go** → Statut `fait`, porte inscrite, Phase 1 close. Passation Phase 2 : `research/opportunity-brief.md` (la matière) + `research/opportunity-summary.md` (le POURQUOI) sont les entrées de `phase-2-product`. Annoncer le passage au cadrage produit.
+- **Go** → Statut `fait`, porte inscrite, Phase 1 close. Passation Phase 2 : `research/opportunity-brief.md` (la matière traçable **+** son bloc §Décision en tête = le POURQUOI) est l'entrée de `phase-2-product`. Annoncer le passage au cadrage produit.
 - **No-Go** → `05-opportunity` écrit `research/post-mortem.md` (5 lignes : ce qui l'a tué, ce qu'on a appris). **Arrêt propre** : porte inscrite (`No-Go` + date), pas de suite produit, projet archivé sans bluff. Un No-Go honnête et rapide est un **succès** de la phase, pas un échec.
 - **Ajuster** → §4, on reste en Phase 1.

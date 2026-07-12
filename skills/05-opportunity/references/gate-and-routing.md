@@ -35,7 +35,7 @@ Le retour arrière est autorisé **à tout moment** (cf. protocole de porte, `co
 
 ## Recette forcing — poser la porte (`AskUserQuestion`)
 
-- **Présente d'abord** : le résumé 1-2 pages + ton verdict net (avec sa clause de bascule). Pas le brief entier — le résumé se suffit.
+- **Présente d'abord** : le **bloc §Décision — le POURQUOI** (en tête de l'`opportunity-brief`, non-technique) + ton verdict net (avec sa clause de bascule). Pas le détaillé — le bloc §Décision se suffit.
 - **Ask exact** : quatre issues nommées, **Go / Ajuster / Go-test / No-Go**, chacune avec sa conséquence en une ligne (ce que ça déclenche). Propose **Go-test** en particulier quand le verdict est « Go prudent » ou « Ajuster » faute de signal terrain : c'est le pont proxy → réel au coût minimal (`go-test-playbook.md`).
 - **Push jusqu'à** : une des quatre est **choisie**. Un « peut-être », « on verra », « ça dépend » n'est **pas** une réponse → reformule le trade-off et redemande.
 - **Red flags — réponses à ne pas traiter comme un franchissement** :

@@ -1,42 +1,48 @@
 ---
 name: 07-product-spec
 description: >-
-  Étape 7 (Phase 2 · cadrage produit) de SaaS Factory — Spec produit / PRD (rôle PM). Le cœur de la phase : traduit le besoin validé en Phase 1 en un PRD complet et exploitable — features, specs, priorisation MoSCoW/RICE, user stories avec critères d'acceptation, dépendances et non-goals — en pilotant la tranche « Product » du moteur vendoré startup-design. Se déclenche pour « faire le PRD », « spécifier le produit », « lister les features », après le business model.
+  Étape 7 (Phase 2 · cadrage produit) de SaaS Factory — Spec produit / PRD (rôle PM, profondeur exigée). Le cœur de la phase : traduit le besoin validé en Phase 1 en un PRD complet et exploitable — features, priorisation MoSCoW/RICE, MVP, dépendances, non-goals — et des fiches feature PROFONDES par Must (objectif, flow détaillé, tous les états, règles métier, boucles fermées, critères d'acceptation testables, volet technique/contrat logique). Pilote la tranche « Product » du moteur vendoré startup-design. Se déclenche pour « faire le PRD », « spécifier le produit », « lister les features », après le business model.
 allowed-tools: Read, Write, Edit, AskUserQuestion, Bash
 ---
 
 # SaaS Factory — Étape 7 : Spec produit / PRD (rôle PM)
 
-Objectif : produire un **PRD complet et exploitable** — la définition de *ce qu'on construit* — **fidèle au besoin validé en Phase 1**. Agis comme un **vrai PM** : tu ne réinventes pas le besoin, tu le traduis en features, specs, priorités et user stories testables. Un PRD sert la Phase 3 (build) : s'il est flou, tout l'aval sera flou.
+Objectif : produire un **PRD complet et exploitable** — la définition de *ce qu'on construit* — **fidèle au besoin validé en Phase 1**. Agis comme un **vrai PM / vrai CEO** : tu ne réinventes pas le besoin, tu le traduis en features, priorités et fiches **profondes** (vraies descriptions produit, fonctionnelles **et** techniques, critères testables). **Qualité avant vitesse** : ici on ne cherche pas la rapidité mais la profondeur actionnable — chaque feature Must exécutée avec le plus grand soin. Un PRD sert la Phase 3 (build) : s'il est flou, tout l'aval sera flou.
 
 ## HARD GATE
-Ici : la **définition produit** (features, specs, priorisation MoSCoW/RICE, user stories, dépendances, non-goals). **Pas de design** (charte, tokens, maquettes, UI) = étape 8. **Pas d'architecture ni de choix techniques** (stack, schéma de données, build order technique) = Phase 3. Le PRD décrit *le quoi*, pas *le comment technique* ni *le look*. Livrables : les artefacts `product/` du contrat.
+Ici : la **définition produit** — features, priorisation MoSCoW/RICE, MVP, **fiches feature profondes**, boucles fermées, dépendances, non-goals. Le PRD décrit *le quoi* (fonctionnel **et** contrat logique), pas *le comment technique concret* ni *le look*.
+- **Pas de design** (charte, tokens, maquettes, UI) = étape 8.
+- **Pas d'archi ni de choix techniques concrets** (stack, schéma SQL, index, migrations, routes exactes, découpage services) = Phase 3. Le **volet technique** du PRD reste le **contrat logique** : entités touchées, actions logiques, validations, invariants — cohérent avec 09, jamais son travail.
+- **Échec du gate** si une feature **Must** n'a pas **flow + états + critères testables + volet technique** (`references/feature-spec-depth.md`), ou si une **action de valeur** n'a pas sa **boucle fermée** documentée (`_shared/boucles-fermees.md`).
+
+Livrables : les artefacts `product/` du contrat.
 
 ## À lire d'abord (une fois)
-`_shared/lessons.md`, `_shared/safety-rails.md` ; si présent, `skills/phase-2-product/references/conventions.md`.
+`_shared/lessons.md`, `_shared/safety-rails.md`, `_shared/boucles-fermees.md` (doctrine — dérivation des boucles) ; si présent, `skills/phase-2-product/references/conventions.md`.
 
 ## Profondeur (references/ — la procédure exhaustive)
 Ce SKILL.md est le **chef d'orchestre scannable**. La procédure détaillée (sous-procédures, matrices de décision, checklists, diagrammes, cas limites, modes d'échec) vit dans `references/` :
-- `references/procedure.md` — le déroulé complet des 6 étapes (data-flow, étapes 1→3 en profondeur, DoD du PRD entier).
+- `references/procedure.md` — le déroulé complet des 6 étapes (data-flow, fusion §5, DoD du PRD entier).
 - `references/forcing-questions.md` — recettes d'auto-interrogation par point de décision (Ask exact / Push-until / Red-flags / MOU-vs-FORT / Routage) + les rares cas où l'on interroge l'utilisateur (R1).
-- `references/prioritization.md` — MoSCoW + RICE (étape 4) : test de retrait, barèmes, MVP.
-- `references/acceptance-criteria.md` — user stories + Given/When/Then (étape 5) + catalogue de cas limites.
+- `references/prioritization.md` — MoSCoW + RICE (étape 3) : test de retrait, barèmes, MVP.
+- `references/feature-spec-depth.md` — **l'anatomie de la fiche feature profonde** (étape 5) : les 11 sections, catalogue d'états, règles métier, frontière du volet technique avec 09.
+- `references/acceptance-criteria.md` — user stories + Given/When/Then + catalogue de cas limites (méthode appliquée dans la fiche).
 - `references/dependencies-build-order.md` — DAG, tri topologique, arbitrage dépendance vs RICE (étape 6).
-- `references/completeness-baseline.md` — le socle « produit complet » (Must d'office pour tout SaaS public) + l'aha moment (étapes 1, 2 et 4).
+- `references/completeness-baseline.md` — le socle « produit complet » S1-S8 (Must d'office, universel aux 3 types) + l'aha moment (étapes 1, 2 et 3).
 
 ## L'engine (à exécuter, pas refaire)
 La **Phase 6 « Product »** de `startup-design` est l'engine. Lis `vendor/startup-skill/startup-design/SKILL.md` (section Phase 6) + `vendor/startup-skill/startup-design/references/frameworks.md` (RICE, MoSCoW, JTBD, Value Proposition Canvas). Suis sa procédure de définition produit + priorisation, et **redirige les sorties vers nos chemins `product/`**. Ta surcouche PM = la structure PRD complète + les user stories détaillées + les critères d'acceptation.
 
 ## Procédure (déterministe, dans l'ordre)
-Aperçu ci-dessous ; la sous-procédure exhaustive de chaque étape est dans `references/` (pointeurs indiqués).
-1. **Reprendre le besoin + le contexte.** Synthétise en tête du PRD : problème, cible (persona précis), **workflow cœur**, edge (ou absence assumée), intégrations attendues. Nomme l'**aha moment** (première action de valeur) + le **chemin le plus court** pour y arriver. Tout le reste doit s'y rattacher. → `references/procedure.md` (étape 1) + `references/completeness-baseline.md` (§ Aha moment).
-2. **Lister toutes les features.** Dérive la liste **complète** depuis : (a) le workflow cœur, (b) les features réclamées (`demand-signals`), (c) les manques concurrents (`opportunity-brief`), (d) le **socle « produit complet »** injecté **d'office** pour tout SaaS public (onboarding wizard qui crée l'entité cœur, profil/settings, empty states, emails brandés, légal FR, 404, seed data — `references/completeness-baseline.md`). Vise un **bouquet cohérent autour d'UN workflow cœur** — niché, pas mono-feature, pas plateforme horizontale. → `references/procedure.md` (étape 2).
-3. **Décliner chaque feature en spec.** Pour chacune : quoi, pour qui, comportement attendu, cas limites, et **ce qu'elle n'inclut pas**. Une fiche par feature Must/Should (`product/features/NN-*.md`, template `feature.md`). → `references/procedure.md` (étape 3) + catalogue de cas limites dans `references/acceptance-criteria.md`.
-4. **Prioriser — MoSCoW + RICE :** **Must** = le MVP (sans quoi le produit ne résout pas le problème cœur) · **Should/Could** = itérations suivantes · **Won't have (this time)** = **non-goals explicites** (nomme ce qu'on ne fait pas — protège le scope). **RICE** (reach × impact × confidence ÷ effort) pour départager. Le socle « produit complet » reste **Must d'office** (exempté du test de retrait — on l'adapte à la niche, on ne le débat pas). → `references/prioritization.md`.
-5. **User stories + critères d'acceptation.** Pour chaque feature Must/Should : « **En tant que** \<persona\>, **je veux** \<action\>, **afin de** \<bénéfice\> » + **critères d'acceptation testables** (style Given/When/Then). C'est **ça** qui rend le PRD exécutable — une story sans critère d'acceptation n'est pas finie. → `references/acceptance-criteria.md`.
-6. **Dépendances + build order.** Mappe les dépendances entre features → **ordre de construction**. Alimente directement le plan de la Phase 3. → `references/dependencies-build-order.md`.
+Aperçu ci-dessous ; la sous-procédure exhaustive de chaque étape est dans `references/` (pointeurs indiqués). **On priorise (3) AVANT de spécifier en profondeur (5)** : la priorisation est *cheap*, la profondeur est *chère* — on ne déploie les fiches complètes que sur les **Must**.
+1. **Reprendre le besoin + le contexte.** Synthétise en tête du PRD : problème, cible (persona précis), **type de produit**, **workflow cœur**, edge, intégrations. **Nomme les actions de valeur** (créer/modifier/annuler l'entité) et l'**aha moment** (première action de valeur) + le **chemin le plus court** pour y arriver. → `references/procedure.md` (étape 1) + `references/completeness-baseline.md` (§ Aha moment).
+2. **Lister toutes les features.** Dérive la liste **complète** depuis : (a) le workflow cœur, (b) les features réclamées (`demand-signals`), (c) les manques concurrents (`opportunity-brief`), (d) le **socle « produit complet » S1-S8** injecté **d'office** (onboarding wizard qui crée l'entité cœur, profil/settings, empty states, emails/notifs brandés, légal FR, 404, seed data, **metadata/favicon** — universel aux 3 types, `references/completeness-baseline.md`). **Bouquet cohérent autour d'UN workflow cœur** — niché, pas mono-feature, pas plateforme. → `references/procedure.md` (étape 2).
+3. **Prioriser — MoSCoW + RICE → figer le MVP.** **Must** = le MVP · **Should/Could** = itérations · **Won't (this time)** = **non-goals explicites**. **RICE** pour départager. Socle « produit complet » = **Must d'office** (exempté du test de retrait — on l'adapte, on ne le débat pas). Écrit dans `product-spec.md` § Priorisation **et** § MVP (fusion §5). → `references/prioritization.md`.
+4. **Boucles fermées — aucune action de valeur muette.** Pour **chaque** action de valeur, remplis les **5 questions** (`_shared/boucles-fermees.md`) → confirmations, notifications à la contrepartie, liens réversibles, rappels, traces. Universel aux 3 types (canal adapté). Chaque « oui » = une exigence répercutée dans la fiche + un critère. Écrit dans `product-spec.md` § Boucles fermées. → `references/procedure.md` (étape 4).
+5. **Fiches feature profondes (le cœur de la qualité).** Pour **chaque Must** : une fiche `product/features/NN-*.md` (template `feature.md`) avec **objectif/job, persona, user story, flow détaillé étape par étape, tous les états (vide/chargement/succès/erreur/edge), règles métier, boucles fermées, critères d'acceptation testables (Given/When/Then), volet technique (entités/actions/validations/invariants — contrat logique cohérent avec 09)**. Should = fiche allégée. → `references/feature-spec-depth.md` + `references/acceptance-criteria.md`.
+6. **Dépendances + build order.** Mappe les dépendances entre features → **ordre de construction** (`product-spec.md` § Dépendances & build order). Alimente directement le plan de la Phase 3. → `references/dependencies-build-order.md`.
 
-Aux points de décision (workflow cœur, feature orpheline, frontière, périmètre MVP, story, cycle de dépendances), applique les recettes forcing-question de `references/forcing-questions.md`.
+Aux points de décision (workflow cœur, feature orpheline, périmètre MVP, boucle muette, flow/états, frontière, volet technique, cycle de dépendances), applique les recettes forcing-question de `references/forcing-questions.md` (Q1-Q11).
 
 ## Contrat (lit/écrit)
 - **Lit :**
@@ -44,22 +50,24 @@ Aux points de décision (workflow cœur, feature orpheline, frontière, périmè
   - `research/opportunity-brief.md` (marché, edge, risques)
   - `research/positioning.md` (angle)
   - `research/demand-signals.md` (features réclamées, manques concurrents)
-  - `product/business-model.md` (modèle éco., segments, revenue streams — étape 6) — ancre le scope et les priorités sur le modèle validé
+  - `product/business-model.md` (modèle éco., segments, revenue streams — étape 6) — ancre le scope et les priorités
+  - `_shared/boucles-fermees.md` (doctrine — dérivation des 5 questions par action de valeur)
   - **Tout le PRD en découle — jamais de page blanche.**
 - **Écrit :**
-  - `product/product-spec.md` — le **PRD** complet (template `assets/templates/product-spec.md`) : contexte, scope, **aha moment** (§ dédié), features, **socle « produit complet »** (§ dédié, adapté à la niche), priorisation, user stories, dépendances, non-goals.
-  - `product/features/NN-<slug>.md` — une fiche par feature Must/Should (template `feature.md`).
-  - `product/user-stories.md` (template `user-stories.md`) — toutes les stories + critères d'acceptation.
-  - `product/feature-prioritization.md` (template `feature-prioritization.md`) — matrice MoSCoW/RICE + build order.
-  - `product/mvp-definition.md` (template `mvp-definition.md`) — périmètre **MVP** (Must) + success criteria + out-of-scope.
+  - `product/product-spec.md` — le **PRD** unique (template `product-spec.md`) : contexte + type, scope + actions de valeur, **aha moment**, features, **socle « produit complet » S1-S8** (adapté au type/à la niche), **§ Priorisation (MoSCoW + RICE)**, **§ MVP** (hypothèse + Must + success criteria + out-of-scope), **§ Boucles fermées**, **§ Dépendances & build order**, **§ Périmètre livré (référence pricing)**, **§ Non-goals**. Absorbe l'ex-priorisation + l'ex-MVP (fusion §5).
+  - `product/features/NN-<slug>.md` — une fiche **profonde** par Must (allégée par Should), template `feature.md`. **Foyer unique** de la user story + des critères d'acceptation.
   - `.saas-factory/state.md` — mise à jour de l'état (étape 7 faite, features Must + périmètre MVP + non-goals).
+  - **Renvois (compatibilité aval — fusion §5, à repointer côté aval) :** `product/feature-prioritization.md`, `product/mvp-definition.md`, `product/user-stories.md` = simples **pointeurs** vers `product-spec.md` / les fiches (templates de même nom), **zéro contenu dupliqué**.
 
 ## Garde-fous PM (le « parfait » se joue ici)
 - **Fidélité Phase 1.** Chaque feature se rattache à un élément du besoin validé. Une feature orpheline → coupe-la ou passe-la en Won't.
 - **Niché, pas gonflé.** UN workflow cœur bien fait + le strict nécessaire. Le MVP = **le plus petit qui résout vraiment le problème**.
-- **Complet, pas creux.** Pour tout SaaS public, le socle « produit complet » (`references/completeness-baseline.md`) est en **Must d'office** : il ne compte pas comme du gonflement — un MVP « petit » reste un **produit fini**, pas un squelette de features.
-- **Testable.** Chaque story a des critères d'acceptation vérifiables.
+- **Profond, pas titré.** Chaque Must a **flow + états + règles + critères + volet technique** (`feature-spec-depth.md`). Une fiche d'une ligne = spec non finie = échec du gate.
+- **Complet, pas creux.** Le socle « produit complet » S1-S8 (`completeness-baseline.md`) est **Must d'office**, universel aux 3 types (canal adapté) : un MVP « petit » reste un **produit fini**, pas un squelette.
+- **Aucune action de valeur muette.** Chaque action ferme sa boucle (`_shared/boucles-fermees.md`) : confirmation à l'acteur, notification à la contrepartie, trace consultable. Canal adapté au type, existence jamais optionnelle.
+- **Le QUOI, pas le COMMENT.** Le volet technique reste le **contrat logique** (entités/actions/validations/invariants), jamais le schéma/stack/archi (= 09).
 - **Non-goals explicites.** Le « Won't have » est aussi important que le « Must ».
+- **Amorce pricing.** La liste des Must (§ Périmètre livré) est la **référence** du gate « pricing = features livrées » : le pricing (06) ne vend que ce que les Must couvrent ; 12/15 vérifient le livré.
 
 ## Porte (fin d'étape 7)
-Présente à l'utilisateur : le résumé du PRD (les features **Must**, l'**aha moment**, l'adaptation du **socle « produit complet »** à la niche, le périmètre **MVP**, les **non-goals**), et demande validation (`AskUserQuestion`) avant de passer au design (étape 8). Ajustable — s'il veut retirer/ajouter, reboucle. Puis mets à jour `.saas-factory/state.md`.
+Présente à l'utilisateur : le résumé du PRD (les features **Must** avec profondeur, l'**aha moment**, l'adaptation du **socle « produit complet »**, les **boucles fermées** des actions de valeur, le périmètre **MVP** + **Périmètre livré (référence pricing)**, les **non-goals**), et demande validation (`AskUserQuestion`) avant de passer au design (étape 8). Ajustable — s'il veut retirer/ajouter, reboucle. Puis mets à jour `.saas-factory/state.md`.

@@ -64,10 +64,22 @@ Le scénario commence là où le **vrai client** commence : l'URL publique, comp
 
 Verse le résultat dans le livret (`qa/test-booklet.md`, section « Parcours d'arrivée réelle »).
 
+#### Boucles fermées — les DEUX rôles (obligatoire dès qu'une contrepartie existe)
+> Doctrine : `_shared/boucles-fermees.md`. **Une action de valeur qui ne ferme pas sa boucle est un bug de spec**, pas un raffinement. Constat fondateur : le booking confirmait la résa **à l'écran** mais n'envoyait **aucun email** à la cliente et ne notifiait **jamais** le gérant.
+
+Pour **chaque action de valeur** du workflow cœur (créer / modifier / annuler l'entité métier — résa, commande, demande, invitation…), le faux-client joue **successivement les deux rôles** et **vérifie la réception réelle** de chaque côté — jamais « l'écran confirme, donc c'est bon » :
+
+1. **Rôle acteur** — accomplis l'action (ex. la cliente réserve). Vérifie que l'acteur reçoit une **trace durable** : email de confirmation **dans la boîte sandbox** (Inbucket/Mailpit en local, boîte de test du provider en staging — `_shared/safety-rails.md` §2), pas seulement la page de confirmation (l'écran se ferme). `.ics` + lien annuler/déplacer si la boucle les prévoit.
+2. **Rôle contrepartie** — bascule sur l'autre partie (ex. le gérant). Vérifie qu'elle est **notifiée** de l'action (email pro / notification in-app / webhook selon le type). Dès qu'une contrepartie existe (client↔gérant, demandeur↔valideur, invité↔propriétaire), cette vérification n'est **jamais** sautable.
+3. **Réversibilité** — si l'action est annulable/modifiable, joue l'annulation **par la contrepartie** (ex. le salon annule) et vérifie que **l'acteur reçoit** l'avis. Puis l'inverse.
+4. **Verdict par boucle** : réception prouvée des **deux** côtés = `PASS`. **Une boucle silencieuse** (email jamais reçu, contrepartie jamais notifiée, « TODO plus tard » dans le code) = **`FAIL` bloquant** — pas un `CONCERNS`. Preuve : screenshot de la boîte sandbox / du centre de notifications.
+
+Le **canal** varie honnêtement selon le type (email client / email pro / notification in-app / webhook interne), **jamais l'existence de la boucle** : la dérivation est **universelle** (public, interne, perso — `_shared/boucles-fermees.md`).
+
 **Sous-procédure :**
-1. **Charge la liste des parcours A→Z** depuis `qa/test-plan.md` (section « Parcours d'intégration ») + complète-la via `references/integration-journeys.md` (comment cartographier un parcours + le data-flow).
+1. **Charge la liste des parcours A→Z** depuis `qa/test-plan.md` (section « Parcours d'intégration ») + complète-la via `references/integration-journeys.md` (comment cartographier un parcours + le data-flow). **Calibrage par type** : le parcours **upgrade/billing** n'est joué que si le produit est **public + billing** ; en interne/perso, joue à la place le test « **signup anonyme refusé** » — **route selon `skills/saas-factory/references/routing.md`** (ligne `14-qa`), ne recopie pas la matrice.
 2. **Joue chaque parcours d'un seul tenant**, sans réinitialiser entre les features — c'est le point : l'état de la feature A doit **arriver correct** dans la feature B.
-3. **Traque les jonctions** (là où deux features se passent un objet, un état, une navigation) : voir la checklist « points de jonction » de `references/integration-journeys.md`.
+3. **Traque les jonctions** (là où deux features se passent un objet, un état, une navigation) : voir la checklist « points de jonction » de `references/integration-journeys.md` — dont la jonction **action de valeur → notification** (la boucle fermée).
 4. **Combinaisons réalistes** : ordre inattendu (payer avant de configurer), reprise après abandon, deux onglets, retour navigateur au milieu d'un flux.
 5. **Verdict par parcours** + preuve. Un bug de jonction → régression + retour dev avec **le parcours complet** en contexte (pas juste l'écran final).
 
@@ -141,3 +153,4 @@ Pour le dev (pourquoi) : <impact utilisateur concret — pas « refais »>
 | **Preuve manquante** | Verdict sans screenshot/trace | Pas de preuve → pas de verdict. Rejoue en capturant. |
 | **Départ en milieu de produit** | Le test commence sur une URL interne, avec un compte pré-créé ou un OTP contourné | Parcours #0 obligatoire : landing publique, compte neuf, code OTP **réellement reçu et saisi**. |
 | **Complétude jugée à la somme des écrans** | « Chaque feature marche » alors que l'ensemble fait démo creuse (dashboard vide, entité cœur jamais créée) | Le verdict « pro et complet » vs « démo creuse » est un critère **à part entière** : juge le produit entier, pas la somme des écrans. |
+| **Boucle muette validée sur l'écran** | « La résa est confirmée à l'écran » → `PASS`, sans avoir ouvert la boîte sandbox ni le rôle contrepartie | Joue les **deux rôles**, **ouvre la boîte de réception** : boucle non reçue d'un côté = `FAIL` bloquant (`_shared/boucles-fermees.md`). |

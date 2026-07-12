@@ -99,7 +99,7 @@ Le moteur produit plus que notre tranche. Redirige, ne conclus pas :
 |---|---|
 | Profils, prix, matrice comparative | **GARDER** → `market.md` |
 | Review-mining / forum-mining brut | **GARDER en `raw/`** → réutilisé étape 4 |
-| Vérif adversariale / tiers | **GARDER** → `confidence.md` |
+| Vérif adversariale / tiers | **GARDER** → `market.md` §Fiabilité & confiance |
 | Battle-cards par concurrent | **IGNORER** ici (pas notre livrable) |
 | Positionnement / catégorie / alternatives (Dunford) | **NE PAS produire** → c'est l'**étape 3** |
 | Verdict de demande, edge concurrentiel formalisé | **NE PAS produire** → c'est l'**étape 4** |

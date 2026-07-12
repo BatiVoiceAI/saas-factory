@@ -18,7 +18,8 @@ Un module auto-contenu avec un **contrat** clair :
 ## Catalogue V1 (archétype `web-saas`)
 | Bloc | Fournit | Config requise |
 |---|---|---|
-| `auth` | Passwordless e-mail (OTP + magic link — pas de mot de passe, cf. `web-saas/BLOCKS.md`), sessions, rôles, multi-tenant (RLS) | Supabase connecté |
+| `auth` | Passwordless e-mail (OTP + magic link — pas de mot de passe, cf. `web-saas/BLOCKS.md`), sessions, rôles, multi-tenant (RLS), **enrollment par type** (public ouvert / interne invitations ou allowlist domaine / perso compte seedé) | Supabase connecté |
+| `access-gate` *(interne/perso)* | Déploiement privé réel : middleware `noindex` (`X-Robots-Tag`) + redirection de bord des visiteurs non authentifiés. Sélectionné par l'étape 9 si `type ≠ public` | `APP_ACCESS_MODE` (posé au provisioning) |
 | `repo-ci` | Repo GitHub + GitHub Actions (lint / test / build / deploy) | GitHub connecté |
 | `hosting` | Déploiement + sous-domaine + SSL (Vercel / CF Pages / Coolify) | hébergeur + domaine |
 | `ui-shell` | Layout, nav, tokens (mappe `DESIGN.md`), composants shadcn | — |
@@ -27,4 +28,4 @@ Un module auto-contenu avec un **contrat** clair :
 | `observability` | Sentry (erreurs) + PostHog (activation) | clés Sentry / PostHog |
 | `billing` *(optionnel)* | Stripe checkout + webhooks + portail client | Stripe connecté *(seulement si le projet vend)* |
 
-> ✅ **Statut : le CODE des blocs est implémenté sous `_shared/blocks/web-saas/` (V1)** — skeleton + 7 blocs (`ui-shell`, `auth`, `crud`, `notifications`, `observability`, `billing` *(optionnel)*, `repo-ci`), `hosting` fourni au déploiement. Voir le manifeste `web-saas/BLOCKS.md` (bloc → fichiers réels) et `web-saas/MOAT-STATUS.md` (livré / reste / limites). Ce README reste la source du **catalogue et des contrats**. Le pipeline est « block-aware » : il sélectionne (étape 9), ordonne (étape 10) et câble (étape 11) les blocs à partir de ce template.
+> ✅ **Statut : le CODE des blocs est implémenté sous `_shared/blocks/web-saas/` (V1)** — skeleton + 8 blocs (`ui-shell`, `auth`, `access-gate` *(interne/perso)*, `crud`, `notifications`, `observability`, `billing` *(optionnel)*, `repo-ci`), `hosting` fourni au déploiement. Voir le manifeste `web-saas/BLOCKS.md` (bloc → fichiers réels) et `web-saas/MOAT-STATUS.md` (livré / reste / limites). Ce README reste la source du **catalogue et des contrats**. Le pipeline est « block-aware » : il sélectionne (étape 9), ordonne (étape 10) et câble (étape 11) les blocs à partir de ce template.

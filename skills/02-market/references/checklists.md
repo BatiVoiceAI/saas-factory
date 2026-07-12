@@ -2,6 +2,23 @@
 
 Filet de sécurité de l'étape 2. À passer avant de déclarer la photo marché terminée.
 
+## Quotas de preuve (SOURCE UNIQUE)
+
+**C'est ici que vivent les chiffres « combien suffit ».** Partout ailleurs (SKILL.md, `procedure.md` critères de passage), on **renvoie** à cette table — on ne la recopie pas. Directive fondateur : la Phase 1 doit avoir la profondeur d'une vraie analyse concurrentielle ; ces quotas sont le plancher, pas le plafond. On ne clôt pas l'étape sous quota — on déclare un data gap ou on creuse.
+
+| Quota | Cible | Plancher (sous lui → data gap déclaré, jamais un blanc muet) |
+|---|---|---|
+| **Concurrents directs profilés** | 5-8 | ≥5 (ou « marché naissant » argumenté, cf. cas limites) |
+| **Solutions adjacentes** | 2-3 | ≥2 (plateformes larges, catégories voisines « good enough ») |
+| **Statu quo** | 1 dossier | **toujours** présent (Excel / papier / rien / stagiaire) — non négociable |
+| **Dossier par concurrent majeur** | complet | identité+traction · produit (desc. fonctionnelle) · features · prix · forces · faiblesses · menace |
+| **Verbatims sourcés (carte de langage)** | ≥3 par concurrent majeur, **≥12 au total** | chaque verbatim porte **URL + marqueur WebFetch oui/non** ; un verbatim sans URL n'existe pas pour l'aval |
+| **Verbatims « ouverts via WebFetch = oui »** | majorité | au moins ceux qui portent une ouverture retenue (les « non » = snippets, plafonnés à l'étape 4) |
+| **Prix relevé par concurrent** | modèle + paliers + métrique de valeur | relevé **ou** data gap explicite (« nous contacter » = data gap, pas whitespace) |
+| **Ouverture retenue** | reliée | manque récurrent (≥2) **+** ≥1 verbatim **+** un prix/segment (sinon → data gap, pas ouverture) |
+
+> Ces quotas sont des **preuves**, pas du remplissage : un 6ᵉ concurrent bâclé ne vaut pas un 5ᵉ creusé. Vise la profondeur actionnable, pas le volume.
+
 ## Definition-of-Done — l'étape 2 est finie quand…
 
 **Garde d'entrée**
@@ -9,21 +26,21 @@ Filet de sécurité de l'étape 2. À passer avant de déclarer la photo marché
 - [ ] mode de recherche décidé et annoncé : **Live** ou **Knowledge-Based**
 - [ ] tier de profondeur retenu (Light/Standard/Deep), inscrit dans `state.md`
 
-**Couverture concurrents**
-- [ ] 5-8 directs profilés + 2-3 adjacents
-- [ ] **colonne Statu quo** présente (Excel / papier / rien / stagiaire)
+**Couverture concurrents** (quotas : §Quotas de preuve — source unique)
+- [ ] concurrents directs + adjacents profilés **au quota** (§Quotas)
+- [ ] **dossier Statu quo** présent (Excel / papier / rien / stagiaire)
 - [ ] set de concurrents **validé au checkpoint** par l'utilisateur
-- [ ] pour chaque acteur majeur : forces + faiblesses + prix (ou trou déclaré) + position
+- [ ] pour chaque acteur majeur : **dossier détaillé complet** dans `market.md` §Dossiers concurrents détaillés (identité+traction · description produit fonctionnelle · features · prix · forces · faiblesses · menace) — la profondeur, pas la brochure
 
 **Prix**
-- [ ] modèle + paliers + **métrique de valeur** relevés par concurrent (ou data gap)
+- [ ] **table palier-par-palier** remplie dans `market.md` §Prix (métrique de valeur + paliers + coût de changement) par concurrent (ou data gap)
 - [ ] **whitespace tarifaire** évalué (dessous/dessus/métrique/segment)
 
-**Review-mining (le plus important pour l'aval)**
-- [ ] `raw/review-mining.md` + `raw/forum-mining.md` **écrits et conservés bruts**
-- [ ] verbatims + volume d'avis + note moyenne + dates présents
+**Review-mining + carte de langage (le plus important pour l'aval)**
+- [ ] `raw/review-mining.md` + `raw/forum-mining.md` **écrits et conservés bruts** (verbatims + volume d'avis + note moyenne + dates)
+- [ ] **§Carte de langage** de `market.md` remplie **au quota de verbatims** (§Quotas) — l'étape 4 en hérite, elle ne re-mine pas
 - [ ] **par verbatim : URL de la source + marqueur « ouvert via WebFetch oui/non »** (un « non » = snippet, plafonné à l'étape 4)
-- [ ] carte de langage amorcée ; signaux de churn notés
+- [ ] signaux de churn notés
 
 **Synthèse**
 - [ ] chaque **ouverture** est FORT (récurrente + plainte + prix) — les MOU sont en data gaps
@@ -33,11 +50,11 @@ Filet de sécurité de l'étape 2. À passer avant de déclarer la photo marché
 - [ ] section **« Taille servable & dynamique »** remplie : [Estimate] bottom-up (nb acteurs × prix observés) avec **hypothèse écrite** + dynamique tranchée (ou data gap déclaré) — **l'étape 5 en hérite**
 - [ ] `research/market.md` conforme au template
 
-**Confiance**
+**Fiabilité & confiance** (section `market.md` §Fiabilité — ex-`confidence.md`, fusionné poids mort §5)
 - [ ] sources classées Tier 1/2/3
 - [ ] score de confiance + confirme/infirme par affirmation structurante
 - [ ] **data gaps déclarés** (aucun chiffre inventé pour combler un trou)
-- [ ] `research/confidence.md` conforme au template
+- [ ] section §Fiabilité de `market.md` remplie (l'étape 5 la lit comme plafond de confiance)
 - [ ] affirmations Tier-3-seul marquées « basse confiance »
 
 **Labels & fraîcheur**

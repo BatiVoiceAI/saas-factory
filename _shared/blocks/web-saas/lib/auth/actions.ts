@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { env } from "@/lib/env";
+import { resolveEnrollment } from "@/lib/auth/enrollment";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -50,6 +51,14 @@ export type AuthState = {
 const AFTER_LOGIN = "/dashboard";
 
 /**
+ * Refus d'enrollment (déploiement `interne`/`perso`) : adresse non invitée ou
+ * hors allowlist de domaine. Message unique pour le refus applicatif ET le refus
+ * Supabase (`disable_signup`) — l'utilisateur ne peut pas distinguer les deux.
+ */
+const ACCESS_DENIED_MESSAGE =
+  "Cette adresse n'est pas autorisée à accéder à cet outil. Demandez une invitation à l'administrateur.";
+
+/**
  * Étape 1 — Envoie le code + magic link. Sert aussi au « Renvoyer le code »
  * (l'état précédent est alors conservé pour rester sur l'écran de vérification).
  */
@@ -67,13 +76,29 @@ export async function requestOtp(
     };
   }
 
+  // Politique d'enrollment selon le type de déploiement (bloc `auth`). En mode
+  // `public` : signup ouvert (compte créé à la volée). En `interne`/`perso` :
+  // création anonyme interdite — l'entrée passe par une invitation ou un compte
+  // seedé (autorité = `disable_signup` Supabase, cf. lib/auth/enrollment.ts).
+  const enrollment = resolveEnrollment(parsed.data.email);
+  if (!enrollment.allowed) {
+    // Refus applicatif immédiat (domaine hors allowlist `interne`) — aucun code
+    // n'est envoyé. Message honnête sans révéler qui est enrôlé.
+    return {
+      step: prevState.step,
+      email: prevState.email,
+      error: ACCESS_DENIED_MESSAGE,
+    };
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email: parsed.data.email,
     options: {
-      // Compte créé à la volée si l'e-mail est inconnu : login = signup,
-      // un seul écran. (Le trigger 0001_auth crée le profil.)
-      shouldCreateUser: true,
+      // `public` : login = signup, un seul écran, compte créé à la volée (le
+      // trigger 0001_auth crée le profil). `interne`/`perso` : jamais de
+      // création anonyme — seuls les comptes invités/seedés obtiennent un code.
+      shouldCreateUser: enrollment.shouldCreateUser,
       // Le magic link contenu dans l'e-mail passe par le callback qui échange
       // le code PKCE contre une session. `NEXT_PUBLIC_SITE_URL` = origine publique.
       emailRedirectTo: `${env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=${encodeURIComponent(
@@ -83,6 +108,17 @@ export async function requestOtp(
   });
 
   if (error) {
+    // Signup désactivé (interne/perso) + adresse non enrôlée : GoTrue refuse la
+    // création (`shouldCreateUser: false` sur e-mail inconnu, ou
+    // `disable_signup=true`). On renvoie le même message de refus que le gate
+    // applicatif — pas de code parti, pas de compte créé.
+    if (error.code === "signup_disabled" || error.code === "otp_disabled") {
+      return {
+        step: prevState.step,
+        email: prevState.email,
+        error: ACCESS_DENIED_MESSAGE,
+      };
+    }
     // Messages humains, sans fuite d'info. (Pas d'énumération possible de
     // toute façon : compte existant ou pas, le même e-mail part.)
     if (error.code === "over_email_send_rate_limit" || error.status === 429) {

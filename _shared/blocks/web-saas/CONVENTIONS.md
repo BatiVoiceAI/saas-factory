@@ -76,6 +76,7 @@ sont `.optional()`.
 |---|---|---|---|
 | Shell / SEO | fondation | `NEXT_PUBLIC_SITE_URL` | requis |
 | Auth / CRUD | fondation (Supabase) | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | requis |
+| Enrollment / accès | blocs `auth` + `access-gate` | `APP_ACCESS_MODE` (public\|interne\|perso), `AUTH_ALLOWED_EMAIL_DOMAINS` | `APP_ACCESS_MODE` défaut `public` ; domaines optionnel |
 | Notifications | bloc `notifications` | `RESEND_API_KEY`, `EMAIL_FROM` | optionnel |
 | Observability | bloc `observability` | `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_AUTH_TOKEN`, `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | optionnel |
 | Billing | bloc `billing` | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRICE_ID` | optionnel |
@@ -117,8 +118,11 @@ role, jamais exposée au client.
 - `*` : un bloc **ajoute** ses clés au `.env.example` / son schéma à `lib/env.ts` /
   ses tokens à `globals.css` — ajouts additifs uniquement, jamais de suppression.
 - `**` : voir §7.
-- `***` : le bloc `auth` peut ajouter des redirections de protection de route,
-  sans retirer l'appel `updateSession`.
+- `***` : les blocs `auth` / `access-gate` peuvent **composer** des passes après
+  `updateSession` dans `middleware.ts` (protection de route, `noindex`), sans
+  jamais retirer l'appel `updateSession` ni changer sa position en tête. Chaque
+  passe ajoutée est un fichier disjoint (`lib/access-gate/gate.ts`) appelé depuis
+  la composition ; `middleware.ts` reste une orchestration mince.
 - `†` : `lib/brand.ts` est renseigné **une seule fois au walking skeleton**
   (étape 12, écrivain unique, comme la charte) depuis `research/positioning.md` —
   puis figé : les blocs en fan-out le **consomment** (`import { brand }`), ne le

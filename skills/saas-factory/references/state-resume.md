@@ -8,6 +8,8 @@ Le master est le **tenant de l'état** : c'est lui qui garantit qu'on peut **rep
 1. LIRE _shared/* (une seule fois)   ── priment sur le comportement par défaut
        lessons.md · safety-rails.md · stack-defaults.md
        blocks/README.md · validation-cascade.md · test-dossier.md
+       + ~/.saas-factory/lessons-learned.md (si présent) ── leçons compound
+         de tes projets, hors plugin ; complètent lessons.md (écrites par 19-retro)
                     │
                     ▼
 2. REPRENDRE l'état : lire .saas-factory/state.md

@@ -37,8 +37,8 @@ Le flux est **séquentiel** : on ne nomme pas un edge avant d'avoir vérifié qu
 - **Critère de passage** : tu peux citer l'angle candidat verbatim.
 
 ### Étape 1.2 — Croiser avec les manques concurrents
-- **Source** : `market.md` (manques observés dans les avis + matrice concurrentielle) et le review-mining brut.
-- **Quoi faire** : liste les manques (features absentes, douleurs non résolues, segments mal servis) et marque chacun **partagé** (≥2 concurrents) ou **isolé** (1 concurrent).
+- **Source** : `market.md` — les **§Dossiers concurrents détaillés** (forces/faiblesses réelles, features, position) + **§Matrice comparative** + **§Carte de langage** (verbatims) + **§Prix**. C'est le **paysage RÉEL détaillé** de l'étape 2 : l'edge se juge contre lui, pas contre une image floue de la concurrence.
+- **Quoi faire** : liste les manques (features absentes, douleurs non résolues, segments mal servis) et marque chacun **partagé** (≥2 concurrents) ou **isolé** (1 concurrent). **Recoupe chaque manque candidat avec le dossier détaillé du concurrent** : un manque qu'un dossier dément (le concurrent le couvre en fait) n'est pas un manque.
 - **Croisement** : l'angle candidat tombe-t-il sur un manque **partagé** ? C'est la question qui décide tout.
 - **Critère de passage** : chaque manque porte une preuve (quote/matrice) + son marquage partagé/isolé.
 

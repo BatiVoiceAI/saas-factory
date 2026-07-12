@@ -1,6 +1,6 @@
 # Référence — Dépendances + build order (étape 6)
 
-Procédure exhaustive pour passer d'un ensemble de features à un **ordre de construction** exploitable par la Phase 3. Le build order vit dans `product-spec.md` (§ Dépendances & build order) **et** `feature-prioritization.md` (§ Build order). Il combine deux signaux : **les dépendances** (contrainte dure — ce qui doit exister avant quoi) et **le score RICE** (préférence — quoi apporte le plus de valeur en premier). **La dépendance prime toujours sur le score.**
+Procédure exhaustive pour passer d'un ensemble de features à un **ordre de construction** exploitable par la Phase 3. Le build order vit dans `product-spec.md` (§ Dépendances & build order) — **source unique** depuis la fusion §5 (plus de `feature-prioritization.md` séparé). Il combine deux signaux : **les dépendances** (contrainte dure — ce qui doit exister avant quoi) et **le score RICE** (préférence — quoi apporte le plus de valeur en premier). **La dépendance prime toujours sur le score.**
 
 ## Le modèle : un graphe orienté sans cycle (DAG)
 
@@ -98,7 +98,7 @@ Note : *Export* a beau être « attendu », il arrive après *Historique* car RI
 - [ ] Ordre = tri topologique **valide** (aucune feature avant sa dépendance).
 - [ ] RICE départage **à dépendances égales**, jamais contre une dépendance.
 - [ ] Chaque item porte **sa raison**.
-- [ ] Build order écrit à la fois dans `product-spec.md` et `feature-prioritization.md`, **identiques**.
+- [ ] Build order écrit dans `product-spec.md` § Dépendances & build order (**source unique**).
 - [ ] Exploitable tel quel par la Phase 3 (socle en tête, lots clairs).
 
 ## Modes d'échec (et comment les gérer)
@@ -110,5 +110,5 @@ Note : *Export* a beau être « attendu », il arrive après *Historique* car RI
 | **Socle oublié** | Auth/modèle de données non priorisé | L'identifier (plusieurs features en dépendent) et le mettre en tête |
 | **Ordre = ordre de la liste** | Build order recopie la numérotation §2 | Refaire le tri à partir du **graphe**, pas de la liste |
 | **Dépendance fantôme** | Une dépendance « par confort » bloque l'ordre | La supprimer si la feature peut être construite sans |
-| **Désynchro inter-fichiers** | Build order différent entre spec et matrice | Une seule source : aligner les deux fichiers |
+| **Build order éparpillé** | On recopie le build order ailleurs et les copies divergent | Source unique = `product-spec.md` ; les autres fichiers renvoient, ne dupliquent pas |
 | **Sur-planification du parallélisme** | Plan détaillé de worktrees/agents ici | Rester au build order ; le parallélisme fin = Phase 3 |

@@ -1,7 +1,7 @@
 ---
 name: 06-business-model
 description: >-
-  Étape 6 (Phase 2 · cadrage produit) de SaaS Factory — Business model & pricing (rôle CEO + PM). Pose le modèle économique (lean canvas) et le pricing (modèle + paliers ancrés sur la valeur et le benchmark concurrent) — pricing marché produit SEULEMENT si le produit est public ; interne = ROI interne (coût évité, temps gagné) ; perso = sans pricing. Pilote la tranche « Strategy » du moteur vendoré startup-design. Se déclenche pour « business model », « pricing », « combien le vendre », après validation de l'opportunité (Phase 1).
+  Étape 6 (Phase 2 · cadrage produit) de SaaS Factory — Business model & pricing (rôle CEO + PM). Pose le modèle économique (lean canvas) et le pricing (modèle + paliers ancrés sur la valeur et le benchmark concurrent) — pricing marché produit SEULEMENT si le produit est public ; interne = ROI interne (coût évité, temps gagné) ; perso = étape sautée (ni business model ni pricing). Pilote la tranche « Strategy » du moteur vendoré startup-design. Se déclenche pour « business model », « pricing », « combien le vendre », après validation de l'opportunité (Phase 1).
 allowed-tools: Read, Write, Edit, Bash
 ---
 
@@ -19,7 +19,8 @@ Tu poses deux choses : le **business model** (comment le produit crée et capte 
 
 ## Entrées / sortie (contrat)
 - **Lit :** `research/idea-brief.md` (**type/route** — pilote le sort du pricing), `research/opportunity-brief.md` (marché, edge, concurrents, risques) + `research/positioning.md` (angle, catégorie, value themes). Pour le **pricing uniquement** : `research/market.md` (prix concurrents relevés à l'étape 2) — l'ancre de marché.
-- **Écrit :** `product/business-model.md` (template `assets/templates/business-model.md`) **toujours**. `product/pricing.md` (template `assets/templates/pricing.md`) **SEULEMENT si `type = public`** (produit vendu sur un marché). **`interne`** → pas de pricing marché : le bloc 6 du canvas porte un **ROI interne** d'environ 10 lignes (voir §« Mode interne ») dans `business-model.md`. **`perso`** → sauté ; note dans `business-model.md` que le pricing est hors périmètre. Défaut prudent si le type manque = `public`.
+- **Écrit :** `product/business-model.md` (template `assets/templates/business-model.md`) quand l'étape est active — soit `public`, soit `interne`. `product/pricing.md` (template `assets/templates/pricing.md`) **SEULEMENT si `type = public`** (produit vendu sur un marché) : c'est le livrable dont dépend le **contrôle de réception de la Phase 2** (« pricing = livré » quand public) et que lit `08-design-system` — s'il manque en public, l'étape est à refaire, pas la porte à présenter. **`interne`** → pas de `pricing.md` : le bloc 6 du canvas porte un **ROI interne** d'environ 10 lignes (voir §« Mode interne ») dans `business-model.md`. **`perso`** → **étape entièrement sautée** : ni `business-model.md` ni `pricing.md` ; le saut est tracé dans `.saas-factory/state.md` par l'orchestrateur de Phase 2 (pas ici). **Défaut prudent si le type manque = `public`.**
+- **Ne duplique pas la matrice de routage** : le skip-set étape × type vit à un seul endroit — `skills/saas-factory/references/routing.md` (route selon elle). Ci-dessus = le calibrage de profondeur propre à cette étape, pas le routage.
 - Rien d'autre. Jamais de secret ni de clé dans le fichier.
 
 ## Principe : tu EXÉCUTES le moteur, tu ne refais pas la stratégie
@@ -48,7 +49,7 @@ De la Phase 4, n'exécute que ce que la Phase 1 **ne couvre pas** : **channels**
 Le **lean canvas 9 blocs** consolidé. Une page, dense, chaque bloc rattaché à un artefact Phase 1. Sous-procédure bloc par bloc, ordre de remplissage, matrices et DoD : `references/lean-canvas.md`.
 
 ### 5. Pose le pricing (procédure normée micro-SaaS)
-> **Garde type (lu dans `research/idea-brief.md`).** Les mouvements 5-6 ne s'exécutent que si **`type = public`**. `interne` → saute-les et écris le **ROI interne** (§« Mode interne » ci-dessous) dans `business-model.md`. `perso` → saute-les, une ligne « pricing hors périmètre (outil perso) » dans `business-model.md`.
+> **Garde type (lu dans `research/idea-brief.md`).** Les mouvements 5-6 ne s'exécutent que si **`type = public`**. `interne` → saute-les et écris le **ROI interne** (§« Mode interne » ci-dessous) dans `business-model.md`. `perso` → l'étape 06 entière est **sautée** par routage (`routing.md`) : rien n'est produit ici (ni `business-model.md` ni `pricing.md`) ; le saut est tracé dans `state.md` par l'orchestrateur.
 > On **vendorera plus tard** un skill de pricing dédié (`coreyhaines31/marketingskills:pricing`). En attendant, applique cette procédure — ne l'improvise pas. Version exhaustive (matrices freemium/trial, choix d'axe de scaling, échelle ancrée, DoD, anti-patterns) : `references/pricing-procedure.md`.
 1. **Benchmark.** Relève les prix concurrents dans `research/market.md` : point d'entrée, point haut, inclus par palier, axe de scaling. L'**ancre de marché**.
 2. **Ancrage sur la valeur (pas cost-plus).** Le prix se justifie par la **valeur du job résolu** (VPC), pas le coût de hosting. Situe-le face à l'**alternative actuelle** (ce que la cible paie/perd aujourd'hui sans l'outil).

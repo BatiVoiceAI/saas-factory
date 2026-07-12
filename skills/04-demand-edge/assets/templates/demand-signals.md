@@ -1,5 +1,5 @@
 # Demande & edge : {produit}
-*SaaS Factory — Phase 1, étape 4 · basé sur review-mining (market.md) + positioning.md · {date}*
+*SaaS Factory — Phase 1, étape 4 · hérité de market.md (§Carte de langage + §Dossiers détaillés, sans re-mining) + positioning.md · {date}*
 
 ## 1. Signal de demande — {plausiblement fort / moyen / faible}
 - **Volume & notes** : {agrégé + par concurrent · bande retenue (élevé/moyen/faible) + justification de la bande (contexte marché)}

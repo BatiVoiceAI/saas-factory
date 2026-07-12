@@ -30,7 +30,7 @@ Un seul traitement par décision : les verdicts de `demand-signals.md` se **trad
 | **Pas d'edge** + niche claire assumée | Edge **Moyen** (pari exécution) |
 | **Pas d'edge**, sans niche nette | Edge **Faible** |
 
-**Plafond de confiance.** Si `confidence.md` est bas sur la dimension concernée, ou si les preuves porteuses sont des `[snippet — non vérifié]`, **descends l'axe hérité d'un cran** — jamais l'inverse (on ne remonte pas la confiance en aval).
+**Plafond de confiance.** Si `market.md` §Fiabilité est bas sur la dimension concernée, ou si les preuves porteuses sont des `[snippet — non vérifié]`, **descends l'axe hérité d'un cran** — jamais l'inverse (on ne remonte pas la confiance en aval).
 **Divergence interdite.** Si la confrontation te fait douter d'un verdict de l'étape 4, la voie est « **Ajuster → reboucler 04** », pas une re-cotation silencieuse ici.
 
 ## Matrice de décision — combinaison des axes → orientation de verdict
@@ -64,7 +64,7 @@ L'IA ne fait **pas** d'interviews terrain (cf. `conventions.md`, principe n°3).
 
 - Toujours « demande **plausible** », jamais « demande **prouvée** ».
 - Toujours assortir d'un « **à valider par toi** ».
-- Le verdict ne peut pas être plus confiant que `confidence.md` (plafond hérité, cf. `synthesis-and-confrontation.md`).
+- Le verdict ne peut pas être plus confiant que `market.md` §Fiabilité (plafond hérité, cf. `synthesis-and-confrontation.md`).
 
 | Formulation à refuser | Formulation à écrire |
 |---|---|
@@ -74,13 +74,13 @@ L'IA ne fait **pas** d'interviews terrain (cf. `conventions.md`, principe n°3).
 
 ## Definition of Done — verdict
 - [ ] Les 4 axes cotés Fort/Moyen/Faible, chacun avec sa preuve.
-- [ ] Demande & Edge **hérités** de l'étape 4 via la table d'héritage (aucune re-cotation) ; plafond `confidence.md` appliqué.
+- [ ] Demande & Edge **hérités** de l'étape 4 via la table d'héritage (aucune re-cotation) ; plafond `market.md` §Fiabilité appliqué.
 - [ ] Marché hérité de `market.md` § « Taille servable & dynamique » ; Risques énumérés via les 5 familles.
 - [ ] Lecture « maillon faible d'abord » faite (Demande/Risques peuvent primer).
 - [ ] Position nette prise — aucun mot-valise.
 - [ ] Clause « ce qui le ferait basculer » présente.
 - [ ] Demande formulée « plausible / à valider par toi ».
-- [ ] Confiance du verdict ≤ confiance de `confidence.md`.
+- [ ] Confiance du verdict ≤ confiance de `market.md` §Fiabilité (reportée dans §Fiabilité du dossier).
 
 ## Modes d'échec du verdict
 - **La flagornerie.** Le verdict rassure au lieu de trancher. *Parade :* honesty-protocol + bannir la liste de mots-valises.

@@ -14,10 +14,10 @@ On ne surdimensionne pas : la décision porte sur l'**utilité / le fit**, pas s
 
 | Type | Ce qu'on écrit | Ce qu'on N'écrit PAS |
 |---|---|---|
-| **perso** | `opportunity-summary.md` **court** : besoin réel + effort vs gain + non-goals + porte | Pas de brief marché, pas de concurrents, pas de taille |
-| **interne** | `opportunity-summary.md` centré **fit** : outils/process/sécurité + effort vs gain + non-goals + porte | Pas d'edge concurrentiel, pas de SAM/TAM |
+| **perso** | `opportunity-brief.md` **réduit à son bloc §Décision** : besoin réel + effort vs gain + non-goals + porte | Pas d'analyse marché, pas de concurrents, pas de taille |
+| **interne** | `opportunity-brief.md` **réduit à son bloc §Décision**, centré **fit** : outils/process/sécurité + effort vs gain + non-goals + porte | Pas d'edge concurrentiel, pas de SAM/TAM |
 
-Le `opportunity-brief.md` complet est **optionnel** ici : s'il est écrit, il ne contient que ce qui existe réellement (besoin, contraintes, non-goals) — sections marché laissées explicitement « non applicable (route allégée) ».
+Le **détaillé** de l'`opportunity-brief.md` est **optionnel** ici : s'il est écrit, il ne contient que ce qui existe réellement (besoin, contraintes, non-goals) — sections marché laissées explicitement « non applicable (route allégée) ». Le fichier reste **unique** (`opportunity-brief.md`).
 
 ## Recette forcing — route `perso` (« est-ce utile POUR TOI ? »)
 - **Ask exact** : « Cet outil te sert à **toi**. Concrètement, tu t'en sers combien de fois par semaine, et qu'est-ce que tu fais aujourd'hui à la place ? »

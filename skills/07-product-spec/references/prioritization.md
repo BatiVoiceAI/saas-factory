@@ -1,6 +1,8 @@
-# Référence — Priorisation MoSCoW + RICE (étape 4)
+# Référence — Priorisation MoSCoW + RICE (étape 3)
 
-Procédure exhaustive pour trancher le **scope** (`product/feature-prioritization.md`) et figer le **MVP** (`product/mvp-definition.md`). Tu **appliques** les frameworks du moteur vendoré `startup-design` (`references/frameworks.md`) — tu ne les réinventes pas. **MoSCoW** décide *ce qui entre dans le MVP* ; **RICE** départage *l'ordre* quand il n'est pas évident.
+Procédure exhaustive pour trancher le **scope** et figer le **MVP**. **Fusion §5 :** depuis la Vague B, la matrice MoSCoW/RICE et la définition du MVP **vivent dans le PRD** (`product/product-spec.md` § Priorisation et § MVP) — plus de fichiers `feature-prioritization.md` / `mvp-definition.md` séparés (ils ne sont conservés qu'en **renvoi** pour compatibilité aval). **Source unique** de la priorité : `product-spec.md` § Priorisation. Tu **appliques** les frameworks du moteur vendoré `startup-design` (`references/frameworks.md`) — tu ne les réinventes pas. **MoSCoW** décide *ce qui entre dans le MVP* ; **RICE** départage *l'ordre* quand il n'est pas évident.
+
+**Pourquoi l'étape 3 (avant les specs) :** la priorisation est **cheap** (test de retrait sur la liste) et les fiches profondes (étape 5) sont **chères** — on ne déploie la profondeur (`feature-spec-depth.md`) que sur les **Must**. Prioriser d'abord, spécifier en profondeur ensuite.
 
 ## Les deux frameworks ne servent pas à la même chose
 
@@ -24,7 +26,7 @@ MoSCoW d'abord (le scope), RICE ensuite (l'ordre). RICE ne **remonte** jamais un
    - **Hors trajectoire v1 / attente qu'on écarte volontairement** → **Won't have (this time)**.
 
    **Exception unique : le socle « produit complet »** (`completeness-baseline.md`) est **Must d'office** pour tout SaaS public — **exempté du test de retrait**. On adapte ses éléments à la niche (quels champs, quels défauts intelligents), on ne débat jamais de leur existence. Justification dans la table : `socle complétude`.
-3. Écris la table MoSCoW (`feature-prioritization.md`) : `Feature · Bucket · Justification (rattachement Phase 1)`.
+3. Écris la table MoSCoW (`product-spec.md` § Priorisation) : `Feature · Bucket · Justification (rattachement Phase 1)`.
 4. Reporte les **Won't** en **Non-goals** du PRD (§ Non-goals de `product-spec.md`).
 
 ### Matrice de décision (bucket)
@@ -83,9 +85,9 @@ Score = **(Reach × Impact × Confidence) ÷ Effort**. On l'applique surtout **a
 
 Lecture : *Génération* passe avant *Historique* par la valeur ; mais si *Historique* est un **socle technique** d'une autre feature, le build order (étape 6) peut le remonter malgré son score inférieur. RICE informe, la dépendance tranche.
 
-## Partie C — Figer le MVP (`mvp-definition.md`)
+## Partie C — Figer le MVP (`product-spec.md` § MVP)
 
-Le MVP = **les Must, rien d'autre**. Le plus **petit** produit qui résout **vraiment** le problème cœur.
+Le MVP = **les Must, rien d'autre**. Le plus **petit** produit qui résout **vraiment** le problème cœur. Depuis la fusion §5, l'hypothèse cœur, les features Must, les success criteria et l'out-of-scope sont une **section du PRD** (§ MVP), pas un fichier séparé.
 
 ### Sous-procédure
 1. **Hypothèse cœur** — le pari central : « si on donne \<capacité\> à \<cible\>, alors \<comportement/valeur attendu\> ». C'est ce que le lancement doit valider.
@@ -100,7 +102,7 @@ Le MVP = **les Must, rien d'autre**. Le plus **petit** produit qui résout **vra
 - Out-of-scope non vide, cohérent avec le Won't have.
 
 ## Cohérence inter-fichiers (non négociable)
-La priorité d'une feature a **une seule source de vérité** : `feature-prioritization.md`. Les fiches `features/NN-*.md` (§ Priorité) et le § Priorisation de `product-spec.md` doivent la **refléter**, jamais la contredire. Une divergence = red flag à corriger avant la Porte.
+La priorité d'une feature a **une seule source de vérité** : `product-spec.md` § Priorisation (la matrice y vit désormais — fusion §5). Les fiches `features/NN-*.md` (§ Priorité) doivent la **refléter**, jamais la contredire. Une divergence = red flag à corriger avant la Porte.
 
 ## Checklist Definition-of-Done (priorisation)
 - [ ] Chaque feature dans **un seul** bucket MoSCoW, justifié Phase 1 (ou `socle complétude`).
@@ -111,7 +113,7 @@ La priorité d'une feature a **une seule source de vérité** : `feature-priorit
 - [ ] Build order alimenté par RICE **et** dépendances (étape 6), pas par RICE seul.
 - [ ] MVP = **Must uniquement** ; hypothèse cœur falsifiable ; success criteria mesurables.
 - [ ] Out-of-scope = Won't have, cohérent.
-- [ ] Priorités **identiques** entre matrice, fiches feature et product-spec.
+- [ ] Priorités **identiques** entre le PRD § Priorisation (source unique) et les fiches feature.
 - [ ] Estimations RICE marquées `[Assumption]`.
 
 ## Modes d'échec (et comment les gérer)
@@ -125,5 +127,5 @@ La priorité d'une feature a **une seule source de vérité** : `feature-priorit
 | **RICE écrase la dépendance** | Une feature socle reléguée car score faible | Le build order remonte le socle : dépendance > score (étape 6) |
 | **Bucket-shopping** | Une feature « négociée » de Won't vers Must | Le scope se décide au test de retrait, pas à l'envie |
 | **Socle débattu** | Un élément du socle (onboarding, profil, empty states…) dégradé en Should après test de retrait | Le socle est **exempté** : Must d'office (`completeness-baseline.md`) — on adapte à la niche, on ne débat pas |
-| **Divergence de priorité** | Fiche dit Must, matrice dit Should | Source unique = matrice ; aligner fiches + product-spec |
+| **Divergence de priorité** | Fiche dit Must, PRD dit Should | Source unique = PRD § Priorisation ; aligner les fiches |
 | **Activation vanity** | Success criterion = « nombre d'inscrits » | Remplacer par le job cœur accompli (ex. « premier livrable exporté ») |

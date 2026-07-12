@@ -1,6 +1,6 @@
 # Référence — User stories + critères d'acceptation (étape 5)
 
-Procédure exhaustive pour rendre le PRD **exécutable** (`product/user-stories.md`). Une **story sans critère d'acceptation testable n'est PAS finie** : ce sont les critères qui permettent au build (Phase 3) d'implémenter et au Verifier de vérifier. Une story par feature **Must/Should**, groupée par feature.
+Procédure exhaustive pour rendre le PRD **exécutable**. **Fusion §5 :** la story et ses critères vivent **dans la fiche feature** (`product/features/NN-*.md` § User story + § Critères d'acceptation) — décision « fiches, pas `user-stories.md` séparé » (cf. `procedure.md` et `feature-spec-depth.md`). Cette référence est la **méthode** (format story, Given/When/Then, catalogue de cas limites) que la fiche applique. Une **story sans critère d'acceptation testable n'est PAS finie** : ce sont les critères qui permettent au build (Phase 3) d'implémenter et au Verifier de vérifier. Une story par feature **Must/Should** (par rôle si plusieurs personas agissent).
 
 ## Ce qui rend le PRD exécutable
 
@@ -58,7 +58,7 @@ Chaque critère = **une** condition cochable oui/non. Couvrir **le nominal ET le
 
 ## Partie C — Catalogue de cas limites (à balayer pour CHAQUE feature)
 
-À l'étape 3 (fiche feature) **et** ici, passe cette grille : il y a **toujours** des cas limites. Ne cocher que ceux **pertinents** pour la feature — mais les avoir tous **considérés**.
+À l'étape 5 (fiche feature — les états §5) **et** ici, passe cette grille : il y a **toujours** des cas limites. Ne cocher que ceux **pertinents** pour la feature — mais les avoir tous **considérés**.
 
 | Famille | Question à se poser | Exemple de critère |
 |---|---|---|
@@ -77,14 +77,13 @@ Chaque critère = **une** condition cochable oui/non. Couvrir **le nominal ET le
 
 **Règle :** une feature Must/Should **sans aucun** cas limite dans sa story est suspecte — repasser le catalogue. Inversement, ne pas **inventer** des cas limites non pertinents pour gonfler : pertinence > exhaustivité aveugle.
 
-## Checklist Definition-of-Done (user-stories.md)
-- [ ] Une story par feature **Must/Should**, groupée par feature.
+## Checklist Definition-of-Done (§ story + § critères de chaque fiche)
+- [ ] Une story par feature **Must/Should** (par rôle si plusieurs personas), dans sa fiche.
 - [ ] Format « En tant que / je veux / afin de » respecté partout.
-- [ ] Chaque bénéfice rattaché à un **besoin Phase 1**.
-- [ ] Chaque story a **≥1 critère nominal** + **1 critère par cas limite** de la fiche.
-- [ ] Critères en Given/When/Then, **vérifiables** oui/non.
-- [ ] Cas limites issus du **catalogue** (Partie C), pertinents.
-- [ ] Cohérence fiche ↔ story : mêmes comportements et cas limites, rien de perdu.
+- [ ] Chaque bénéfice rattaché à un **besoin Phase 1** (ou `socle complétude`).
+- [ ] Couverture des critères (cf. `feature-spec-depth.md` §8) : **1 nominal** + **1 par état** (§5) + **1 par règle métier** (§6) + **1 par boucle fermée** (§7) + **≥1 frontière** (§11).
+- [ ] Critères en Given/When/Then, **vérifiables** oui/non, résultat **concret**.
+- [ ] Cas limites issus du **catalogue** (Partie C), pertinents (pas inventés pour « faire riche »).
 - [ ] Aucune story orpheline (toutes rattachées à une feature du PRD).
 
 ## Modes d'échec (et comment les gérer)

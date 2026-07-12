@@ -45,17 +45,18 @@ STATUT       : écrire status/provision-<resource>.md (format ci-dessous).
 
 ## `provisioner-db` (Supabase + migrations + RLS) — parallélisable
 - **OBJECTIF** : projet Supabase pour `<slug>`, migrations appliquées (tables + **RLS**).
-- **TYPE** : réglages d'enrollment par type de produit — `interne` : signup désactivé + invitations ; `perso` : compte unique seedé ; `public` : confirmation exigée. Matrice unique + obligation de log des allègements : `provisioning-plan.md` §« Routage par type de produit ».
+- **TYPE** : réglages d'enrollment par type de produit — `interne` : `disable_signup=true` + invitations (`auth.admin.inviteUserByEmail`) **ou** allowlist de domaine ; `perso` : compte unique seedé (`auth.admin.createUser`) ; `public` : signup ouvert + confirmation exigée. Matrice unique (QUOI) : `provisioning-plan.md` §« Routage par type de produit » ; COMMENT opératoire (endpoints API) : §« Enrollment par type ». Log des allègements obligatoire.
 - **COMPÉTENCE** : consulter `supabase` + `supabase-postgres-best-practices` **avant** d'écrire/valider une policy RLS.
-- **IDEMPOTENCE** : `list projects` match `<slug>` → réutilise `ref` ; migrations **par nom** (saute celles déjà passées). `confirm_cost` **auto** avant `create_project`.
+- **IDEMPOTENCE** : `list projects` match `<slug>` → réutilise `ref` ; migrations **par nom** (saute celles déjà passées). `confirm_cost` **auto** avant `create_project`. Enrollment : lire la config Auth + `list users` avant de poser (ne pas ré-inviter / re-seeder).
 - **DoD** :
   - [ ] projet créé/réutilisé, `ref` + URL logués.
   - [ ] toutes les migrations du modèle de données (étape 9) appliquées, dans l'ordre.
   - [ ] **RLS activée sur chaque table multi-tenant** (sinon `[SÉCU]` bloquant).
+  - [ ] **enrollment posé selon le type** — `interne`/`perso` : `disable_signup=true` **vérifié** (config Auth relue) + invitations envoyées **ou** compte fondateur présent (`list users`) ; `public` : signup ouvert. **Logué** dans `tech/provisioning-log.md` (jamais silencieux).
   - [ ] clés (anon, service_role) récupérées → transmises au câblage secrets, **pas** dans le statut.
   - [ ] `status/provision-db.md` = `DONE` + ref.
 - **ROLLBACK** : migration échouée à mi-parcours → **ne pas supprimer le projet**, re-jouer les migrations restantes (par nom).
-- **RED-FLAGS** : table multi-tenant **sans RLS** → refuser de marquer `DONE`. Projet au bon slug contenant des tables métier **inconnues** → conflit, ne pas migrer par-dessus.
+- **RED-FLAGS** : table multi-tenant **sans RLS** → refuser de marquer `DONE`. Projet au bon slug contenant des tables métier **inconnues** → conflit, ne pas migrer par-dessus. **`type` = `interne`/`perso` avec `disable_signup=false`** (signup resté ouvert) → **refuser `DONE`** : le « déploiement privé » n'est pas réel, un inconnu peut créer un compte (cf. P0.5). Marquer `verified` sans relire la config Auth → interdit (simulation).
 
 ## `provisioner-email` (Resend) — parallélisable, non-bloquant
 - **OBJECTIF** : domaine d'envoi vérifié + config transactionnel.
