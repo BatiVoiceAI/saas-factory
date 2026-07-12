@@ -1,7 +1,7 @@
 ---
 name: provisioner-db
 description: Sous-agent de provisioning — provisionne BDD + auth (tables + RLS + config Supabase Auth) d'un projet, de façon idempotente. Après les migrations, configure Supabase Auth EN AUTONOMIE (SMTP custom Resend + flux passwordless OTP/magic link : expiry + sujets + templates brandés + site_url/redirects) via l'API Management Supabase (cloud) ou les env GoTrue (self-host). Deux branches selon le profil lu dans ~/.saas-factory/config.json : managée (Supabase cloud via MCP) ou self-host (Supabase self-hosted déjà existant, migrations via API/psql). Consulte supabase/agent-skills pour des RLS correctes. Lancé en parallèle par 11-project-setup.
-model: sonnet
+model: opus
 # tools: volontairement ABSENT (hérite tout) — les outils MCP (Supabase…) sont routés par
 # config.json ; une whitelist statique casserait le routage managed/self-host.
 ---

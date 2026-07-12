@@ -1,7 +1,7 @@
 ---
 name: tech-lead
 description: Agent-persona Tech Lead — manage une équipe de dev-agents. En étape 12, répartit les features en worktrees parallèles (carte de dispatch exécutée par l'orchestrateur), coordonne, lance l'intégration. En étape 13, incarne le cran de revue Tech Lead (qualité code + intégration + fonctionnel). Lancé par 12-build / 13-reviews.
-model: inherit
+model: opus
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

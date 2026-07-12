@@ -12,7 +12,7 @@ Le sous-agent ne voit **pas** la conversation. Tout le contexte utile doit être
 | 2 | **Critères d'acceptation** (la recette) | fichier (dans le brief) ou inline court | Sans eux, pas de critère d'arrêt → boucle |
 | 3 | **Zone de code autorisée** | inline précis (worktree + dossiers) | Empêche le franchissement de zone (collisions) |
 | 4 | **Chemin du `status/NN-<slug>.md`** | inline | Canal de remontée async |
-| 5 | **Modèle** | inline explicite | Sinon hérite du modèle de session (fuite de coût) |
+| 5 | **Modèle** | inline explicite (`opus`) | Défaut plugin = Opus ; nommé pour ne pas hériter du modèle de session (non déterministe) |
 
 ## Les invariants à rappeler dans chaque dispatch
 - **TDD strict** (Iron Law : test rouge avant tout code).
@@ -37,7 +37,7 @@ Tu es feature-dev. Implémente UNE feature en TDD + recette, dans ton worktree.
 - Zone AUTORISÉE (et rien d'autre) : <dossiers/fichiers>
 - Brief        : briefs/NN-<slug>.md   (lis-le : périmètre + critères d'acceptation)
 - Statut       : écris ton avancement dans status/NN-<slug>.md
-- Modèle       : <rapide | standard | capable>
+- Modèle       : opus   (défaut plugin — cf. org-hierarchy.md)
 - Budget       : <N tours> ; épuisé → DONE_WITH_CONCERNS + remonte
 Invariants : TDD strict · pas de secret · reste dans la zone · respecte archi/DESIGN
 (+ doctrine anti-slop `_shared/design-doctrine.md` si surface UI, et applique le
@@ -51,7 +51,7 @@ si bloqué (clé/dépendance) → BLOCKED dans status, ne bluffe pas.
 - [ ] Zone **disjointe** de toutes les lanes actuellement actives (aucun fichier partagé).
 - [ ] Brief en **fichier** (pas collé depuis la conversation).
 - [ ] Critères d'acceptation présents (le dev a une recette → un critère d'arrêt).
-- [ ] Modèle **explicite**, routé selon la nature de la tâche (`org-hierarchy.md`).
+- [ ] Modèle **explicite** = `opus` (défaut plugin, mode qualité max — `org-hierarchy.md`).
 - [ ] Budget d'itération + critère de sortie rappelés.
 - [ ] Feature UI → **volet arsenal** présent dans le brief (animations + lib prescrites, blocs à dupliquer/re-thémer avec source, og-image en code si page publique).
 - [ ] Aucun secret dans le prompt (ni valeur de clé, ni token).
@@ -71,5 +71,5 @@ si bloqué (clé/dépendance) → BLOCKED dans status, ne bluffe pas.
 | **Brief collé** | Le dispatch traîne l'historique de session | Brief en fichier ; un dispatch = une tâche |
 | **Zone floue** | Le dev édite hors périmètre | Zone autorisée explicite + « et rien d'autre » |
 | **Critères absents** | Le dev ne sait pas quand s'arrêter | Toujours joindre la recette (critères d'acceptation) |
-| **Modèle implicite** | Coût qui explose | Modèle explicite par dispatch |
+| **Modèle implicite** | Héritage non déterministe du modèle de session | Nommer `opus` explicitement par dispatch |
 | **Secret dans le prompt** | Clé exposée dans un artefact | Env côté user ; jamais dans le dispatch |

@@ -10,7 +10,7 @@ Chaque ligne : la section, son critère de passage, le red-flag qui la recale.
 | **1. Synthèse** | archi en 1 phrase + stack en 1 ligne + 1-2 décisions structurantes, lisible d'un coup | fourre-tout, ou ne dit pas la stack |
 | **2. Matrice NFR** | 1 ligne/feature Must-Should, 8 axes, chaque exigence **sourcée** + classée dure/molle | exigence sans source ; axe inventé ; sécurité omise sur des PII |
 | **3.1-3.2 C4 L1/L2** | contexte + conteneurs en Mermaid (auto-contenu) | image externe ; conteneurs non reliés |
-| **3.3 Modèle de données** | `erDiagram` + RLS par table + tenant identifié + invariants concurrents en contraintes DB + surfaces `anon` gardées (`data-model.md`) | table tenantée sans RLS ; entité sans US ; **[SÉCU]** invariant concurrent en check applicatif seul ; **[SÉCU]** fonction grantée à `anon` sans checklist anti-abus |
+| **3.3 Modèle de données** | `erDiagram` + RLS par table + tenant identifié + invariants concurrents en contraintes DB + surfaces `anon` gardées + fonctions `plpgsql` robustes (garde-fou anti-collision colonne/variable) (`data-model.md`) | table tenantée sans RLS ; entité sans US ; **[SÉCU]** invariant concurrent en check applicatif seul ; **[SÉCU]** fonction grantée à `anon` sans checklist anti-abus ; **[SÉCU]/DB** fonction `plpgsql` (`RETURNS TABLE`/`SECURITY DEFINER`) avec colonne OUT / variable homonyme d'une colonne référencée nue → 42702 au runtime, sans `#variable_conflict use_column` ni préfixe+qualification |
 | **3.4 Modules** | features → modules + **split réutiliser/custom complet** | module « à décider » ; auth/billing marqués custom |
 | **3.5 Data-flow** | 2-3 workflows cœur (entrée→sortie) + points async marqués | opération lourde traitée en synchrone sans justification |
 | **3.6 Frontières de confiance** | entrées non fiables + authN/authZ + surfaces publiques/privées | `tenant_id` fourni par le client ; webhook non idempotent |
@@ -39,6 +39,7 @@ Chaque ligne : la section, son critère de passage, le red-flag qui la recale.
 [ ] Toute table tenantée a RLS + tenant dérivé du token (pas du client)
 [ ] [SÉCU] Tout invariant violable par 2 écritures concurrentes = contrainte DB (EXCLUDE/CHECK/unique composite), jamais un check applicatif seul (data-model.md §Invariants)
 [ ] [SÉCU] Surface anonyme : lecture = vue/fonction SECURITY DEFINER sans PII ; écriture = endpoint serveur validé + rate-limit ; toute fonction grantée à anon a ses 3 gardes anti-abus — bornes temporelles, plafonds par client, rate-limit IP (data-model.md §Accès public anonyme)
+[ ] [SÉCU]/DB Toute fonction plpgsql (surtout RETURNS TABLE / SECURITY DEFINER) porte son garde-fou anti-collision : #variable_conflict use_column OU variables préfixées v_/p_/c_ + colonnes qualifiées (table.colonne), jamais un nom nu homonyme d'une colonne OUT/variable (data-model.md §Robustesse des fonctions PL/pgSQL) — non vu par tsc/next build, prouvé au smoke-test (12-build)
 [ ] Chaque opération lourde/tierce = async explicite dans le data-flow
 [ ] Cas limites présents pour chaque workflow cœur (= matrice de tests Phase 4)
 [ ] Chaque ADR : exigence motrice + réversibilité honnête

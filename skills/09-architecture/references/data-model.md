@@ -69,6 +69,54 @@ Dès qu'une table, vue ou fonction est accessible au rôle `anon` (page publique
   3. **Rate-limit IP** — au niveau endpoint / middleware.
 - Sans ces trois gardes, un script remplit la ressource de n'importe quel tenant = **DoS métier trivial**. Chaque garde est documentée en section 3.3 (elle devient contrainte / code / test aux étapes 11 et Phase 4).
 
+## Robustesse des fonctions PL/pgSQL (collision colonne / variable — bug runtime invisible au build)
+Une fonction `plpgsql` **compile toujours** : Postgres ne résout les noms qu'**à l'exécution**. Un nom de **colonne de sortie** (`RETURNS TABLE(… x …)`), de **paramètre** ou de **variable locale** qui porte le **même nom qu'une colonne de table** référencée **sans qualification** lève l'erreur runtime **42702 « column reference … is ambiguous »** — au **premier appel réel**, jamais au build. Ni `tsc` ni `next build` ne voient le SQL : une fonction cœur (réservation, paiement, création de compte) passe toute la CI verte puis **plante au premier vrai clic en prod**. C'est un point `[SÉCU]`/qualité DB.
+
+Règle dure : **toute fonction `plpgsql`** (a fortiori `SECURITY DEFINER` et/ou `RETURNS TABLE`) applique **l'un des deux** garde-fous, jamais aucun :
+- **(a) directive `#variable_conflict use_column`** en **tête de corps** (après `as $$`, avant `begin`/`declare`) — un nom ambigu résout alors vers la **colonne** ; **ou**
+- **(b) discipline de nommage** : variables locales / paramètres **préfixés `v_` / `p_` / `c_`** (jamais le nom d'une colonne) **ET** **toute référence de colonne qualifiée** `table.colonne` — aucun nom **nu** qui puisse collisionner avec un paramètre OUT, une variable ou une colonne.
+
+Les deux se cumulent volontiers (ceinture + bretelles). Ce qui est **interdit** : un nom **nu** (`hold_expires_at`) dans une fonction où ce nom est **aussi** une colonne de sortie, un paramètre ou une variable.
+
+### Le fix exact (bug réel `create_booking`)
+```sql
+-- ❌ AVANT — 42702 au premier appel : la colonne OUT `hold_expires_at` de
+-- RETURNS TABLE collisionne avec appointments.hold_expires_at, référencée NUE.
+create function public.create_booking(slot_id uuid, client_email text)
+returns table (id uuid, hold_expires_at timestamptz)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  return query
+  insert into public.appointments (slot_id, client_email, hold_expires_at)
+  values (slot_id, client_email, now() + interval '15 minutes')
+  returning appointments.id, hold_expires_at;  -- hold_expires_at AMBIGU (colonne OUT vs colonne table)
+end;
+$$;
+
+-- ✅ APRÈS — un seul des deux garde-fous suffit ; ici les deux, par sûreté.
+create function public.create_booking(p_slot_id uuid, p_client_email text)
+returns table (id uuid, hold_expires_at timestamptz)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+#variable_conflict use_column                                         -- (a) nom ambigu ⇒ colonne
+begin
+  return query
+  insert into public.appointments (slot_id, client_email, hold_expires_at)
+  values (p_slot_id, p_client_email, now() + interval '15 minutes')   -- (b) paramètres préfixés p_
+  returning appointments.id, appointments.hold_expires_at;            -- (b) colonnes qualifiées
+end;
+$$;
+```
+> La collision était sur la **sortie** : `hold_expires_at` (colonne OUT de `RETURNS TABLE`) et `appointments.hold_expires_at` portent le même nom ; **nue** dans le `RETURNING`, la référence devient ambiguë → 42702. Fix : la directive (a) **et** la qualification `appointments.hold_expires_at` (b), plus les paramètres préfixés `p_` par hygiène. Règle mnémotechnique : **dans une fonction, un nom nu ne doit désigner qu'une seule chose.**
+
+- **Recette** : toute fonction posée en section 3.3 (et sa migration `supabase/` à l'étape 11) porte **(a) ou (b)** — c'est un point de revue à la DoD (item DB) et un red-flag de sa checklist.
+- **Preuve** : le build **ne l'attrape pas** ; seul un **smoke-test qui appelle réellement la fonction** contre une vraie base le détecte → porte de la passe d'intégration (`skills/12-build/references/integration-pass.md`, § smoke-test des fonctions/RPC).
+
 ## Cas limites de données (à lister explicitement)
 Chacun est un test futur (Phase 4) — non listé ici = test manquant plus tard.
 
@@ -89,10 +137,11 @@ Chacun est un test futur (Phase 4) — non listé ici = test manquant plus tard.
 - **RLS oubliée sur une table tenantée** : fuite inter-clients → deny-by-default, revue à la DoD.
 - **Invariant en check applicatif** : « on vérifie avant d'insérer » cède sous concurrence → contrainte `EXCLUDE`/`CHECK`/unique composite (§ Invariants d'intégrité DB), taggue `[SÉCU]`.
 - **Surface `anon` sans garde** : fonction grantée à `anon` sans bornes temporelles / plafonds / rate-limit → checklist anti-abus obligatoire (§ Accès public anonyme), taggue `[SÉCU]`.
+- **Fonction `plpgsql` à nom collisionnable** : colonne OUT / paramètre / variable homonyme d'une colonne de table référencée nue → 42702 « column reference is ambiguous » au premier appel, **invisible au build** → `#variable_conflict use_column` ou préfixe `v_`/`p_` + qualification systématique (§ Robustesse des fonctions PL/pgSQL) ; prouvé par smoke-test, pas par `tsc`.
 - **Entité fantôme** : une table sans US qui la justifie → supprime (choix orphelin).
 - **Modèle figé trop tôt** : si une US n'a pas d'entité pour la porter, **itère** avant de figer les modules (M3 boucle interne).
 
 ## Handoff
 - **Étape 10 (plan)** : chaque entité `crud` → tâche de câblage ; le custom → tâches verticale.
 - **Étape 11 (setup)** : le modèle → migrations `supabase/` versionnées.
-- **Phase 4 (build)** : les cas limites → matrice de tests ; les points `[SÉCU]` → revue sécurité.
+- **Phase 4 (build)** : les cas limites → matrice de tests ; les points `[SÉCU]` → revue sécurité ; **chaque fonction/RPC → smoke-test contre une vraie base (0 erreur SQL)** avant livraison (`skills/12-build/references/integration-pass.md`) — le garde-fou (a)/(b) se **prouve** là, il ne se relit pas.

@@ -77,11 +77,11 @@ Avant d'envoyer un `feature-dev`, force la vérification :
 - **Red-flags — dispatch à ne pas envoyer** :
   - brief collé depuis la conversation (contexte de session parasite) au lieu d'un fichier,
   - zone qui chevauche une lane déjà lancée,
-  - modèle non spécifié (l'agent hériterait du modèle de session, souvent le plus cher),
+  - modèle non spécifié (l'agent hériterait du modèle de session — on veut `opus` de façon déterministe),
   - critères d'acceptation absents (le dev n'aurait pas de recette → pas de critère d'arrêt).
 - **MOU vs FORT** :
   - MOU : *« Construis la feature de commentaires. »*
-  - FORT : *« Feature `08-comments`, worktree `feature/comments`, zones `src/comments/**` + `src/api/comments.ts` uniquement, brief `briefs/08-comments.md`, critères d'acceptation inclus, status `status/08-comments.md`, modèle rapide. TDD strict, budget 5 tours. »*
+  - FORT : *« Feature `08-comments`, worktree `feature/comments`, zones `src/comments/**` + `src/api/comments.ts` uniquement, brief `briefs/08-comments.md`, critères d'acceptation inclus, status `status/08-comments.md`, modèle opus. TDD strict, budget 5 tours. »*
 
 ## Suivi de l'avancement (async par fichiers)
 - Tu **lis** `status/*.md`, tu ne te fies **jamais** à ta mémoire de session.
@@ -95,5 +95,5 @@ Avant d'envoyer un `feature-dev`, force la vérification :
 | **Zones qui se chevauchent** | Deux devs éditent le même fichier | Ne jamais lancer : séquentialise, drapeau de conflit |
 | **Contexte de session collé** | Le dispatch traîne l'historique d'autres tâches | Un dispatch = une tâche ; artefacts en fichier |
 | **Dispatch en série au lieu de groupé** | Pas de concurrence réelle (attente entre agents) | Lanes indépendantes = **un seul message** avec tous les dispatches |
-| **Modèle implicite** | Coût qui explose | Toujours spécifier le modèle par dispatch |
+| **Modèle implicite** | Héritage non déterministe du modèle de session | Toujours nommer `opus` par dispatch |
 | **Blocage propagé** | Un dev bloqué gèle tout | Isole : les autres lanes avancent, on résout à la convergence |

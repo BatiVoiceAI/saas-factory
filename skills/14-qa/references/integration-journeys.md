@@ -38,10 +38,11 @@ Un parcours d'intégration = une **suite d'étapes utilisateur** qui traverse **
 ## 3. Catalogue des points de jonction (où traquer les bugs)
 | Jonction | Ce qui doit transiter | Bug typique |
 |---|---|---|
-| **Landing → signup OTP** | CTA → formulaire → code/lien émis, **reçu**, saisi → session | Email OTP jamais envoyé (mail sandbox non branché) ; code expiré avant saisie ; magic link qui pointe sur la mauvaise URL. |
+| **Landing → signup OTP** | CTA → formulaire → code/lien émis, **reçu**, **d'une longueur qui rentre dans l'input**, saisi → session | Email OTP jamais envoyé (mail sandbox non branché) ; **code plus long que le nombre de cases de l'input → saisie impossible** (bug vécu : `8` chiffres vs input `6`, défaut Supabase `mailer_otp_length`) ; code expiré avant saisie ; magic link qui pointe sur la mauvaise URL. |
 | **Auth → app** | Session, identité, rôles/permissions | Utilisateur connecté mais traité comme anonyme sur une page ; rôle non propagé. |
 | **Onboarding → feature cœur** | Préférences, plan choisi, données d'amorçage | Choix d'onboarding perdu ; feature démarre sur un état vide inattendu. |
 | **Feature A → Feature B** | Objet métier (devis, projet, doc…) | Objet créé en A introuvable/incomplet en B ; ID non passé. |
+| **Action de valeur → persistance (endpoint/RPC)** | Réponse **200** + **ligne réellement écrite** en base | Endpoint/RPC renvoie un **500 avalé** par un toast générique / UI optimiste ; **erreur SQL runtime** (`42702` colonne ambiguë, RLS, grant) **invisible au build** — « confirmé à l'écran » mais **rien n'est écrit** (bug vécu : `create_booking`). Exige **200 + l'objet qui réapparaît** (refresh / côté B), pas l'écran de confirmation. |
 | **Action de valeur → notification (boucle fermée)** | Trace durable à l'acteur **ET** avis à la contrepartie | **Email jamais envoyé** (mailer non branché, job `notification_jobs` posé mais jamais consommé) ; contrepartie jamais notifiée ; « confirmé à l'écran » mais rien ne part. → `_shared/boucles-fermees.md`, vérifié des **deux côtés** en sandbox. |
 | **Action → billing** *(public + billing)* | Quota, plan, compteur d'usage | Action autorisée au-delà du quota ; upgrade non reflété immédiatement. |
 | **Paiement → déblocage** *(public + billing)* | Statut d'abonnement, features premium | Payé mais premium toujours verrouillé (webhook non traité) ; double-charge. |
@@ -72,6 +73,7 @@ Rejoue chaque parcours cœur avec **une** de ces perturbations à la fois :
 ## 6. Definition-of-done de la passe 2
 - [ ] Chaque parcours cœur du PRD joué **bout-en-bout, sans réinitialiser** entre features.
 - [ ] Chaque **jonction** du parcours vérifiée (l'objet/état arrive intact).
+- [ ] Chaque **action de valeur exécutée → réponse 200 + entité persistée** (pas un 500 avalé ; l'objet réapparaît après refresh / côté contrepartie).
 - [ ] Chaque **action de valeur → boucle fermée** vérifiée des **deux côtés** (acteur + contrepartie reçoivent réellement — `_shared/boucles-fermees.md`) ; aucune boucle muette.
 - [ ] Au moins **une combinaison réaliste** (perturbation) testée par parcours cœur.
 - [ ] Le data-flow de l'**objet métier central** vérifié de création à consommation.
@@ -87,3 +89,4 @@ Rejoue chaque parcours cœur avec **une** de ces perturbations à la fois :
 | **Happy-path only en passe 2** | Aucune perturbation testée | Ajoute au moins une combinaison réaliste (§5) par parcours. |
 | **Contexte de bug amputé** | Retour dev avec juste l'écran final | Fournis le **parcours entier** : un bug de jonction se corrige avec l'amont, pas l'écran d'arrivée. |
 | **Boucle fermée non traquée** | Le parcours « passe » mais la notification n'est jamais vérifiée (jonction *action → notif* oubliée) | Traite la boucle comme une jonction à part entière : ouvre la boîte sandbox des **deux** rôles ; rien reçu = `FAIL` bloquant. |
+| **Persistance non vérifiée (500 masqué)** | Le parcours « passe » parce que l'écran confirme, mais l'endpoint/RPC a renvoyé un 500 avalé et rien n'est écrit (bug vécu : erreur SQL runtime `create_booking`) | Lis la réponse réseau : **200** exigé ; **rejoue une lecture** (refresh / côté contrepartie) pour prouver que l'entité existe. Écran ≠ écriture. |

@@ -1,7 +1,7 @@
 ---
 name: verifier
 description: Sous-agent de vérification technique (support QA de l'étape 14). Ne code pas : il juge. Vérifie tests, lint, build, régression, sécurité/PII, et resynchronise la doc. Complète le faux-client (qui, lui, teste l'expérience utilisateur A→Z).
-model: sonnet
+model: opus
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

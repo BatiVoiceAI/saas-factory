@@ -16,8 +16,8 @@ L'organisation en agents, façon vraie startup. Chaque rôle = un agent-persona 
 - `verification-before-completion`, `dispatching-parallel-agents`.
 > Discipline : conserver la **notice MIT** (Jesse Vincent). Préfixer `saas-factory-` pour éviter les collisions avec une install superpowers existante.
 
-## Sélection de modèle (repris de superpowers)
-Implémenteur mécanique → modèle rapide/cheap ; intégration/jugement → standard ; archi/revue → le plus capable. **Toujours spécifier le modèle** en dispatchant un sous-agent (sinon il hérite du modèle de session, souvent le plus cher).
+## Sélection de modèle — Opus par défaut (mode qualité maximale)
+**Modèle de base du plugin = Opus 4.8** (directive fondateur : **qualité > coût/vitesse** — cf. `skills/saas-factory/SKILL.md` §Cap qualité). **Tout** dispatch de sous-agent tourne sur **Opus** : chaque `agents/*.md` porte `model: opus`. On ne descend **jamais** en gamme « pour le coût » ni « pour aller plus vite ». Un modèle inférieur ne s'envisage que sur un geste **purement mécanique** **ET** **explicitement décidé** au cas par cas — **jamais le défaut**. **Toujours nommer le modèle** en dispatchant un sous-agent : on veut Opus de façon **déterministe**, pas par héritage accidentel du modèle de session.
 
 ---
 
@@ -56,14 +56,14 @@ La communication descend par **dispatch** (Task) et remonte par **fichiers** (`s
 | Merge + passe d'intégration | supervise | **exécute** | — |
 | Déclarer une feature `DEV-DONE` | — | consolide | **propose** (via recette) |
 
-## Sélection de modèle — routage par nature de tâche
+## Sélection de modèle — Opus pour toute nature de tâche
 | Nature de la tâche dispatchée | Modèle | Pourquoi |
 |---|---|---|
-| Câblage de bloc, CRUD mécanique, glue code | **rapide / cheap** | Peu de jugement, beaucoup de volume |
-| Feature custom avec logique métier | **standard** | Jugement modéré, cœur du produit |
-| Walking skeleton, passe d'intégration, jonctions | **standard → capable** | Vision transverse requise |
-| Architecture, arbitrage, revue (étape 13) | **le plus capable** | Coût d'erreur élevé |
-> Règle d'or : **toujours** nommer le modèle dans le dispatch. Un dispatch sans modèle hérite du modèle de session (souvent le plus cher) — fuite de coût silencieuse.
+| Câblage de bloc, CRUD mécanique, glue code | **Opus** | Même le mécanique se fait **sans-faute** ; qualité > coût |
+| Feature custom avec logique métier | **Opus** | Cœur du produit — le plus capable |
+| Walking skeleton, passe d'intégration, jonctions | **Opus** | Vision transverse — là où naissent les bugs de jonction |
+| Architecture, arbitrage, revue (étape 13) | **Opus** | Coût d'erreur le plus élevé |
+> Règle d'or : **Opus par défaut, toujours nommé dans le dispatch** (jamais implicite — sinon héritage non déterministe du modèle de session). Un modèle inférieur ne s'envisage que sur un geste **purement mécanique** **ET** décidé **explicitement** au cas par cas — **jamais le défaut**, jamais « pour le coût ».
 
 ## Frontière étape 12 vs étape 13 (ne pas confondre les casquettes)
 Le CTO et le Tech Lead ont **deux casquettes** selon l'étape :
