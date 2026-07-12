@@ -1,0 +1,49 @@
+name: Lighthouse
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unlighthouse:
+    name: Unlighthouse budgets (Core Web Vitals)
+    runs-on: ubuntu-latest
+    # Le serveur Next démarré ci-dessous importe lib/env.ts (validation zod).
+    # Placeholders NON sensibles pour satisfaire le schéma — jamais de vraie clé
+    # commitée (cf. safety-rails §4). Les vraies valeurs viennent des secrets.
+    env:
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-role-key' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Start production server
+        run: npm run start &
+
+      - name: Wait for server to be ready
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000 >/dev/null; then
+              echo "Server is up." && exit 0
+            fi
+            sleep 2
+          done
+          echo "Server did not start in time." && exit 1
+
+      # unlighthouse-ci lit unlighthouse.config.ts (budgets CWV, étape 17) et
+      # échoue si un budget de score de catégorie n'est pas atteint.
+      - name: Run Unlighthouse CI
+        run: npx unlighthouse-ci --site http://localhost:3000

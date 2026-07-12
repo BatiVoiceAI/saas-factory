@@ -1,0 +1,14 @@
+{
+  "name": "felix-saas-factory",
+  "owner": "felix",
+  "homepage": "https://github.com/felix/saas-factory",
+  "plugins": [
+    {
+      "name": "saas-factory",
+      "source": "./",
+      "description": "Idée → SaaS déployé, avec la méthode spec-driven multi-agents de Felix.",
+      "category": "productivity",
+      "tags": ["saas", "scaffolding", "spec-driven", "agents", "startup"]
+    }
+  ]
+}

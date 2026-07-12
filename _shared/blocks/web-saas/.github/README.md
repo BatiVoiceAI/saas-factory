@@ -1,0 +1,1 @@
+CI et budgets qualité du châssis web-saas : `workflows/ci.yml` (install · lint · typecheck · test · build sur push/PR) et `workflows/lighthouse.yml` (Unlighthouse — budgets Core Web Vitals de l'étape 17 : LCP < 2,5 s · CLS < 0,1 · INP < 200 ms).

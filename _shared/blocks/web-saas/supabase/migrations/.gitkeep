@@ -1,0 +1,6 @@
+# Les migrations SQL versionnées vivent ici. Chaque bloc écrit UNIQUEMENT
+# sa propre migration (numérotation figée, pas de collision) :
+#   0001_auth.sql     -> bloc auth
+#   0002_items.sql    -> bloc crud (entité exemple)
+#   0003_billing.sql  -> bloc billing (optionnel)
+# Toute table créée ici DOIT activer la RLS (safety-rails §4 / CONVENTIONS.md).

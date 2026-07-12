@@ -1,0 +1,25 @@
+{
+  "_comment": "Déclaration des MCP officiels dont dépend le provisioning (étape 11). Copier en .mcp.json et confirmer les configs au câblage réel. Les connexions/OAuth sont établies UNE fois par le skill infra-setup. Voir skills/11-project-setup/references/mcp-map.md.",
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"]
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"]
+    },
+    "cloudflare": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com"
+    },
+    "stripe": {
+      "type": "http",
+      "url": "https://mcp.stripe.com"
+    }
+  }
+}

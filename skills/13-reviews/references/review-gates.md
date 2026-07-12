@@ -1,0 +1,23 @@
+# Référence — Les 4 gates de revue (une lentille chacun)
+
+Chaque cran applique le **même gabarit** (`code-reviewer.md` de superpowers) avec une **lentille** différente, et rend son verdict au **format `verdict-schema.md`** (`PASS/CONCERNS/FAIL/WAIVED` + confiance 1-10 + **preuve citée**).
+
+> Ce fichier donne la **lentille** de chaque cran (le quoi). La **sous-procédure exhaustive** de chaque cran (ordre de lecture, critères de passage, forcing-question, DoD, cas limites, modes d'échec) est dans **`reviewer-playbooks.md`** — c'est là qu'on va pour *exécuter* un cran. Le contrat du rejet est dans `rejection-contract.md`, la conduite parallèle dans `orchestration.md`.
+
+## Gabarit commun (superpowers `requesting-code-review/code-reviewer.md`)
+Structure d'analyse : *Strengths · Critical · Important · Minor*. On le clone pour chaque cran en changeant la **lentille d'attention** — sans pré-juger les findings (le cran raise, la **preuve** tranche). Verdict final au format unifié.
+
+## Cran 1 — Tech Lead (`agents/tech-lead.md`)
+**Qualité code + intégration + fonctionnel** : DRY, lisibilité, patterns du projet, pas de sur-ingénierie ; cohérence avec le châssis (`_shared/blocks/`) et les autres features ; comportement conforme à la user story.
+> Catégories « bug qui passe la CI mais casse en prod » (façon gstack `/review`) : races/concurrence, complétude d'enum, time-window, trust-boundary d'une sortie LLM.
+
+## Cran 2 — CTO (`agents/cto.md`)
+**Architecture + sécurité + fonctionnel** : respect de `tech/architecture.md`, couplage, perf, dette ; **sécurité** via `security-review` vendoré + `owasp-cards.md` (OWASP / STRIDE / LLM / Agentic, **exploit concret par finding**, tag `[SÉCU]`) ; conformité comportementale. *(Cross-check `codex` optionnel ici.)*
+
+## Cran 3 — Designer (`agents/designer.md`)
+**Conformité `DESIGN.md` + UX + accessibilité + anti-slop** : tokens / composants / hiérarchie visuelle, **états** (loading / vide / erreur / succès), parcours clair ; **a11y** via `accessibility-review` vendoré (WCAG 2.1 AA : contraste, clavier, cibles 44px, lecteur d'écran) ; **anti-slop** via la checklist binaire de `_shared/design-doctrine.md`, passée **point par point** sur le rendu desktop + mobile — **un marqueur coché = `FAIL`** → retour dev (pas de rustine ponctuelle).
+
+## Cran 4 — CEO (`agents/ceo.md`)
+**Fonctionnel / métier (final)** : la feature résout-elle le **vrai besoin** du PRD ? Respecte-t-elle le **workflow cœur** et l'**edge** ? A-t-elle du sens **pour la cible** ? Consomme les **critères d'acceptation** (du PRD) → verdict de **conformité PRD**. Dernière validation avant le faux-client (étape 14).
+
+> Tous les crans sont **adversariaux** (chercher le défaut) et respectent le **gate anti-hallucination** (`verdict-schema.md` : pas de preuve citée → finding supprimée). Un `FAIL` = **retour dev avec le contexte du pourquoi**.

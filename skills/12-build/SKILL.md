@@ -1,0 +1,53 @@
+---
+name: 12-build
+description: >-
+  Étape 12 (Phase 4 · build) de SaaS Factory — Build multi-agents (org CTO → Tech Lead → devs). Exécute le plan de l'étape 10 : le CTO-agent donne la direction technique, le Tech Lead-agent dispatche une équipe de dev-agents qui construisent les features EN PARALLÈLE (1 feature = 1 worktree = 1 agent), en TDD + recette, chacun bouclant jusqu'à ce que ses critères d'acceptation passent ; walking skeleton d'abord, passe d'intégration après merge. S'appuie sur le moteur superpowers (subagent-driven-development, TDD, worktrees). Se déclenche pour « construire », « coder le SaaS », « lancer le build », après le setup (étape 11).
+allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Task
+---
+
+# SaaS Factory — Étape 12 : Build multi-agents (org CTO → Tech Lead → devs)
+
+C'est le **niveau DEV** de ta cascade : on **construit** les features. Tu incarnes l'**org d'ingénierie** — le CTO-agent donne la direction, le Tech Lead-agent répartit à une **équipe de dev-agents** qui codent en parallèle. Tu ne codes pas toi-même : tu **orchestres** (`Task`).
+
+**HARD GATE.** Ici on **construit et on auto-teste** (niveau dev). La **validation montante** (Tech Lead → CTO → Designer → CEO) = **étape 13**. Le **faux-client** = étape 14. Tu produis du **code + des tests verts par feature**, prêts à monter la cascade.
+
+## À lire d'abord
+`_shared/lessons.md`, `_shared/safety-rails.md`, `_shared/validation-cascade.md`, `_shared/stack-defaults.md`, `_shared/design-doctrine.md` (interdits design binaires — pour tout agent qui touche une surface UI), `_shared/landing-playbook.md` (structure + copy de la landing) ; le plan `tech/execution-plan.md` (étape 10) ; le `CLAUDE.md` projet (étape 11). **Moteur** : superpowers `subagent-driven-development` + `test-driven-development` + `using-git-worktrees` (`references/org-hierarchy.md`). Les **tests dev (TDD, recette)** alimentent le **livret de test** (`_shared/test-dossier.md` — tenu par le QA Analyst).
+
+## Le moteur (on l'exécute, on ne le réinvente pas)
+Le **pattern superpowers `subagent-driven-development`** est notre moteur **par-feature** (dispatch d'un dev-agent frais → implémente → self-review → la revue montante = étape 13). On y ajoute **notre org** (CTO / Tech Lead) et **notre fan-out multi-features**. TDD strict via `test-driven-development` ; isolation via `using-git-worktrees`. *(À vendorer dans `vendor/superpowers/` — cf. `references/org-hierarchy.md`.)*
+
+## Procédure
+1. **Direction (CTO-agent)** — lis `tech/execution-plan.md` : walking skeleton, lanes, carte de délégation. Le **CTO** (`agents/cto.md`) fixe l'ordre et les contraintes techniques, spawn le Tech Lead. Rôles, org, routage de modèle : `references/org-hierarchy.md`.
+2. **Walking skeleton d'abord** (séquentiel) — une tranche verticale mince qui **tourne** de bout en bout, mergée sur `main` avant tout fan-out (`references/walking-skeleton.md`).
+3. **Fan-out (Tech Lead-agent)** — pour les lanes parallèles : dispatche **un `feature-dev` par feature, dans son worktree** (`references/fan-out.md`), **en un seul message** ; anatomie exacte du dispatch dans `references/dispatch-brief.md`. Features liées → même lane coordonnée.
+4. **Dev-loop (chaque dev-agent)** — code + **test technique (TDD)** + **gate de compilation** (`tsc` avec le **tsconfig STRICT du châssis**, `noUncheckedIndexedAccess` inclus → 0 erreur) + **recette** (ses critères d'acceptation du plan) + self-review ; **boucle jusqu'à ce que sa recette passe** (`references/dev-loop.md`). Écrit `status/<feature>.md`.
+5. **Passe d'intégration** — après merge des lanes, le Tech Lead lance une **tâche d'intégration** (les bugs de jonction sont le coût du parallélisme, `_shared/lessons.md`) et une **porte de compilation = BUILD RÉEL de l'archétype** (`web-saas` : `next build` **+** `next lint`, pas seulement `tsc`) : un défaut qui passe `tsc` mais casse le build (ex. `export const` dans un fichier `"use server"`) n'est visible qu'au build réel. La passe vérifie **aussi** les garde-fous de sortie produit : (a) **charte appliquée** (`app/globals.css` ≠ défaut châssis) + **checklist anti-slop passée** (`_shared/design-doctrine.md`, binaire, desktop + mobile) ; (b) **landing conforme au playbook** (`_shared/landing-playbook.md` : sections canoniques + copy spécifique, zéro placeholder/lorem) ; (c) **métadonnées brandées** (title/description/og — `lib/brand.ts` ≠ défaut châssis ; `grep "SaaS Factory Template"` sur le repo = 0) **+ favicon** ; (d) **parcours premier usage complet** (signup OTP/magic link → onboarding qui crée l'entité cœur → dashboard non-vide) ; (e) **empty states avec CTA** sur chaque liste vide ; (f) **pages légales FR** présentes ; (g) **404 brandée + loading states**. Procédure, catalogue de jonctions et DoD dans `references/integration-pass.md`.
+6. **Handoff cascade** — chaque feature dev-validée est **prête pour l'étape 13** (Tech Lead → CTO → Designer → CEO). Note l'état dans `status/`.
+
+## Références (profondeur — progressive disclosure)
+- `references/org-hierarchy.md` — l'org (CTO/Tech Lead/dev), moteur superpowers à vendorer, routage de modèle, frontière étape 12↔13.
+- `references/walking-skeleton.md` — la tranche verticale d'abord : procédure, DoD, forcing-question, modes d'échec.
+- `references/fan-out.md` — parallélisation : matrices parallèle/séquentiel, largeur de fan-out, suivi async, modes d'échec.
+- `references/dispatch-brief.md` — anatomie d'un dispatch `feature-dev` (5 éléments obligatoires, squelette, checklist).
+- `references/dev-loop.md` — la boucle dev : machine à états, matrices, recette (forcing-question), DoD, catalogue de cas limites, modes d'échec.
+- `references/integration-pass.md` — merge séquentiel + passe d'intégration : catalogue de bugs de jonction, DoD, modes d'échec.
+
+## Contrat d'artefacts
+- **Lit** : `tech/execution-plan.md` (le plan, étape 10), `CLAUDE.md` (projet, étape 11), `DESIGN.md` (la charte), `_shared/design-doctrine.md` + `_shared/landing-playbook.md` (références normatives design / landing — checklists de la passe d'intégration), `research/positioning.md`, `product/pricing.md`, `product/*` (PRD + user stories), `status/*` (état des lanes).
+- **Écrit** : le **code sous la racine du repo** (features), `app/globals.css` **+** `tailwind.config` (mapping de la charte), `lib/brand.ts` (identité de marque — nom/tagline/description, renseigné au walking skeleton), `status/<feature>.md` (état par feature, template `assets/templates/feature-status.md`), `.saas-factory/state.md`.
+
+## Règles
+- **1 feature = 1 worktree = 1 agent**, zones disjointes, communication **async par fichiers** (`status/`).
+- **Jamais** plusieurs dev-agents sur la **même** zone en parallèle (collisions) — superpowers l'interdit, nous aussi.
+- **Budget d'itération** (du plan / `_shared/validation-cascade.md`) sur le dev-loop — pas de boucle infinie.
+- **tsconfig STRICT du châssis obligatoire** : chaque `feature-dev` boucle `tsc` (`npm run typecheck`, `noUncheckedIndexedAccess` inclus) → **0 erreur** avant de rendre sa feature. Interdit de contourner (`@ts-ignore`, `any`, tsconfig relâché).
+- **Le gate de compilation ≠ `tsc` seul** : la porte de l'org lance le **build réel de l'archétype** (`next build` + lint pour `web-saas`) — `tsc` vert ne prouve pas que le build passe.
+- **Appliquer la charte AVANT tout** (1er geste du walking skeleton) : mapper les tokens de `DESIGN.md` dans `app/globals.css` (`:root`/`.dark`) **+** `tailwind.config`, en **écrasant** les défauts du châssis. Un produit au look **générique** du châssis (noir/blanc) = charte **non appliquée** → bug bloquant. Vérif : `app/globals.css` diffère des valeurs par défaut du châssis.
+- **Brander l'identité AVANT tout** (même 1er geste, avec la charte) : renseigner `lib/brand.ts` (`name`, `tagline`, `description`) depuis `research/positioning.md` (nom + angle/tagline) **+** `product/pricing.md` (proposition de valeur). C'est la **source de vérité unique** du branding : `app/layout.tsx` (`<title>` / metadata), l'écran d'auth et la sidebar la consomment ; l'étape 16 (SEO) hérite du suffixe de titre via `title.template`. Le défaut `"SaaS Factory Template"` est une **sentinelle** : le laisser = `<title>` générique sur le site live (le dernier vestige châssis, invisible dans le corps de page) → bug bloquant. Ne **jamais** re-coder le nom du produit en dur ailleurs. Vérif : `lib/brand.ts` ≠ défaut châssis **et** `grep "SaaS Factory Template"` sur le repo = 0.
+- **La landing est un livrable à part entière**, pas un hero nu : vraie page marketing (hero + *comment ça marche* + features + *pricing* + CTA + footer), dérivée de `research/positioning.md` + `product/pricing.md` + PRD (+ clusters SEO de l'étape 16). Traite-la comme une feature avec critères d'acceptation. La référence normative est `_shared/landing-playbook.md` (11 sections canoniques, règles de copy, légal FR) : sa checklist binaire fait partie des critères d'acceptation de la landing.
+- **L'onboarding est une feature Must implicite de tout SaaS public** — jamais livrer un produit qui atterrit sur du vide. Le parcours de premier usage fait partie du périmètre du build : **signup OTP ou magic link** (jamais mot de passe seul) → **onboarding qui crée l'entité cœur** du produit (ex. profil salon : nom, adresse, horaires, prestations) → **dashboard d'arrivée non-vide** (il reflète l'entité créée) ; chaque liste encore vide porte un **empty state avec CTA**. Si le plan (étape 10) ne l'a pas listé, le Tech Lead l'ajoute comme lane Must.
+- **Pas de secret** en dur ni loggé.
+
+## Sortie & état
+Code buildé + tests verts par feature + `status/*` à jour (template `assets/templates/feature-status.md`). Mets à jour `.saas-factory/state.md`. Résume (features construites + intégration). Annonce l'**étape 13** (cascade Tech Lead → CTO → Designer → CEO).

@@ -1,0 +1,8 @@
+{
+  "name": "saas-factory",
+  "version": "0.3.6",
+  "description": "Transforme une idée en SaaS déployé de bout en bout : validation marché honnête, spec produit, design, architecture, build multi-agents avec cascade de validation (Tech Lead → CTO → Designer → CEO), QA faux-client, SEO qualité mesurée, déploiement borné, mesure & retro. 6 phases · 19 étapes · méthode spec-driven multi-agents.",
+  "author": "Felix",
+  "homepage": "https://github.com/felix/saas-factory",
+  "license": "MIT"
+}

@@ -1,0 +1,74 @@
+# Configuration Supabase CLI (minimale). `project_id` est un identifiant local
+# de dossier, pas un secret. Renseigner via `supabase link` à l'instanciation.
+project_id = "web-saas-template"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+# URL de base du site, utilisée pour les redirections OAuth / magic link.
+# Défaut LOCAL ci-dessous. En prod, `provisioner-db` pose en autonomie (API
+# Management Supabase) site_url = "https://<slug>.<config.domain>".
+site_url = "http://localhost:3000"
+# Redirections autorisées. Le wildcard couvre déjà /auth/callback, mais on la
+# liste explicitement — miroir de l'`uri_allow_list` posée en prod
+# ("https://<slug>.<config.domain>/auth/callback").
+additional_redirect_urls = ["http://localhost:3000/**", "http://localhost:3000/auth/callback"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+# --- PASSWORDLESS (OTP + magic link) = LE flux d'auth du châssis -------------
+# Pas de mot de passe : connexion ET création de compte passent par un code à
+# 6 chiffres + magic link envoyés dans le même e-mail (`signInWithOtp`).
+# Saisir le code ou cliquer le lien prouve la possession de la boîte mail :
+# l'e-mail est vérifié PAR CONSTRUCTION.
+#
+# `enable_confirmations` est donc SANS OBJET pour ce flux (il ne gouverne que
+# la confirmation des inscriptions par mot de passe) — laissé à false.
+enable_confirmations = false
+# Longueur du code (6-10 chiffres). 6 = défaut GoTrue, attendu par l'écran de
+# vérification du châssis.
+otp_length = 6
+# Validité du code ET du magic link, en SECONDES. 600 = 10 min : assez pour
+# ouvrir sa boîte mail, trop court pour un brute force confortable. En prod,
+# `provisioner-db` pose la même valeur via l'API Management (`mailer_otp_exp`).
+otp_expiry = 600
+# Intervalle minimal entre deux e-mails d'auth pour une même adresse. Aligné
+# sur le cooldown de 60 s du bouton « Renvoyer le code » de l'écran de
+# vérification (components/auth/auth-form.tsx).
+max_frequency = "1m"
+
+# --- SMTP custom (Resend) — LOCAL / SELF-HOST uniquement ---------------------
+# En CLOUD, c'est `provisioner-db` qui pose ce SMTP EN AUTONOMIE via l'API
+# Management Supabase (le SMTP custom retire la limite de débit du SMTP intégré
+# ⇒ e-mails OTP/magic link sans upgrade payant). Ce bloc ne sert QUE pour un
+# Supabase local/self-host : décommenter pour tester l'envoi des codes/liens
+# de connexion en local.
+# Même domaine d'envoi générique que le transactionnel (From noreply@<domain>).
+# Le secret RESEND_API_KEY est lu depuis .env — jamais en clair ici.
+# [auth.email.smtp]
+# host = "smtp.resend.com"
+# port = 587                      # 587 (STARTTLS) ou 465 (SSL)
+# user = "resend"
+# pass = "env(RESEND_API_KEY)"    # secret : référence .env, jamais la valeur
+# admin_email = "env(EMAIL_FROM)" # adresse d'envoi générique = noreply@<domain>
+# sender_name = "SaaS Factory"    # nom d'affichage (peut être le nom du projet)
+
+[storage]
+enabled = true
