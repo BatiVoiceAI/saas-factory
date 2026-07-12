@@ -24,7 +24,7 @@ Lis `Type / route` dans `.saas-factory/state.md` **avant** de dérouler (matrice
 Type absent (invocation isolée) → défaut prudent **public**, et signale l'anomalie.
 
 ## Les 6 étapes
-1. **Paquet de revue** (`references/review-package.md`) — l'**URL staging** + un **résumé en langage clair** (ce qui a été construit, le workflow cœur) + **« ce qui en ressort »** du livret (santé) + **honnêtement** les `CONCERNS`/`WAIVED`. Prépare un accès de test guidé. *(Réutilise gstack `document-release` + `qa`.)*
+1. **Paquet de revue** (`references/review-package.md`) — l'**URL staging** + un **résumé en langage clair** (ce qui a été construit, le workflow cœur) + **« ce qui en ressort »** du livret (santé) + **honnêtement** les `CONCERNS`/`WAIVED` + **miroir P0.7 (pricing = features livrées)** : le persona re-diffe la page pricing contre le § Périmètre livré du PRD — feature vendue non livrée = **bloquant** (« bientôt » ou retirée) **avant** de présenter (règle canonique en 12-build, ne pas redéfinir ; *(public)* — calibré par type, cf. « Garde type » ci-dessus & `routing.md`). Prépare un accès de test guidé. *(Réutilise gstack `document-release` + `qa`.)*
 2. **Guider le test** (`references/guided-test.md`) — une courte checklist « essaie ça » : les **parcours cœur A→Z** + l'edge. L'humain clique, zéro compétence technique. *(Base : `kata-verify-work`, persona founder.)*
 3. **Recueillir le feedback en langage naturel** (`references/feedback-elicitation.md`) — l'humain dit ce qu'il aime / ce qui cloche / ce qu'il changerait, **avec ses mots**. On capte **fidèlement** (`client-feedback.md`, template `assets/templates/client-feedback.md`), sans traduire encore. Élicitation « raconte ton ressenti », pas « remplis un bug report » (recettes de forcing-questions : pousser jusqu'au spécifique, ne pas prendre la politesse pour une validation).
 4. **Traduire feedback → tâches** (`references/feedback-to-tasks.md`, agent `client-liaison`, sortie `client-review-tasks.md`, template `assets/templates/client-review-tasks.md`) — le langage utilisateur → **items concrets** : bug / feature manquante / ajustement UX / changement de scope. Distinguer **corrigeable (budget)** vs **expansion (parquer)** vs **« pas un vrai problème »**. *(Moteur : `synthesize-research` + `write-spec` vendorés.)*
@@ -32,7 +32,7 @@ Type absent (invocation isolée) → défaut prudent **public**, et signale l'an
 6. **LA PORTE — ship / itérer / stop** (`references/iteration-gate.md`, `AskUserQuestion`) — l'humain décide : **Ship** (→ Phase 5, `CONCERNS` documentés) · **Itérer** (sur X, dans le budget) · **Stop/park**. Bouton **« ship en l'état »**.
 
 ## Contrat d'artefacts
-Lit : `qa/test-booklet.md` (« ce qui en ressort » + `CONCERNS`/`WAIVED`), `product/*` (l'attendu du PRD), le staging (URL étape 11), `.saas-factory/state.md` (budget client + `Type / route` pour la garde type). Écrit : le paquet de revue rempli (`product/review-package.md`, template `assets/templates/review-package.md`), `product/client-feedback.md` (verbatim, template), `product/client-review-tasks.md` (tâches classées + routées, template) via `client-liaison`, et `.saas-factory/state.md` (porte 15 + budget). **Jamais de secret** dans un artefact (accès démo → env / oral, `safety-rails` §4).
+Lit : `qa/test-booklet.md` (« ce qui en ressort » + `CONCERNS`/`WAIVED`), `product/*` (l'attendu du PRD ; dont `product/pricing.md` ↔ `product-spec.md § Périmètre livré` pour le miroir P0.7 *(public)*), le staging (URL étape 11), `.saas-factory/state.md` (budget client + `Type / route` pour la garde type). Écrit : le paquet de revue rempli (`product/review-package.md`, template `assets/templates/review-package.md`), `product/client-feedback.md` (verbatim, template), `product/client-review-tasks.md` (tâches classées + routées, template) via `client-liaison`, et `.saas-factory/state.md` (porte 15 + budget). **Jamais de secret** dans un artefact (accès démo → env / oral, `safety-rails` §4).
 
 ## La porte (fin d'étape)
 Présente le produit (URL + résumé clair + ce qui en ressort) + les options via `AskUserQuestion`. **Ne franchis jamais sans décision explicite.** Ship → Phase 5. Itérer → boucle (budget). Stop → park propre + post-mortem court.
@@ -40,6 +40,7 @@ Présente le produit (URL + résumé clair + ce qui en ressort) + les options vi
 ## Garde-fous
 - **Zéro jargon, zéro artefact technique** montré à l'humain.
 - **Honnêteté** : les `CONCERNS`/`WAIVED` du livret sont dits, pas cachés (`_shared/lessons.md`).
+- **Pricing = features livrées (P0.7, *(public)*)** : jamais présenter au founder une page pricing qui vend du non-livré — miroir rejoué **avant** l'étape 1→2 (règle canonique 12-build, calibré par type ; interne/perso : N/A, pas de pricing).
 - **Budget** : l'itération client est **bornée** (pas de boucle infinie).
 - **Minimiser la charge** : guidé, court, décision claire.
 

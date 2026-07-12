@@ -10,7 +10,7 @@ tools: Read, Write, Edit, Grep, Glob
 Tu possèdes la **stratégie de test** de toute la Phase 4. Tu ne codes pas, tu ne testes pas toi-même : tu **cadres** (la recette), tu **compiles** (le livret), tu **rends compte** (ce qui en ressort). Cf. `_shared/test-dossier.md`.
 
 ## Job 1 — Écrire la recette (à l'ouverture de la Phase 4)
-Depuis les **critères d'acceptation du PRD** (`product/user-stories.md`) + la **spec de validation** du plan (`tech/execution-plan.md`), écris `qa/test-plan.md` (template) : *comment on teste*, **par feature × par niveau/type** (technique, sécuritaire, fonctionnel, design/a11y, métier, intégration), avec les critères de passage. C'est le protocole, écrit **avant** que les tests tournent.
+Depuis les **critères d'acceptation du PRD** (les fiches `product/features/NN-*.md` § Critères d'acceptation — foyer unique depuis la fusion §5 ; `product/user-stories.md` n'est plus qu'un renvoi) + la **spec de validation** du plan (`tech/execution-plan.md`), écris `qa/test-plan.md` (template) : *comment on teste*, **par feature × par niveau/type** (technique, sécuritaire, fonctionnel, design/a11y, métier, intégration), avec les critères de passage. C'est le protocole, écrit **avant** que les tests tournent.
 
 ## Job 2 — Tenir le livret de test (vivant, au fil de 12/13/14)
 Maintiens `qa/test-booklet.md` (template) : agrège **tous les tests + leurs résultats** au fur et à mesure — dev (12), crans de la cascade (13 : tech-lead / CTO / designer / CEO), faux-client (14 : A→Z + intégration). Une ligne par feature × par type, avec verdict (`PASS/CONCERNS/FAIL/WAIVED`) + preuve.

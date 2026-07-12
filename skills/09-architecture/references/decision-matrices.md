@@ -42,6 +42,7 @@ Décidé en M3 pour **chaque** module. Alimente directement l'ordre du graphe de
 | Capacité du module | Décision | Bloc |
 |---|---|---|
 | Authentification, sessions, rôles, multi-tenant | **réutiliser** | `auth` |
+| Déploiement privé réel (`noindex` + redirection de bord des non-authentifiés) — **si `type ≠ public`** | **réutiliser** *(sélectionné par l'étape 9 quand `type ≠ public` ; inerte en `public` — cf. `routing.md` « 09 \| + bloc access-gate »)* | `access-gate` |
 | Repo + CI (lint/test/build/deploy) | **réutiliser** | `repo-ci` |
 | Déploiement + sous-domaine + SSL | **réutiliser** | `hosting` |
 | Layout, nav, tokens (mappe `DESIGN.md`), composants | **réutiliser** | `ui-shell` |

@@ -45,7 +45,7 @@ Le détail vit dans la matrice ci-dessous ; les portes réellement actives par r
 
 | Porte | public | interne | perso |
 |---|---|---|---|
-| 🚪 Opportunité (05) | Go / Ajuster / No-Go complet | décision d'utilité interne | décision build/non, très courte |
+| 🚪 Opportunité (05) | Go / Ajuster / Go-test / No-Go complet | décision d'utilité interne | décision build/non, très courte |
 | 🚪 PRD (07) | oui | oui | oui (validation courte) |
 | 🚪 Charte (08) | oui | oui | oui (1 décision de direction) |
 | 🚪 Client-review (15) | oui — persona founder | oui — sponsor interne | oui — toi-même, très court |

@@ -12,7 +12,7 @@ Chaque recette a le même format que l'entretien de la Découverte : **Ask-self*
 - **Red-flags** (→ renvoi Phase 2, `decision-matrices.md §0`) :
   - Une feature Must sans US ni critère d'acceptation → **on ne devine pas** le comportement attendu.
   - Une intégration citée sans nom d'outil (« se connecte à leur CRM ») → la faisabilité est opaque.
-  - Deux artefacts qui se contredisent (mvp-definition dit « pas de paiement v1 », une feature décrit un checkout) → le scope est instable.
+  - Deux artefacts qui se contredisent (`product-spec.md` § MVP dit « pas de paiement v1 », une fiche feature décrit un checkout) → le scope est instable.
   - Un non-goal contredit par une feature listée.
 - **MOU** (ce qu'on refuse d'ingérer) : « Le produit permet de gérer ses projets. » (aucune entité, aucun acteur, aucun flux).
 - **FORT** (ce qui est architecturable) : « Un *membre* crée un *projet* (nom, deadline, statut) ; il y attache des *tâches* assignées à d'autres membres ; à la deadline, une notification part. » → entités {membre, projet, tâche}, acteurs, déclencheur async identifiables.

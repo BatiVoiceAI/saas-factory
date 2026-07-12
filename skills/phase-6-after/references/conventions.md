@@ -10,7 +10,7 @@ Règles transverses. Chaque étape est un skill expert autonome (`18-metrics`, `
 | Étape | Lit | Écrit |
 |---|---|---|
 | 18 Metrics | tracking (PostHog / Sentry), `product/*`, `product/pricing.md` | `metrics/review.md` |
-| 19 Retro | `metrics/review.md`, `_shared/lessons.md`, `state.md` (critère de kill) | `retro/retro.md`, `~/.saas-factory/learnings.jsonl`, MAJ `_shared/lessons.md` |
+| 19 Retro | `metrics/review.md`, `_shared/lessons.md`, `~/.saas-factory/lessons-learned.md` (si présent), `state.md` (critère de kill) | `retro/retro.md`, `~/.saas-factory/learnings.jsonl`, MAJ `~/.saas-factory/lessons-learned.md` (jamais `_shared/lessons.md`) |
 
 Le chaînage est **par artefact sur disque** : `18` ne parle pas à `19` autrement qu'en écrivant `metrics/review.md`. Si `metrics/review.md` manque quand `19` démarre → l'étape le signale et ne fabrique pas de chiffres (repli honnête, `_shared/safety-rails.md` §6).
 
@@ -24,9 +24,9 @@ Le chaînage est **par artefact sur disque** : `18` ne parle pas à `19` autreme
 Ces moteurs sont **déjà provisionnés** (Phase 5) ; la Phase 6 les **lit**, elle ne les configure pas.
 
 ## Mémoire qui compound (le principe clé)
-La Phase 6 **enrichit la mémoire** pour que le prochain projet soit meilleur. Les leçons **transverses** (valables au-delà de ce projet) remontent dans `_shared/lessons.md` ; les leçons **projet** (spécifiques) vivent dans `~/.saas-factory/learnings.jsonl`. C'est **l'actif long terme** de SaaS Factory — la seule chose qui survit à un kill.
+La Phase 6 **enrichit la mémoire** pour que le prochain projet soit meilleur. Les leçons **transverses** (valables au-delà de ce projet) remontent dans `~/.saas-factory/lessons-learned.md` (hors plugin — survit aux updates ; `_shared/lessons.md`, livré avec le plugin, reste en **lecture seule**) ; les leçons **projet** (spécifiques) vivent dans `~/.saas-factory/learnings.jsonl`. C'est **l'actif long terme** de SaaS Factory — la seule chose qui survit à un kill.
 
-Règle de tri : *« Est-ce que je referais l'erreur / rejouerais le coup sur un projet **différent** ? »* → oui = `lessons.md` (transverse) ; non = `learnings.jsonl` (projet). En cas de doute, projet.
+Règle de tri : *« Est-ce que je referais l'erreur / rejouerais le coup sur un projet **différent** ? »* → oui = `~/.saas-factory/lessons-learned.md` (transverse) ; non = `~/.saas-factory/learnings.jsonl` (projet). En cas de doute, projet.
 
 ## Kill explicite
 Le critère de kill est **écrit au lancement** (dans `state.md`, champ `Critère de KILL`) et **confronté** aux métriques à l'étape 19. Jamais de kill (ni de continue) au feeling. C'est la règle d'or n°9 des `_shared/lessons.md` : *un critère écrit déclenche l'archivage + un post-mortem de 5 lignes.*

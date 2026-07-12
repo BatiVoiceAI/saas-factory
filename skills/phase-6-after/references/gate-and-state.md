@@ -32,7 +32,7 @@ Au vu de `metrics/review.md` **confronté** au `Critère de KILL` écrit dans `s
         └──────┬────────────┘                              │
                ▼                                           ▼
        à terme, re-boucle en Phase 6            leçons remontées en mémoire
-       (mesurer la nouvelle itération)          (lessons.md + learnings.jsonl)
+       (mesurer la nouvelle itération)          (~/.saas-factory/lessons-learned.md + learnings.jsonl)
 ```
 - **CONTINUE → Phase 4** quand l'itération est une **nouvelle feature / piste** (les 1-3 pistes de `metrics/review.md`) : on re-descend d
 - **KILL** → **post-mortem de 5 lignes**, archive propre, et surtout : **on capitalise** — c'est un kill qui a de la valeur seulement si la mémoire en sort enrichie.
@@ -47,7 +47,7 @@ Format : `_shared/state-schema.md`. À **chaque transition** de la phase, mettre
 - **Porte franchie** : ajouter `(kill/continue, décision, date)` une fois tranchée.
 - **Si CONTINUE** : noter la **cible du retour** (Phase 4 nouvelle piste, ou Phase 5 relance) + la piste retenue depuis `metrics/review.md`.
 - **Si KILL** : marquer le projet **clos** + lien vers `retro/retro.md` (post-mortem).
-- **Mémoire** : cocher que `learnings.jsonl` et `_shared/lessons.md` ont été enrichis (l'actif long terme est le vrai livrable).
+- **Mémoire** : cocher que `~/.saas-factory/lessons-learned.md` et `~/.saas-factory/learnings.jsonl` (hors plugin) ont été enrichis (l'actif long terme est le vrai livrable ; `_shared/lessons.md`, livré avec le plugin, reste en lecture seule).
 
 **Écrivain unique** : seul **l'orchestrateur** écrit `state.md` — jamais 18/19 ni un sous-agent. Ils produisent leur artefact (`metrics/*`, `retro/*`) et te le rapportent ; toi seul consignes, à chaque transition. Règle canonique (+ l'unique exception `01-discover`) : `skills/saas-factory/references/state-resume.md` §Écrivain unique.
 

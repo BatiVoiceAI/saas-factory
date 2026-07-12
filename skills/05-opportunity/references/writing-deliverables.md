@@ -56,7 +56,7 @@ Template : `assets/templates/opportunity-brief.md`, bloc **§Décision** en têt
 1. **Le problème en 1 phrase** — qui souffre, quand, de quoi. Une phrase, pas trois.
 2. **Ce qu'on a trouvé** — marché / concurrents / demande **en clair**. Dire la mauvaise nouvelle sans la maquiller. Ex. : « Il existe déjà 5 outils solides, les gens se plaignent surtout du prix, mais personne ne domine. »
 3. **Le POURQUOI** — LE CŒUR. *Pourquoi* continuer, ou *pourquoi pas*. Un **raisonnement**, pas un score. Rappelle que le signal est inféré (« à valider par toi »).
-4. **Recommandation** — Go / Ajuster / No-Go, une position claire, puis **rends la main** (« à toi de décider »).
+4. **Recommandation** — Go / Ajuster / Go-test / No-Go, une position claire, puis **rends la main** (« à toi de décider »).
 
 ### Recette forcing — le bloc « Le POURQUOI »
 - **Vise** : un enchaînement causal en 3-5 phrases qui *tient tout seul* (« parce que A, et que B malgré C, alors D »).

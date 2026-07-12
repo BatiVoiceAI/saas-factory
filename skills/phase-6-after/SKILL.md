@@ -12,7 +12,7 @@ Prérequis : produit **en ligne** (fin Phase 5, `17-deploy`). Tu déroules 2 ét
 **HARD GATE (phase).** On **mesure et on décide** — pas de build. Aucune ligne de code produit ici : toute itération repart en Phase 4/5. Livrable : bilan métriques + rétro + décision **kill/continue** + mémoire enrichie.
 
 ## À lire d'abord
-`references/conventions.md` + `_shared/lessons.md` (la mémoire — c'est ici qu'on la nourrit). Ces blocs `_shared/*` sont **déjà en contexte** (lus une fois par le master) : ne les fais pas relire par les étapes.
+`references/conventions.md` + `_shared/lessons.md` (baseline de leçons **livrée avec le plugin**, lecture seule). La mémoire qu'on **nourrit** ici vit **hors plugin** : `~/.saas-factory/lessons-learned.md` (transverse) + `~/.saas-factory/learnings.jsonl` (projet), écrites par `19-retro` (elles survivent aux updates). Ces blocs `_shared/*` sont **déjà en contexte** (lus une fois par le master) : ne les fais pas relire par les étapes.
 
 ## Le flux de la phase
 ```
@@ -33,13 +33,13 @@ Prérequis : produit **en ligne** (fin Phase 5, `17-deploy`). Tu déroules 2 ét
                    (nouvelle feature) ou Phase 5 (relance)     + archive propre + mémoire
                           │                                              │
                           └──────────────▶ mémoire enrichie ◀───────────┘
-                       (_shared/lessons.md transverse · learnings.jsonl projet)
+              (~/.saas-factory/lessons-learned.md transverse · learnings.jsonl projet)
 ```
 Détail exhaustif de la séquence (lit/produit/persona par étape) + calibrage par `type` : `references/flow.md`.
 
 ## Le pipeline
 1. **`18-metrics`** — funnel d'activation (PostHog) + santé (Sentry) → **1-3 pistes d'itération** priorisées. Écrit `metrics/review.md`.
-2. **`19-retro`** — rétro + **mémoire qui compound** + **porte kill/continue**. Écrit `retro/retro.md` + met à jour `~/.saas-factory/learnings.jsonl` / `_shared/lessons.md`.
+2. **`19-retro`** — rétro + **mémoire qui compound** + **porte kill/continue**. Écrit `retro/retro.md` + met à jour `~/.saas-factory/learnings.jsonl` / `~/.saas-factory/lessons-learned.md` (hors plugin ; `_shared/lessons.md` reste en lecture seule).
 
 ## Portes
 `19-retro` porte l'unique porte de la phase : la **décision kill/continue**.

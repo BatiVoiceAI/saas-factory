@@ -17,8 +17,9 @@ L'humain doit pouvoir **juger et tester en ~10 min**, sans être expert, avec un
 3. **Extraire « ce qui en ressort » du livret.** Lis `qa/test-booklet.md` : santé globale, ce qui est `PASS`, ce qui est `CONCERNS`/`WAIVED`. **Ne recopie pas** le livret (technique) → **traduis** en 3-5 lignes de langage clair.
 4. **Rédiger le résumé produit.** 5-8 lignes : le problème résolu + le workflow cœur + l'edge (la différenciation). Ton `stakeholder-update` : ce que le produit **fait pour l'utilisateur**, pas comment il est bâti.
 5. **Rédiger le « ce qu'on sait imparfait ».** Traduis chaque `CONCERNS`/`WAIVED` en une phrase honnête et non-alarmante. Voir la matrice ci-dessous.
-6. **Passer le paquet au filtre « zéro jargon ».** Voir la checklist de jargon. Un seul terme technique = échec, on réécrit.
-7. **Écrire** dans `product/review-package.md` (à partir du template `assets/templates/review-package.md`). Prêt pour l'étape 2 (guider le test).
+6. **Passer le miroir P0.7 (pricing = features livrées) — *(public)*.** Avant de présenter, le persona re-diffe la page pricing contre les Must **réellement livrés** : une feature vendue mais non livrée est **bloquante** (« bientôt » ou retirée), pas juste « à documenter ». Voir « Miroir P0.7 » ci-dessous. *(N/A en interne/perso — pas de page pricing.)*
+7. **Passer le paquet au filtre « zéro jargon ».** Voir la checklist de jargon. Un seul terme technique = échec, on réécrit.
+8. **Écrire** dans `product/review-package.md` (à partir du template `assets/templates/review-package.md`). Prêt pour l'étape 2 (guider le test).
 
 ## Matrice de décision — quoi inclure / quoi exclure
 | Élément candidat | Décision | Pourquoi |
@@ -44,6 +45,18 @@ L'humain doit pouvoir **juger et tester en ~10 min**, sans être expert, avec un
 
 **Règle** : on **nomme** la limite, on donne le **contour** (ça marche quand même / ça viendra), on **ne minimise pas** et on **ne dramatise pas**.
 
+## Miroir P0.7 — pricing = features livrées (garde d'honnêteté, avant de présenter) *(public)*
+Le paquet ne peut pas montrer au founder une **promesse commerciale fausse**. Avant l'étape 2, le persona **re-vérifie** chaque ligne de la page pricing (le live + `product/pricing.md`) contre le **§ Périmètre livré** du PRD (`product/product-spec.md` — la liste des Must réellement implémentés). **Feature vendue mais non livrée = bloquant** : « **bientôt** » explicite **ou** retirée de la carte — jamais un vaporware sous les yeux de l'humain. C'est le **troisième passage** de la même règle (posée à la passe d'intégration, 12 ; re-jouée au faux-client, 14 ; ici sur le produit fini).
+
+> **Règle canonique — ne pas la redéfinir.** Le diff pricing ↔ Must livrés et son traitement (« bientôt » / retirée / structurellement impossible → retirée) vivent **une seule fois** en 12-build : `skills/12-build/SKILL.md` (« Pricing = features livrées », P0.7) + `skills/12-build/references/integration-pass.md`. Ici on **rejoue** ce contrôle, on ne le ré-écrit pas.
+
+### Garde type (locale) — à qui s'applique ce miroir
+Lis `Type / route` dans `.saas-factory/state.md` (matrice canonique : `skills/saas-factory/references/routing.md`, ligne `12-build` — ne recopie pas la matrice) :
+- **public** → persona = **founder** : page pricing publique → le miroir P0.7 **s'applique pleinement** (diff bloquant avant de présenter).
+- **interne** → persona = **sponsor interne** : **pas de page pricing marketing** → miroir **N/A** ; la garde équivalente est « **accès privé prouvé** » (signup anonyme refusé), portée par 14 et `agents/live-qa.md`.
+- **perso** → persona = **toi-même** : **pas de pricing** → **N/A** (idem interne).
+- Type absent (invocation isolée) → défaut prudent **public** (on applique le miroir) + signale l'anomalie.
+
 ## Checklist zéro-jargon (chaque ligne du paquet doit passer)
 - [ ] Aucun nom de techno, framework, langage, provider, service cloud.
 - [ ] Aucun chemin de fichier, aucun `fichier:ligne`, aucun verdict `PASS/FAIL`.
@@ -57,14 +70,16 @@ L'humain doit pouvoir **juger et tester en ~10 min**, sans être expert, avec un
 - [ ] Résumé produit : 5-8 lignes, workflow cœur + edge, zéro jargon.
 - [ ] « Ce qui en ressort » : santé traduite du livret, 3-5 lignes.
 - [ ] « Ce qu'on sait imparfait » : **tous** les `CONCERNS`/`WAIVED` du livret traduits (ou explicitement « rien de notable »).
+- [ ] **(public) Miroir P0.7 passé** : chaque ligne de pricing = feature livrée (diff contre le § Périmètre livré du PRD) ; toute promesse non livrée mise en « bientôt » ou retirée. *(interne/perso : N/A.)*
 - [ ] Checklist zéro-jargon passée intégralement.
 - [ ] Le paquet tient sur un écran.
 
 ## Data-flow (ce qui alimente le paquet)
 ```
-qa/test-booklet.md ─┐   (santé + CONCERNS/WAIVED)
-product/product-spec ─┤─► TRADUCTION langage clair ─► review-package.md ─► étape 2 (guider)
-URL staging (étape 11)┘   (zéro jargon, honnête)          │
+qa/test-booklet.md ───┐   (santé + CONCERNS/WAIVED)
+product/product-spec ─┤   (§ Périmètre livré = Must livrés)
+product/pricing.md ───┤─► TRADUCTION langage clair ─► review-package.md ─► étape 2 (guider)
+URL staging (étape 11)┘   (miroir P0.7 public : diff pricing ↔ livré ; zéro jargon, honnête)
                                                           └─ secret d'accès → hors artefact (env/oral)
 ```
 
@@ -73,6 +88,7 @@ URL staging (étape 11)┘   (zéro jargon, honnête)          │
 |---|---|---|
 | **Staging mort** | 404 / démo vide / erreur au chargement | STOP, ne rien présenter, renvoyer au déploiement staging (repli honnête) |
 | **Paquet-brochure** | On vend, on cache les défauts | Réinjecter les `CONCERNS`/`WAIVED` du livret ; l'honnêteté prime |
+| **Vaporware montré au founder** *(public)* | La page pricing vend une feature que le code ne livre pas | Miroir P0.7 : diff pricing ↔ § Périmètre livré du PRD ; feature absente = « bientôt » ou retirée (renvoi 12-build) — jamais présenter une promesse fausse |
 | **Jargon résiduel** | Un terme technique a survécu | Repasser la checklist zéro-jargon, réécrire |
 | **Surcharge** | Le paquet fait 3 écrans, l'humain décroche | Couper : garder cœur + edge + top 3 limites |
 | **Démo vide** | Compte sans données → produit paraît mort | Pré-remplir des données de démo réalistes |

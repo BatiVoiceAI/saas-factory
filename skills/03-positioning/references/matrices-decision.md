@@ -73,6 +73,6 @@ Chaque champ que l'intake du moteur réclame, et d'où le tirer sans re-question
 
 ## Frontière anti-doublon (la seule règle)
 
-02 **observe** les manques · 03 **formalise** l'angle candidat (chaîne Dunford jusqu'à l'Onliness candidate) · 04 **tranche** le verdict edge (réel / faible / absent) en reprenant ta phrase et en précisant la niche · 05 **pèse** dans la décision Go/Ajuster/No-Go.
+02 **observe** les manques · 03 **formalise** l'angle candidat (chaîne Dunford jusqu'à l'Onliness candidate) · 04 **tranche** le verdict edge (réel / faible / absent) en reprenant ta phrase et en précisant la niche · 05 **pèse** dans la décision Go/Ajuster/Go-test/No-Go.
 
 Interdit en étape 3 — rien d'autre : le **verdict edge**, le **Go**, l'inférence de demande (étape 4), les taglines/messaging canal (Phase 2).

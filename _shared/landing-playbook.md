@@ -68,7 +68,7 @@ H1 unique ; hiérarchie de headings sans saut ; contraste ≥ 4.5:1 ; LCP < 2,5 
 2. **Bénéfice avant fonctionnalité** : header de feature = le résultat (« Zéro rappel téléphonique »), le paragraphe = le comment.
 3. **Langage du client final, jamais du dev.** Le copy est écrit dans la voix du produit, pour la persona (gérante de salon, pas CTO).
 4. **Longueurs** : headline ≤ 10 mots ; sous-titre 1-2 phrases ; paragraphe de feature 2-3 phrases ; réponse FAQ 1-2 phrases ; étape « comment ça marche » = 1 ligne d'action + 1 bénéfice.
-5. **Interdictions absolues** : lorem ipsum, `[placeholder]`, TODO ; superlatifs vides et buzzwords (seamless, empower, supercharge, revolutionize, leverage, all-in-one, effortless, next-gen, « révolutionnaire », « la meilleure plateforme ») ; jargon technique dans une page grand public ; CTA générique (« Learn more », « Get started » seul) ; superlatif non prouvable.
+5. **Interdictions absolues** : lorem ipsum, `[placeholder]`, TODO ; **buzzwords/hedge interdits — liste canonique dans `design-doctrine.md` §marqueur 19 (lexique buzz/hedge) + son lint CI ; ne pas la recopier ici** ; en **complément FR spécifique landing** (explicitement marqué) : « révolutionnaire », « tout-en-un » (non justifié), « la meilleure plateforme » ; jargon technique dans une page grand public ; CTA générique (« Learn more », « Get started » seul) ; superlatif non prouvable.
 6. Chaque headline contient un **objet concret + un bénéfice mesurable**.
 
 ### Formules de headline (8 patterns à instancier avec le métier du client)
@@ -140,7 +140,7 @@ Vérifiée par la porte d'intégration (étape 12) et la QA (étape 14). Trois p
 ### Passe B — Copy (bloquant)
 7. Aucun « lorem », « placeholder », « [.*] », « TODO » dans la page ?
 8. Headline ≤ 10 mots, contient le job concret + un bénéfice ?
-9. Aucun buzzword interdit (seamless, empower, supercharge, revolutionize, all-in-one, effortless, next-gen et équivalents FR) ?
+9. Aucun buzzword interdit (**liste canonique : `design-doctrine.md` §marqueur 19**) ni équivalent FR spécifique landing (« révolutionnaire », « tout-en-un » non justifié, « la meilleure plateforme ») ?
 10. Aucune stat sans source ; aucun témoignage/logo/avis non fourni en intake ?
 11. CTA primaire = verbe d'action spécifique au job, identique partout (pas de « Get started » nu) ?
 12. Prix affichés, TTC, devise locale, politique d'annulation explicite ?
@@ -154,7 +154,7 @@ Vérifiée par la porte d'intégration (étape 12) et la QA (étape 14). Trois p
 - **5-second test automatisé** : soumettre le screenshot above-the-fold seul à un LLM en persona « gérante de salon pressée, non-technique » avec 3 questions : *Que vend ce site ? Pour qui ? Que se passe-t-il si je clique le bouton ?* Une réponse fausse ou vague = régénérer le hero.
 - **6 critères Shapiro** : clarté (qu'est-ce qui est ambigu ?), conversion (qu'est-ce qui manque pour signer ?), intérêt, crédibilité (qu'est-ce qui sonne faux/spam ?), brièveté (si on coupe 50 %, que garde-t-on ?), différenciation vs concurrents.
 
-Note de maintenance : les patterns d'AI-slop et les buzzwords évoluent vite — cette checklist et le lexique interdit sont un fichier de config versionné, à réviser, pas des règles gravées.
+Note de maintenance : les patterns d'AI-slop évoluent vite — cette checklist landing est un fichier de config versionné, à réviser, pas des règles gravées. **Le lexique buzz/hedge interdit n'est pas maintenu ici : source unique = `design-doctrine.md` §marqueur 19 (+ son lint CI) ; landing n'ajoute que les équivalents FR spécifiques.**
 
 ---
 

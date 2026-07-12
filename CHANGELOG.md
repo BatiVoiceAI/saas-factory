@@ -2,7 +2,7 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
-## [0.4.0] — 2026-07-12 (en cours)
+## [0.4.0] — 2026-07-12
 
 Refonte qualité majeure, déclenchée par l'usage réel (premier SaaS déployé : `booking.speechflow.fr`). Objectif : passer de « génère un SaaS qui compile » à « livre un produit **pro, complet et vérifié**, pour SaaS public / outil interne / outil perso ».
 
@@ -26,10 +26,19 @@ Refonte qualité majeure, déclenchée par l'usage réel (premier SaaS déployé
 ### Gouvernance
 - Le plugin est désormais un **dépôt git** (tag `v0.3.6-snapshot` comme point de rollback) ; règle : chaque vague = commit.
 
-### En cours (Vague B, à venir)
-- Profondeur PM/CEO Phases 1-2 (competitive-analysis vendorée, PRD PM-grade).
-- P0.1 (plan soldé prouvé par exécution), P0.5 (déploiement privé interne/perso), P0.7 (pricing = features livrées), fusion des artefacts en doublon.
-- Adoptions issues de l'évaluation comparative (gstack / startup / superpowers).
+### Ajouté — profondeur PM/CEO (Vague B)
+- **Phase 1 = vraie analyse concurrentielle** : méthodo `startup-competitors` vendorée (MIT), 3 vagues (deep-dives 5-8 concurrents + adjacents, pricing intelligence tier-par-tier, sentiment mining avec verbatims sourcés + language map + churn signals, GTM/channel map), quotas de preuve, honesty-protocol.
+- **PRD PM-grade** (étape 07) : chaque feature Must = 11 sections (objectif/job, persona, user story, flow détaillé, tous les états, règles métier, boucles fermées, critères Given/When/Then, volet technique). Socle complétude généralisé aux 3 types + metadata/favicon brandés (S8).
+- **P0.1** plan soldé prouvé par exécution (registre `plan-ledger.md`, tests committés, E2E cœur exécuté) · **P0.5** déploiement privé réel interne/perso (bloc `enrollment.ts` + `access-gate` + middleware noindex) · **P0.7** pricing = features livrées.
+- **« Cap qualité »** (le soin prime sur la vitesse) gravé dans l'orchestrateur maître.
+- Fusion des doublons (§5) : research/ 7→5 fichiers, le PRD absorbe MVP + priorisation ; **Go-test** devient une 4ᵉ issue de porte canonique.
+
+### Gouvernance
+- Le plugin est un **dépôt git** (tag `v0.3.6-snapshot`) ; chaque vague = commit + entrée CHANGELOG.
+
+### Reste (backlog, non bloquant)
+- Adoptions issues de l'évaluation comparative (gstack / startup / superpowers) — à relancer (perdue au gel nocturne).
+- Cosmétiques : diagrammes ASCII compressés, quelques mentions génériques « user-stories » à préciser.
 
 ## [0.3.6] — 2026-07-11
 - Emails autonomes : domaine d'envoi générique unique, SMTP custom = Resend posé par la machine (lève la limite Supabase, zéro upgrade payant), pour confirmation de compte **et** transactionnel.

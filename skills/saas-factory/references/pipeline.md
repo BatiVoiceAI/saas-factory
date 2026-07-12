@@ -47,7 +47,7 @@ Les 🚪 = portes utilisateur. Les flèches `◀` remontantes = **retours arriè
 
 | # | Orchestrateur | Rôle | Étapes | Produit (artefacts clés) | Porte |
 |---|---|---|---|---|---|
-| 1 | `phase-1-validation` | CEO | 01→05 | `research/opportunity-brief.md` (bloc §Décision = le POURQUOI, en tête) | 🚪 **Go / Ajuster / No-Go** |
+| 1 | `phase-1-validation` | CEO | 01→05 | `research/opportunity-brief.md` (bloc §Décision = le POURQUOI, en tête) | 🚪 **Go / Ajuster / Go-test / No-Go** |
 | 2 | `phase-2-product` | PM/CEO/Designer | 06→08 | `product/*` (PRD), `DESIGN.md` | 🚪 **PRD + charte validés** |
 | 3 | `phase-3-tech` | CTO | 09→11 | `tech/architecture.md`, `tech/execution-plan.md`, repo + `tech/provisioning-log.md` | **aucune** (100% autonome) |
 | 4 | `phase-4-build` | l'org | 12→15 | code validé (cascade + faux-client), `qa/*` | 🚪 **Ship / Itérer / Stop** (étape 15) |

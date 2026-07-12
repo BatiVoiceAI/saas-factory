@@ -6,7 +6,7 @@ Une **porte = une décision de l'utilisateur, en clair + preuve**. Jamais faire 
 
 | Porte | Portée par | Décide | Options → suite |
 |---|---|---|---|
-| **Opportunité** | `05-opportunity` (P1) | l'idée vaut-elle qu'on la construise ? | **Go** → P2 · **Ajuster** → reboucle étape faible de P1 · **No-Go** → post-mortem 5 lignes + stop |
+| **Opportunité** | `05-opportunity` (P1) | l'idée vaut-elle qu'on la construise ? | **Go** → P2 · **Ajuster** → reboucle étape faible de P1 · **Go-test** *(public)* → ship une landing+waitlist à seuil pré-enregistré avant de builder ; seuil atteint → Go, sinon → Ajuster/No-Go · **No-Go** → post-mortem 5 lignes + stop |
 | **PRD + Charte** | `07-product-spec` + `08-design-system` (P2) | le QUOI (produit + design) est-il le bon ? | **validé** → P3 · **à revoir** → reboucle 06-08 |
 | — *(Phase 3)* | — | **aucune porte** — 100% autonome, décisions loguées | → P4 direct |
 | **Client-review** | `15-client-review` (P4) | le produit construit est-il bon à lancer ? | **Ship** → P5 · **Itérer** → reboucle build (budget) · **Stop** → arrêt |
@@ -25,6 +25,7 @@ Les portes **réellement actives selon le `type`** (ex. porte Déploiement absen
 Une porte peut **renvoyer à une phase antérieure**. Le master gère la boucle et la re-mise à jour d'état :
 
 - **Ajuster (P1)** → reboucle sur l'**étape faible** de P1 (le routage précis est dans `05-opportunity`), pas tout P1.
+- **Go-test (P1, public)** → pas un retour arrière mais un **test réel avant build** : ship une landing+waitlist à seuil pré-enregistré, puis **retour à la porte 5** avec la donnée (seuil atteint → Go, sinon → Ajuster/No-Go). Détail : `skills/05-opportunity/references/go-test-playbook.md`.
 - **À revoir (P2)** → reboucle 06-08 selon ce qui coince (business model, PRD, ou charte).
 - **Itérer (P4, étape 15)** → repart dans le build (12→14), **borné par le budget d'itération** (`_shared/validation-cascade.md` / champ « Budget d'itération » de l'état). Budget épuisé → présenter l'état, proposer « ship en l'état » vs « continuer », laisser trancher.
 - **Continue (P6, étape 19)** → itération produit : **retour Phase 4** (nouvelles features) ou **Phase 5** (re-deploy), selon la piste retenue à l'étape 18.

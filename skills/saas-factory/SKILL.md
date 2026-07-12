@@ -51,7 +51,7 @@ IDÉE ─▶ P1 validation ─Go▶ P2 product ─validés▶ P3 tech ─▶ P4 
          └No-Go▶ stop                                                                         └kill▶ archive+mémoire
 ```
 
-1. **`phase-1-validation`** (CEO) — idée → marché → positionnement → demande/edge → opportunité. 🚪 **Go / Ajuster / No-Go**.
+1. **`phase-1-validation`** (CEO) — idée → marché → positionnement → demande/edge → opportunité. 🚪 **Go / Ajuster / Go-test / No-Go**.
 2. **`phase-2-product`** (PM/CEO/Designer) — business model → **PRD** → design system. 🚪 validation PRD + charte.
 3. **`phase-3-tech`** (CTO) — architecture → plan d'exécution → setup & provisioning. **Zéro porte** (100 % autonome).
 4. **`phase-4-build`** (l'org) — build multi-agents → cascade de validation → faux-client → 🚪 **revue client** (seul contact humain du build).

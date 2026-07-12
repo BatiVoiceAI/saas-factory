@@ -66,4 +66,4 @@ Applique `vendor/startup-skill/startup-competitors/references/verification-agent
 4. **Si pas d'edge : dis-le, net.** N'invente rien. Écris que le produit reste **viable à features égales, bien exécuté sur une niche** — et renvoie l'arbitrage « on y va quand même ? » à l'étape 5.
 
 ## Clôture d'étape
-Mets à jour `.saas-factory/state.md` (verdict demande, verdict edge). Résume en 2 lignes, puis annonce l'**étape 5 (`05-opportunity`)**, qui pèsera demande × edge × marché × risques pour la porte Go / Ajuster / No-Go.
+Mets à jour `.saas-factory/state.md` (verdict demande, verdict edge). Résume en 2 lignes, puis annonce l'**étape 5 (`05-opportunity`)**, qui pèsera demande × edge × marché × risques pour la porte Go / Ajuster / Go-test / No-Go.

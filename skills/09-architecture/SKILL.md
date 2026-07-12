@@ -29,7 +29,7 @@ Le process est **normé**, jamais improvisé : les 4 mouvements ci-dessous s'ex�
 Tiens l'état dans `.saas-factory/state.md`. Lis le fichier de référence du mouvement **au moment** où tu l'exécutes (économie de contexte). La **machine à états** complète (crans, critères de passage, retours arrière, data-flow) : `references/procedure.md`. À exécuter **dans l'ordre** — un mouvement ne démarre que si le critère de passage du précédent est tenu.
 
 1. **Ingérer le découpage fonctionnel** — `references/procedure.md §M1` (+ `references/forcing-questions.md §1`)
-   Lis tout le travail du PM : `product/product-spec.md`, `product/features/*`, `product/user-stories.md` (avec critères d'acceptation), `product/mvp-definition.md`, `product/feature-prioritization.md`, `DESIGN.md`, et `research/idea-brief.md` (écosystème / intégrations attendues). C'est le socle : **jamais de page blanche**. Si une pièce manque ou en contredit une autre → signale-le et **renvoie à la Phase 2** avant de continuer (déclencheurs exacts du renvoi : `references/decision-matrices.md §0`).
+   Lis tout le travail du PM : `product/product-spec.md` (dont § Priorisation, § MVP, § Dépendances & build order), `product/features/*` (§ User story + § Critères d'acceptation + § Volet technique par fiche), `DESIGN.md`, et `research/idea-brief.md` (écosystème / intégrations attendues). C'est le socle : **jamais de page blanche**. Si une pièce manque ou en contredit une autre → signale-le et **renvoie à la Phase 2** avant de continuer (déclencheurs exacts du renvoi : `references/decision-matrices.md §0`).
 
 2. **Extraire les exigences techniques** — `references/nfr-checklist.md`
    Passe une **grille fixe** (ISO/IEC 25010 + piliers Well-Architected) sur **chaque feature et chaque user story** : sécurité, performance/rapidité, efficacité/coût, scalabilité, fiabilité, maintenabilité, intégrations, contraintes plateforme. Produis la **matrice des exigences** (feature × axe). C'est elle qui **justifiera** tous les choix suivants.
@@ -59,7 +59,7 @@ Tiens l'état dans `.saas-factory/state.md`. Lis le fichier de référence du mo
 ## Contrat d'artefacts (le bus de données)
 | Lit | Écrit |
 |---|---|
-| `product/product-spec.md`, `product/features/*`, `product/user-stories.md`, `product/mvp-definition.md`, `product/feature-prioritization.md`, `DESIGN.md`, `research/idea-brief.md`, `_shared/stack-defaults.md`, `_shared/archetypes/web-saas.md` | `tech/architecture.md` (template `assets/templates/architecture.md`), `tech/decisions.md` (template `assets/templates/decisions.md`), `.saas-factory/state.md` |
+| `product/product-spec.md` (§ Priorisation, § MVP, § Dépendances & build order), `product/features/*` (§ User story + § Critères d'acceptation + § Volet technique), `DESIGN.md`, `research/idea-brief.md`, `_shared/stack-defaults.md`, `_shared/archetypes/web-saas.md` | `tech/architecture.md` (template `assets/templates/architecture.md`), `tech/decisions.md` (template `assets/templates/decisions.md`), `.saas-factory/state.md` |
 
 Ne mets **jamais** de secret / clé API dans ces fichiers.
 

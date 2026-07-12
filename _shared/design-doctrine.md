@@ -40,7 +40,7 @@ Liste binaire. Un agent qui produit un de ces marqueurs a échoué, quelle que s
 
 ### Contenu
 18. **INTERDIT** : testimonials fictifs, avatars stock/IA, logos « as seen in » faux, métriques inventées (« 10 000+ users » au lancement), stats non sourcées. Règle : pas de preuve réelle = pas de section.
-19. **INTERDIT** : lexique buzz/hedge — seamless, empower, unlock, revolutionize, supercharge, best-in-class, effortless, next-gen, all-in-one, « may help you » — et tout lorem ipsum / placeholder / TODO.
+19. **INTERDIT** : lexique buzz/hedge — seamless, empower, unlock, revolutionize, supercharge, best-in-class, effortless, next-gen, all-in-one, leverage, « may help you » — et tout lorem ipsum / placeholder / TODO.
 20. **INTERDIT** : thème shadcn par défaut (zinc) non personnalisé (`bg-slate-100` / `rounded-lg` bruts).
 
 **Garde-fou automatisable (lint CI)** : grep qui échoue sur classes `text-indigo-*` / `bg-violet-*` / `from-purple-*`, hex en dur dans `components/`, font-family hors variables, emoji unicode dans les TSX de pages marketing, chaînes du lexique buzz dans le copy. Peu coûteux, attrape ~80 % des régressions.

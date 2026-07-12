@@ -20,7 +20,7 @@ Le fichier d'état global du projet, tenu par le master et chaque phase. **Jamai
 ## Portes franchies
 | Porte | Décision | Date |
 |---|---|---|
-| Opportunité (étape 5) | Go / Ajuster / No-Go | … |
+| Opportunité (étape 5) | Go / Ajuster / Go-test / No-Go | … |
 | PRD (étape 7) · Charte (étape 8) | validé | … |
 | Client-review (étape 15) | Ship / Itérer / Stop | … |
 | Déploiement (étape 17) | publié | … |

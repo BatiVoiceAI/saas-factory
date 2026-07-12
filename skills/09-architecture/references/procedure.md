@@ -43,7 +43,7 @@ Le cadrage a un **cran courant**. Il ne **monte** d'un cran qu'une fois le **cri
 - **Passage** : les 4 fichiers socle sont lus.
 
 ### M1 — Ingérer le découpage fonctionnel (le PRD)
-- **Fais** : lis **tout** le travail produit — `product/product-spec.md`, `product/features/*`, `product/user-stories.md` (avec critères d'acceptation), `product/mvp-definition.md`, `product/feature-prioritization.md`, `DESIGN.md`, `research/idea-brief.md`.
+- **Fais** : lis **tout** le travail produit — `product/product-spec.md` (dont § Priorisation, § MVP, § Dépendances & build order), `product/features/*` (§ User story + § Critères d'acceptation + § Volet technique par fiche), `DESIGN.md`, `research/idea-brief.md`.
 - **Auto-interrogation** : applique `forcing-questions.md §1` (le PRD est-il *architecturable* ?). Cherche les trous qui **empêchent** de décider une archi : entité centrale non nommée, workflow cœur sans critères d'acceptation, intégration mentionnée sans le nom de l'outil, non-goal contredit par une feature.
 - **Interdit** : **combler un trou côté produit** (re-spécifier une feature, inventer une US). Le HARD GATE tient : si le produit est flou, on **renvoie à la Phase 2**, on ne bouche pas.
 - **Passage** : soit le PRD est cohérent et complet côté architecture → M2 ; soit un déclencheur de `decision-matrices.md §0` est atteint → **renvoi Phase 2** (on s'arrête, on dit précisément quel artefact manque/contredit).
@@ -56,6 +56,7 @@ Le cadrage a un **cran courant**. Il ne **monte** d'un cran qu'une fois le **cri
 
 ### M3 — Découpage technique (miroir du fonctionnel)
 - **Fais** : suis `technical-decomposition.md` — C4 niveau 1 (contexte), niveau 2 (conteneurs), **modèle de données** (via `data-model.md` : entités/relations/RLS/multi-tenant), niveau 3 (modules en miroir des features), **data-flow** des workflows cœur, **frontières de confiance**, **cas limites**.
+- **Reprends les noms de 07 (anti-dette)** : chaque fiche `product/features/*` porte un **§ Volet technique** (contrat logique : entités touchées, actions logiques, validations, invariants à préserver). L'architecte **reprend ces noms d'entités/actions tels quels** pour nommer tables et modules — il ne les réinvente pas ; il les **traduit** en COMMENT (schéma, RLS, routes, index) sans renommer le QUOI. Un renommage silencieux (« Réservation » du PM → `booking_slot` en archi) casse la traçabilité feature → module et crée de la dette.
 - **Décide le split** : pour chaque module → **réutilise un bloc** (`_shared/blocks/`) ou **custom** (la verticale). Matrice : `decision-matrices.md §3`. Ce split est l'entrée directe de l'étape 10.
 - **Boucle interne** : si le modèle de données ne « ferme » pas (une US n'a pas d'entité pour la porter, une relation ambiguë) → itère sur `data-model.md` avant de figer les modules (les modules dépendent des entités).
 - **Passage** : C4 L1+L2 rendus en Mermaid + modèle de données (erDiagram + RLS) + data-flow des 2-3 workflows cœur + cas limites listés + tableau réutiliser/custom rempli (L3 modules).

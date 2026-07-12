@@ -24,7 +24,7 @@ La carte détaillée de la phase : l'ordre exact d'invocation, ce que chaque ét
  │  fait : rétro honnête, extrait les leçons, CONFRONTE le      │
  │         critère de kill aux chiffres                          │
  │  écrit: retro/retro.md, ~/.saas-factory/learnings.jsonl,     │
- │         MAJ _shared/lessons.md                                │
+ │         MAJ ~/.saas-factory/lessons-learned.md                │
  │  🚪 PORTE : KILL / CONTINUE                                    │
  └───────────────────────────────┬───────────────────────────────┘
                                  ▼

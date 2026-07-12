@@ -10,8 +10,8 @@ Definition of Done      ─▶ la barre de sortie (tests, doc, design, sécu)
 Budget d'itération      ─▶ plafond de boucles + critère de sortie (anti-boucle infinie)
 ```
 
-## 1. Critères d'acceptation — les dériver des user stories
-- **Source obligatoire** : `product/user-stories.md` + les critères d'acceptation du PRD. **Jamais inventés.** Si une feature n'a pas de critère traçable, c'est un trou du PRD → noter dans l'audit (`[Hypothèse]`), ne pas fabriquer.
+## 1. Critères d'acceptation — les dériver des fiches feature
+- **Source obligatoire** : `product/features/*` (§ User story + § Critères d'acceptation de chaque fiche Must/Should). **Jamais inventés.** Si une feature n'a pas de critère traçable, c'est un trou du PRD → noter dans l'audit (`[Hypothèse]`), ne pas fabriquer.
 - **Format** : testables, binaires (vrai/faux), au présent, orientés comportement observable. « Quand {contexte}, alors {résultat observable} ».
 - **Couvrir le chemin ET les bords** : au moins un critère nominal + les cas limites recensés au data flow de l'étape 9 (entrée vide/invalide, échec tiers, double soumission/idempotence, concurrence, limite haute).
 

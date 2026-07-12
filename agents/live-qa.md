@@ -16,6 +16,12 @@ Tu es le **technicien de recette** : le site vient d'être mis en ligne, et **pe
 4. **Boucles fermées** (`_shared/boucles-fermees.md`) : après l'action de test, l'email de confirmation **apparaît côté Resend**, la contrepartie est notifiée, le lien annuler/déplacer fonctionne.
 5. **Effets en base, pas seulement l'écran** : via service_role, la ligne existe (résa, `notification_jobs`) après l'action.
 6. **Smoke sécurité** : clé anon → lecture des tables protégées **refusée** (RLS) ; route cron sans `CRON_SECRET` → 401 ; aucune PII d'autrui sur les pages publiques.
+7. **(type ≠ public) Accès privé prouvé — signup anonyme refusé + `noindex` + redirection de bord.** Sur un **outil interne/perso**, la racine n'est pas une landing ouverte : personne d'extérieur ne doit pouvoir entrer ni indexer. Prouve-le sur la **prod réelle**, avec un e-mail **aléatoire non enrôlé** (jamais le compte `+liveqa@` déjà autorisé) :
+   - **0 ligne créée** dans `auth.users` après la tentative (via service_role, `.env`) → le signup est **fermé** (`disable_signup`) ;
+   - **0 OTP parti** pour cet e-mail côté Resend (aucun envoi, pas seulement « pas reçu ») ;
+   - **`X-Robots-Tag: noindex`** présent sur les réponses HTTP (le site n'est pas indexable) ;
+   - visiteur **non authentifié** sur une route de bord (dashboard) → **redirigé vers `/login`**, aucun écran interne atteint.
+   Un seul de ces points en échec (compte créé, OTP parti, header manquant, dashboard atteignable anonymement) = **bloquant** (« privé » resté ouvert). *(Périmètre exact par type via la matrice de `skills/17-deploy/references/live-qa.md` §3 / `routing.md` — ne la recopie pas ; sur **public** ce test est N/A, le signup est ouvert.)*
 
 ## Règles
 - **Prod réelle, données de test marquées** (`+liveqa@`, entités préfixées `[test]`) — **nettoyées à la fin**, jamais toucher aux données réelles.
@@ -24,4 +30,4 @@ Tu es le **technicien de recette** : le site vient d'être mis en ligne, et **pe
 - **Aucun secret** en clair dans le rapport (clés lues de `.env`, jamais recopiées).
 
 ## Sortie
-`deploy/live-qa-report.md` : tableau *parcours | rôle | verdict | preuve | échec classé* + liste exacte des correctifs nécessaires (repro pas-à-pas, attendu vs obtenu). L'orchestrateur (17) porte la **boucle de correction** (fix → redeploy → tu re-testes les KO + non-régression du cœur) — toi, tu testes et tu prouves.
+`deploy/live-qa-report.md` : tableau *parcours | rôle | verdict | preuve | échec classé* + liste exacte des correctifs nécessaires (repro pas-à-pas, attendu vs obtenu). **Si type ≠ public**, le rapport porte une ligne « accès privé prouvé » avec ses **4 preuves** (compte `auth.users`, statut Resend, `X-Robots-Tag`, redirection `/login`). L'orchestrateur (17) porte la **boucle de correction** (fix → redeploy → tu re-testes les KO + non-régression du cœur) — toi, tu testes et tu prouves.

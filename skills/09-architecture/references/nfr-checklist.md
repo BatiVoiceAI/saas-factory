@@ -18,7 +18,7 @@ Pour **chaque feature Must / Should** du PRD, renseigne :
 8. **Contraintes plateforme** — web / mobile / desktop ? offline / local-first ? i18n ? accessibilité ? navigateurs / OS cibles.
 
 ## Procédure (déterministe)
-1. Liste les features **Must + Should** depuis `product/mvp-definition.md` et `product/feature-prioritization.md`.
+1. Liste les features **Must + Should** depuis `product/product-spec.md` (§ MVP + § Priorisation).
 2. Pour chaque feature, parcours les **8 axes** ; note l'exigence **et sa source** (US / critère d'acceptation / élément du PRD). Pas de source → ce n'est pas une exigence, c'est une hypothèse (labellise `[Hypothèse]`).
 3. **Agrège** au niveau produit : les exigences transverses qui reviennent partout (auth, multi-tenant, i18n, paiement) deviennent des **exigences socle** (elles cadrent l'archétype).
 4. **Classe** chaque exigence : **dure** (contrainte non négociable → pilotera un choix de stack au mouvement 4) vs **molle** (souhait → n'impose rien).
