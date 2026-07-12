@@ -67,8 +67,11 @@ tableau reflète l'arbre **réel** sur disque après la Phase Cohérence.
 
 > **Emails — deux flux, un seul domaine générique.** Le projet envoie deux
 > types d'email, **distincts** mais partant du **même domaine d'envoi générique**
-> (`mail.<domain>`, From `noreply@<domain>`), via le **même compte Resend** —
-> domaine vérifié **une seule fois** puis réutilisé par **tous** les projets :
+> (l'adresse `EMAIL_FROM` choisie à `infra-setup` ; **⚠️ son domaine EST le
+> domaine vérifié dans Resend** — apex `<domain>` **ou** sous-domaine
+> `mail.<domain>`, selon le choix, jamais From apex + vérif `mail.<domain>`),
+> via le **même compte Resend** — domaine vérifié **une seule fois** puis
+> réutilisé par **tous** les projets :
 > - **E-mail de connexion** (code OTP + magic link — il n'y a pas de mot de
 >   passe ; cet e-mail EST la vérification d'adresse) = job de **Supabase Auth**
 >   avec **SMTP custom = Resend**. Réglé côté `supabase/config.toml`
@@ -78,7 +81,11 @@ tableau reflète l'arbre **réel** sur disque après la Phase Cohérence.
 >   de débit du SMTP intégré ⇒ **pas d'upgrade payant**).
 > - **Transactionnel** (welcome, rappels, confirmation de RDV) = bloc
 >   `notifications` / `lib/email`, via l'**API Resend** (`RESEND_API_KEY`,
->   `EMAIL_FROM`).
+>   `EMAIL_FROM`). Les **rappels planifiés** (« J-1 ») se câblent en **cron
+>   quotidien** (`vercel.json` `"0 8 * * *"`, compatible **Vercel Hobby**) +
+>   worker qui **balaie les échéances des 24-48 h**, idempotent via
+>   `notification_jobs` ; une cadence sub-quotidienne (`*/10`, H-2) **exige
+>   Vercel Pro** — jamais le défaut (`_shared/boucles-fermees.md`).
 >
 > Le plugin câble le tout au provisioning — **rien à configurer à la main** une
 > fois `infra-setup` fait.

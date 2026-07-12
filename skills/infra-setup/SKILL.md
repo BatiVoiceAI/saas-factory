@@ -43,7 +43,7 @@ La sonde s'exécute directement sur le MCP/l'API, ou est **déléguée à un sou
    > ⚠️ **NE COLLE PAS ton access token ici** — dépose-le **uniquement** dans `~/.saas-factory/.env`.
 3. **Cloudflare** (DNS + CDN) — connecte (MCP hébergé, **OAuth**) **+ demande le nom de domaine principal** (pour les sous-domaines `projet.tondomaine.com`). *[socle — forcing domaine : `connection-procedure.md §3`]*
 4. **Hébergement** — choix : défaut **Vercel** ; alternatives **Cloudflare Pages/Workers** ou **Coolify** (self-host, 1 VPS pour tout). Connecte le provider retenu. *[socle — matrice de choix : `decision-matrices.md`]*
-5. **Email — Resend** (défaut, alt Postmark) — clé déposée par l'utilisateur (emails de confirmation/transactionnels).
+5. **Email — Resend** (défaut, alt Postmark) — clé déposée par l'utilisateur (emails de confirmation/transactionnels) **+ demande l'adresse d'expéditeur (From)** — ex. `no_reply@<domain>` (apex) ou `contact@mail.<domain>` (sous-domaine). Défaut **proposé** (`no_reply@<domain>`, ou un sous-domaine `mail.` si l'apex sert déjà de l'email) mais **overridable** → stockée en `config.email_from`. **Le domaine de cette adresse sera celui vérifié dans Resend** (Resend gratuit = **1 seul domaine**, choix unique). *[forcing adresse + invariant domaine : `connection-procedure.md §5`]*
    > ⚠️ **NE COLLE PAS ta `RESEND_API_KEY` ici** — dépose-la **uniquement** dans `~/.saas-factory/.env`.
 6. **Paiement — Stripe (OPTIONNEL)** — ne le propose **que si** l'utilisateur veut vendre. Sinon, saute (le bloc `billing` ne sera pas câblé). *[forcing vente : `decision-matrices.md §Billing`]*
 7. **Observabilité (optionnel)** — Sentry + PostHog.

@@ -12,7 +12,7 @@
 {
   "profile": "managed",              // managed | open-source  — POSTURE PAR DÉFAUT, overridable par service ci-dessous
   "domain": "tondomaine.com",
-  "email_from": "noreply@tondomaine.com", // OPTIONNEL — défaut dérivé: noreply@<domain> ; domaine d'envoi générique = mail.<domain> (vérifié 1×, réutilisé). NON-secret.
+  "email_from": "no_reply@tondomaine.com", // adresse d'expéditeur CHOISIE à l'onboarding (apex OU sous-domaine mail.<domain>) ; son domaine = le domaine vérifié dans Resend. NON-secret.
   "hosting": "vercel",               // vercel | cloudflare | coolify (self-host)
   "providers": {
     "repo": "github",                // github | gitea | forgejo (self-host)
@@ -31,7 +31,9 @@
 > **`profile` = posture, pas verrou** : `"managed"` pose les défauts managés (repo=github, db=supabase cloud, hosting=vercel, obs cloud), `"open-source"` pose les défauts self-host (repo=gitea/forgejo, db=supabase-self-host, hosting=coolify, obs posthog-self-host+glitchtip, llm=ollama). Chaque clé de `providers`/`hosting` **override** le profil au cas par cas (`decision-matrices.md §Profil`).
 > **`llm` ≠ `visuals`** : Nano Banana est un modèle image **Google**. `llm="gemini"` → même clé Google pour les deux. `llm="gpt-4o"`/`"ollama"` → `visuals="nano-banana"` **seulement** si une clé Google dédiée est déposée, sinon `"none"`.
 > **Provider-only** (pas de branche self-host) : `cloudflare` (DNS), `email` (délivrabilité), `billing` (Stripe). Le profil `open-source` ne les bascule pas.
-> **`email_from` (optionnel, NON-secret).** Adresse d'expédition par défaut ; défaut **dérivé** = `noreply@<domain>`. Injectée telle quelle comme `EMAIL_FROM` dans l'env du projet (non-secret aussi). Le **domaine d'envoi générique** de toute la factory est **`mail.<domain>`** (sous-domaine, **vérifié une seule fois** dans Resend puis réutilisé par tous les projets — pas de domaine par projet). `email_from`/`EMAIL_FROM` et le domaine d'envoi **restent dans `config.json` / env projet, jamais dans `.env` secrets** ; le seul secret email est `RESEND_API_KEY` (`.env`, tableau ci-dessous). Sert les **deux flux** : confirmation de compte (Supabase Auth, **SMTP = `smtp.resend.com`**) **et** transactionnel (API Resend).
+> **`email_from` (NON-secret) — adresse CHOISIE par l'utilisateur à l'onboarding.** C'est une **question de `infra-setup`** (étape Email/Resend, `connection-procedure.md §5`), **pas** un défaut apex imposé. Un défaut est **proposé** (`no_reply@<domain>` sur l'apex, ou `no_reply@mail.<domain>` si l'apex sert déjà de l'email) mais reste **overridable** : l'utilisateur donne l'adresse qu'il veut (`no_reply@<domain>` apex **ou** `contact@mail.<domain>` sous-domaine).
+> **🚨 INVARIANT — le domaine de `email_from` = le domaine d'envoi vérifié dans Resend** (l'apex `<domain>` **ou** le sous-domaine `mail.<domain>`, **selon l'adresse choisie**). Resend **refuse d'envoyer depuis un domaine non vérifié** (→ HTTP 500 « Error sending confirmation email ») : le domaine de l'adresse From **doit** être celui que l'étape 11 crée + vérifie dans Resend, pas un autre. **Resend gratuit = 1 seul domaine** (403 « plan includes 1 domain » au-delà) → le domaine d'envoi est un **choix unique** (apex **ou** `mail.`, jamais les deux) ; changer d'adresse plus tard = **remplacer** le domaine (delete + add + re-DNS), pas empiler.
+> Injectée telle quelle comme `EMAIL_FROM` dans l'env du projet (non-secret aussi). `email_from`/`EMAIL_FROM` et le domaine d'envoi **restent dans `config.json` / env projet, jamais dans `.env` secrets** ; le seul secret email est `RESEND_API_KEY` (`.env`, tableau ci-dessous). Sert les **deux flux** : confirmation de compte (Supabase Auth, **SMTP = `smtp.resend.com`**) **et** transactionnel (API Resend).
 
 ## Secrets & URLs self-host — dans `.env` (jamais `config.json`)
 | Variante | Variables `.env` |

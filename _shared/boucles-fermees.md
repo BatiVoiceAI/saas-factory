@@ -10,7 +10,7 @@ Pour **chaque action de valeur** du workflow cœur (créer / modifier / annuler 
 | 1. **L'acteur** reçoit-il une trace durable ? | email de confirmation (+ page de confirmation ≠ suffisant : l'écran se ferme) |
 | 2. **La contrepartie** est-elle informée ? | notification à l'autre partie (le gérant apprend la nouvelle résa ; la cliente apprend l'annulation par le salon) |
 | 3. L'action est-elle **réversible/modifiable** par celui qui l'a faite ? | lien annuler/déplacer (token signé, sans compte si l'action s'est faite sans compte) |
-| 4. Un **rappel** a-t-il du sens avant l'échéance ? | rappel J-1/H-2 (email, SMS si bloc activé) |
+| 4. Un **rappel** a-t-il du sens avant l'échéance ? | rappel **J-1** par défaut (email, SMS si bloc activé) — **cron quotidien**, cf. garde-fou « Rappels planifiés » |
 | 5. L'action laisse-t-elle une **trace consultable** ? | historique côté acteur ET côté contrepartie |
 
 ## Les canons — mêmes boucles, trois contextes (la règle n'est PAS spécifique au booking)
@@ -28,3 +28,4 @@ Pour **chaque action de valeur** du workflow cœur (créer / modifier / annuler 
 - Emails de boucle = bloc `notifications` (Resend, `EMAIL_FROM` générique) — **distincts** de l'auth (OTP), même domaine d'envoi.
 - Best-effort honnête : si l'envoi échoue, l'action métier **reste valide** ; l'échec est logué et réessayé (`notification_jobs`), jamais silencieux, jamais bloquant pour l'utilisateur final.
 - Pas de sur-notification : une action = un email par destinataire, digest si volume.
+- **Rappels planifiés = cron QUOTIDIEN par défaut (compatible Vercel Hobby).** Le rappel avant échéance (question 4, « J-1 ») se câble avec **un seul cron quotidien** — défaut `"0 8 * * *"` (heure locale du produit) — dont le worker **balaie les échéances des ~24-48 h à venir** et enfile/envoie chaque rappel encore dû. **Idempotent via `notification_jobs`** : une ligne par `(entité, type de rappel)` — rejouer le cron le même jour ne redouble **jamais** l'envoi. **Ne jamais** défaut sur une cadence **sub-quotidienne** (`*/10 * * * *`, un rappel « H-2 » au ras de l'échéance…) : le plan **Vercel Hobby n'autorise que des crons quotidiens** et une expression plus fréquente **fait échouer le déploiement** (« Hobby accounts are limited to daily cron jobs »). Un rappel fin type **H-2 exige Vercel Pro** — capacité **optionnelle**, décision explicite (upgrade payant tracé), **jamais** le défaut. *(Constat fondateur {2026-07} : un booking déployé générait `"*/10 * * * *"` → déploiement en échec sur Hobby.)*

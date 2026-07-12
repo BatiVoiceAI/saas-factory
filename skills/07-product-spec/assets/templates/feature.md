@@ -45,7 +45,7 @@ En tant que <persona>, je veux <action>, afin de <bénéfice>.
 | 1 | Trace durable pour l'acteur ? | <email/notif de confirmation, ou « écran + historique suffisent » justifié> |
 | 2 | Contrepartie informée ? | <notif à l'autre partie — jamais sautable si contrepartie> |
 | 3 | Réversible / modifiable ? | <lien annuler/déplacer (token signé si sans compte)> |
-| 4 | Rappel pertinent ? | <rappel J-1/H-2 si échéance> |
+| 4 | Rappel pertinent ? | <rappel **J-1** si échéance — cron **quotidien** par défaut ; H-2/sub-quotidien = option **Vercel Pro** (`_shared/boucles-fermees.md`)> |
 | 5 | Trace consultable ? | <historique acteur + contrepartie> |
 
 ## Critères d'acceptation

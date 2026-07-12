@@ -1,6 +1,6 @@
 {
   "name": "saas-factory",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Transforme une idée en SaaS public, outil interne ou outil perso déployé et vérifié, de bout en bout : analyse concurrentielle approfondie + validation marché honnête, PRD PM-grade (fonctionnel + technique), design anti-AI-slop, architecture, build multi-agents avec cascade de validation (Tech Lead → CTO → Designer → CEO), auth passwordless OTP, boucles fermées, QA faux-client, SEO, déploiement borné + recette live post-deploy, mesure & retro. 6 phases · 19 étapes · qualité avant vitesse.",
   "author": "Felix",
   "license": "MIT"

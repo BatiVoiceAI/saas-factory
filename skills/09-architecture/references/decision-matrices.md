@@ -83,7 +83,7 @@ Décidé en M3 pour chaque opération lourde d'un workflow cœur.
 | < ~1 s, résultat attendu immédiatement | **synchrone** (route/handler) | rien de spécial |
 | Lourde/longue (LLM, PDF, media, gros import) ou dépend d'un tiers lent | **asynchrone** (job + statut) | table de statut, worker, polling/realtime côté UI |
 | Déclenchée par un événement externe (paiement, webhook tiers) | **asynchrone idempotent** | dédup par id d'événement, retries |
-| Périodique (rappel, nettoyage, agrégat) | **cron** | job planifié, borne de charge |
+| Périodique (rappel, nettoyage, agrégat) | **cron** | job planifié, borne de charge ; cadence **quotidienne** par défaut — Vercel Hobby n'autorise **que** du quotidien, un cron sub-quotidien casse le deploy ⇒ Vercel Pro (`_shared/boucles-fermees.md`, garde-fou « Rappels planifiés ») |
 
 Toute opération asynchrone **doit** apparaître comme point async explicite dans le data-flow **et** générer ses cas limites (double déclenchement, échec à mi-parcours, ordre des webhooks).
 

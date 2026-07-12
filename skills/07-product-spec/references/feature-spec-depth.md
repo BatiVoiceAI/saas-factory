@@ -79,7 +79,7 @@ Si la feature **crée / modifie / annule l'entité métier** (résa, commande, d
 | 1 | L'**acteur** reçoit-il une trace durable ? | \<email/notif de confirmation, ou « écran + historique suffisent » justifié\> |
 | 2 | La **contrepartie** est-elle informée ? | \<notif à l'autre partie — jamais sautable si contrepartie existe\> |
 | 3 | L'action est-elle **réversible/modifiable** ? | \<lien annuler/déplacer (token signé si sans compte)\> |
-| 4 | Un **rappel** a-t-il du sens ? | \<rappel J-1/H-2 si échéance\> |
+| 4 | Un **rappel** a-t-il du sens ? | \<rappel **J-1** si échéance — cron **quotidien** par défaut ; H-2/sub-quotidien = option **Vercel Pro** (`_shared/boucles-fermees.md`)\> |
 | 5 | Trace **consultable** des deux côtés ? | \<historique acteur + contrepartie\> |
 
 Le **canal** s'adapte au type de produit (email client / email pro / notif in-app / webhook interne) ; l'**existence** de la boucle, non. « Pas de boucle » est une réponse **justifiée par action** (action solo instantanée dont l'écran + l'historique suffisent), jamais un défaut de type. Si la boucle exige une brique non listée (email de confirmation, lien d'annulation) → **remonter** en feature/exigence dans le PRD.

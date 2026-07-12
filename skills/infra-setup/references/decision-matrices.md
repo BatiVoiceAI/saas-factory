@@ -29,7 +29,8 @@ Les services **forkés** (repo, BDD, hébergement, obs, LLM) **offrent le choix 
 | Hébergement | oui (selon profil : Vercel / Coolify) | **oui, léger** (matrice ci-dessous) |
 | Vendre / billing | non (dépend du modèle) | **oui** (forcing court) |
 | BDD, CI, obs, LLM | oui (défaut = selon profil) | non — appliquer le défaut du profil, **override possible par service** |
-| DNS, email | oui (`stack-defaults.md`, provider-only) | non — appliquer le défaut, mentionner qu'il est swappable entre providers |
+| DNS, provider email | oui (`stack-defaults.md`, provider-only) | non — appliquer le défaut, mentionner qu'il est swappable entre providers |
+| **Adresse d'expéditeur (From, `email_from`)** | défaut **proposé** (`no_reply@<domain>`, ou `mail.` si apex déjà email) mais dépend de l'utilisateur | **oui, léger** (forcing court, `connection-procedure.md §5`) — son **domaine = celui vérifié dans Resend** (gratuit = 1 seul) |
 
 ## Matrice — Hébergement (managé ↔ open-source)
 Trancher **un** provider et ne connecter que celui-là. Défaut = selon **profil** (managé → Vercel/Cloudflare ; open-source → Coolify).

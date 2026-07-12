@@ -16,7 +16,7 @@ Les **invariants sont les mêmes** dans les deux branches : sonde d'idempotence 
 |---|---|---|---|---|
 | Repo + CI | **managed** | **GitHub MCP** (MIT) | create repository · Actions · secrets | push du template scaffané |
 | Repo + CI | **self-host** | **API Gitea/Forgejo** (`Bash`/curl) | `POST /api/v1/user/repos` · `PUT .../contents` · Actions/secrets | `GITEA_URL` + `GITEA_TOKEN` (`.env`) |
-| BDD + Auth | **managed** | **Supabase MCP** (Apache) + **API Management** (`Bash`/curl) | `confirm_cost` · `create_project` · `apply_migration` (SQL → **tables + RLS**) · `deploy_edge_function` · **config Auth** (SMTP custom Resend, `mailer_autoconfirm`, `site_url`, `uri_allow_list`) | ⚠️ `confirm_cost` requis avant `create_project` → l'agent le **confirme auto** (autorisation durable d'`infra-setup`) · la **config Auth n'est PAS couverte par le MCP DB** → `PATCH /v1/projects/{ref}/config/auth`, `Bearer $SUPABASE_ACCESS_TOKEN` (`.env`) |
+| BDD + Auth | **managed** | **Supabase MCP** (Apache) + **API Management** (`Bash`/curl) | `confirm_cost` · `create_project` · `apply_migration` (SQL → **tables + RLS**) · `deploy_edge_function` · **config Auth** (SMTP custom Resend — **bloc SMTP complet, `smtp_port` en chaîne, rate-limit desserré**, `mailer_autoconfirm`, `site_url`, `uri_allow_list`) | ⚠️ `confirm_cost` requis avant `create_project` → l'agent le **confirme auto** (autorisation durable d'`infra-setup`) · la **config Auth n'est PAS couverte par le MCP DB** → `PATCH /v1/projects/{ref}/config/auth`, `Bearer $SUPABASE_ACCESS_TOKEN` (`.env`) · **4 gotchas SMTP : `agents/provisioner-db.md`** |
 | BDD + Auth | **self-host** | **API Supabase self-hosted** (`Bash`/curl ou `psql`) | applique **les migrations seules** (tables + RLS) sur l'instance existante · **config Auth via env GoTrue** | `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (`.env`) · **PAS** de `create_project` (instance déjà là) · Auth = variables `GOTRUE_SMTP_*` / `GOTRUE_MAILER_AUTOCONFIRM` / `GOTRUE_SITE_URL` / `GOTRUE_URI_ALLOW_LIST` |
 | Hébergement | **managed** | **Vercel** (REST/MCP) | create-project · create-deployment · env vars · link repo | alt managée : Cloudflare Pages |
 | Hébergement | **self-host** | **API Coolify** (`Bash`/curl) | create app · link repo · deploy · env vars | `COOLIFY_URL` + `COOLIFY_API_TOKEN` (`.env`) |
@@ -68,12 +68,16 @@ managed = Supabase MCP cloud (migrations) + API Management (Auth) :
      apply_migration(nom, sql)    (saute si nom déjà présent) → tables + RLS
 5. config Auth via API MANAGEMENT (PATCH /v1/projects/{ref}/config/auth, Bearer $SUPABASE_ACCESS_TOKEN
      — PAS le MCP DB) :
-     smtp_host=smtp.resend.com, smtp_port=465|587, smtp_user=resend, smtp_pass=$RESEND_API_KEY,
-     smtp_sender_name=<projet>, smtp_admin_email=noreply@<domain>,
+     smtp_host=smtp.resend.com, smtp_port='587' (CHAINE — un entier vide tout le bloc SMTP), smtp_user=resend,
+     smtp_pass=$RESEND_API_KEY, smtp_sender_name=<projet>,
+     smtp_admin_email=$EMAIL_FROM (config.email_from, sur le DOMAINE VERIFIE — invariant From = domaine verifie),
+     bloc SMTP pose COMPLET en un coup (PATCH smtp partiel vide les autres champs → 500),
+     rate_limit_email_sent~30 + smtp_max_frequency~15s desserres (defaut 2/h bloque l'utilisateur),
      mailer_otp_exp=600, mailer_otp_length=6 (defaut Supabase=8 → PIN a 6 = nb cases input chassis),
      site_url + uri_allow_list (https://<slug>.<domaine>/auth/callback),
      mailer_autoconfirm=false (confirmation requise, public) | true (dev/perso)
-     → sonde d'idempotence : lire la config Auth actuelle, patcher SEULEMENT si différente
+     → idempotence : lire la config Auth, patcher si different — SAUF le bloc SMTP (indivisible : un champ diff ⇒ repose tout)
+     → 4 gotchas SMTP detailles : agents/provisioner-db.md etape Auth (source unique)
 6. loger ref + URL dans status/   (les clés + $RESEND_API_KEY → .env, jamais dans le status)
 
 self-host = Supabase self-hosted DÉJÀ EXISTANT (SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY en .env) :
@@ -82,11 +86,13 @@ self-host = Supabase self-hosted DÉJÀ EXISTANT (SUPABASE_URL + SUPABASE_SERVIC
 3. pour chaque migration (même ordre) :
      applique le SQL (tables + RLS) via API/psql   (saute si déjà présent)
 4. config Auth via variables d'env GoTrue de l'instance (PAS l'API Management) :
-     GOTRUE_SMTP_HOST/PORT/USER/PASS/SENDER_NAME/ADMIN_EMAIL (Resend, pass=$RESEND_API_KEY),
+     GOTRUE_SMTP_HOST/PORT/USER/PASS/SENDER_NAME/ADMIN_EMAIL (Resend, pass=$RESEND_API_KEY,
+       ADMIN_EMAIL=$EMAIL_FROM sur le DOMAINE VERIFIE — invariant From = domaine verifie),
+     GOTRUE_SMTP_MAX_FREQUENCY~15s + GOTRUE_RATE_LIMIT_EMAIL_SENT~30 (desserres, defaut bloque le re-envoi),
      GOTRUE_MAILER_AUTOCONFIRM, GOTRUE_SITE_URL, GOTRUE_URI_ALLOW_LIST
 5. loger URL d'instance dans status/   (service_role + $RESEND_API_KEY → .env, jamais dans le status)
 ```
-> **Routage config Auth** : **managed = API Management** (`PATCH /v1/projects/{ref}/config/auth`) · **self-host = variables d'env GoTrue**. Dans les deux cas : **SMTP custom = Resend** (lève la limite d'email de Supabase, aucun upgrade payant), même domaine générique `mail.<domain>` / `noreply@<domain>` que le transactionnel.
+> **Routage config Auth** : **managed = API Management** (`PATCH /v1/projects/{ref}/config/auth`) · **self-host = variables d'env GoTrue**. Dans les deux cas : **SMTP custom = Resend** (lève la limite d'email de Supabase, aucun upgrade payant), même **adresse `email_from` / même domaine vérifié** (invariant : domaine From = domaine vérifié) que le transactionnel.
 
 **Cloudflare (DNS)** — deux propriétaires distincts, mêmes MCP, records différents :
 - **`provisioner-hosting`** possède le **record de routage** `<slug>.<domaine>` (séquence ci-dessous).
@@ -123,8 +129,12 @@ self-host = API Coolify (Bash/curl, COOLIFY_URL + COOLIFY_API_TOKEN en .env) :
 
 **Resend (email)** — API HTTP (pas de MCP), via `Bash`/curl + clé `~/.saas-factory/.env`
 ```
-1. get domain status                  (sonde)
-2. add domain mail.<domain> (si absent) → Resend renvoie ses records de vérification (SPF/DKIM/DMARC + return-path)
+1. get domains → domaine cible = domaine de config.email_from (partie apres @)   (sonde)
+2. domaine cible absent → add domain = domaine de email_from (apex OU sous-domaine, selon l'adresse choisie a infra-setup)
+     → Resend renvoie ses records de verification (SPF/DKIM/DMARC + return-path)
+   ⚠️ Resend gratuit = 1 SEUL domaine : si un domaine DIFFERENT est deja present (adresse changee) →
+     REMPLACER (delete l'ancien + add le cible + re-DNS), jamais empiler (sinon 403 « plan includes 1 domain »)
+   invariant : domaine From = domaine verifie (sinon Resend refuse d'envoyer → 500)
 3. publier ces records en appelant DIRECTEMENT le MCP Cloudflare
      → c'est provisioner-email qui possède ces appels DNS (records propres à l'email),
        distincts du record de routage <slug>.<domaine> de provisioner-hosting.

@@ -2,6 +2,19 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.4.2] — 2026-07-12
+### Corrigé (trouvé par un déploiement réel — cron de rappels vs plan Vercel Hobby)
+- **Rappels de boucle fermée = cron QUOTIDIEN par défaut.** Le pattern de rappels générait un `vercel.json` avec un cron sub-quotidien (`"*/10 * * * *"`) qui **faisait échouer le déploiement** sur le plan **Vercel Hobby** (« Hobby accounts are limited to daily cron jobs »). Défaut posé partout : **un cron quotidien** (`"0 8 * * *"`) + worker qui **balaie les échéances des ~24-48 h** à venir, **idempotent via `notification_jobs`**. Un rappel fin (H-2) / toute cadence sub-quotidienne **exige Vercel Pro** — capacité optionnelle, jamais le défaut.
+- Câblé dans : `_shared/boucles-fermees.md` (garde-fou « Rappels planifiés » + question 4), `_shared/stack-defaults.md` (note « Vercel — crons & plan »), `_shared/blocks/web-saas/BLOCKS.md` (bloc `notifications`), `skills/09-architecture` (matrice cron), `skills/07-product-spec` (fiche feature + template), `skills/12-build` (règle boucles fermées).
+- **Pré-vol 17-deploy** : nouveau check « **cadence cron compatible avec le plan d'hébergement** » + entrée au catalogue de cas limites.
+
+## [0.4.2] — 2026-07-12
+### Corrigé (trouvé par le run réel « Poser »)
+- **Expéditeur email sur domaine non vérifié** : le plugin dérivait `noreply@<domain>` (apex) mais ne vérifiait que `mail.<domain>` dans Resend → Resend refuse d'envoyer depuis un domaine non vérifié (**HTTP 500**). Invariant posé partout : **le domaine de `email_from` = le domaine vérifié dans Resend** (`provisioner-email`, `provisioner-db`, `provisioning-plan`, `mcp-map`, `stack-defaults`).
+- **L'adresse d'expéditeur devient une QUESTION d'`infra-setup`** (plus un défaut apex imposé) — SKILL + connection-procedure + config-schema + decision-matrices.
+- **Resend gratuit = 1 seul domaine** : changer d'adresse = `provisioner-email` REMPLACE le domaine (delete+add+re-DNS), jamais empiler (évite le 403).
+- **Gotchas SMTP Supabase↔Resend** dans `provisioner-db` (évitent le 500) : `smtp_port` en **chaîne** ('587'), **bloc SMTP indivisible** (toujours PATCHer complet), `rate_limit_email_sent`~30 + `smtp_max_frequency`~15s desserrés (défaut 2/h bloquait l'utilisateur).
+
 ## [0.4.1] — 2026-07-12
 ### Corrigé (trouvé par un run réel — « Poser »)
 - **OTP longueur** : `provisioner-db` pinne désormais `mailer_otp_length = 6` (API Management + env GoTrue self-host). Le défaut Supabase est **8** alors que l'input OTP du châssis n'accepte que 6 cases → sans le pin, le code reçu par email ne rentrait pas dans l'input et la vérif échouait pour **tous** les projets OTP. Invariant posé : `mailer_otp_length` (Supabase) = nb de cases de l'input (`auth-form.tsx`).

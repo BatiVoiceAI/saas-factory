@@ -148,20 +148,31 @@ Format identique partout : **But → Méthode → Ordre → Critère de passage 
 - **Override** : profil managé mais l'utilisateur veut Coolify (coût fixe) → basculer ce seul service.
 - **Micro-exemple (Coolify)** : *« Coolify choisi (self-host, coût fixe VPS, open-source). Dépose `COOLIFY_API_TOKEN` dans `~/.saas-factory/.env` et donne-moi l'URL de ton instance. Sonde lecture OK, rien provisionné. »*
 
-### 5. Email — Resend (défaut, alt Postmark) — **provider-only (honnête)**
+### 5. Email — Resend (défaut, alt Postmark) — **provider-only (honnête)** + **capture l'adresse d'expédition**
 - **But** : autoriser l'envoi d'emails transactionnels/confirmation par projet.
 - **Pas de fork open-source recommandé** : la **délivrabilité** = un provider (réputation IP, DKIM/SPF gérés). Self-host SMTP techniquement possible mais **délivrabilité fragile** (spam, IP froide) → **à flaguer honnêtement**, non recommandé par défaut. Le profil open-source **ne bascule pas** ce service ; on reste sur Resend/Postmark (swappable entre providers).
 - **Méthode** : B (pas de MCP officiel Resend). Clé `RESEND_API_KEY` déposée dans `~/.saas-factory/.env`.
 - **Scope requis** : clé **Full access** (pas **Sending access**). L'étape 11 doit **créer + vérifier le domaine d'envoi** (`POST /domains` + records DNS) — une clé Sending-only sait **envoyer** mais **pas gérer les domaines**. Le dire au moment de créer la clé.
-- **Ordre** : indiquer où créer la clé (resend.com/api-keys, **permission Full access**) → l'utilisateur la dépose lui-même → ne **rien coller** dans le chat.
+- **Ordre** : (a) indiquer où créer la clé (resend.com/api-keys, **permission Full access**) → l'utilisateur la dépose lui-même → ne **rien coller** dans le chat. (b) **Demander l'adresse d'expédition (From)** → `config.email_from` (forcing ci-dessous).
   > 🚨 **NE COLLE JAMAIS la `RESEND_API_KEY` dans le chat.** Elle va **uniquement** dans `~/.saas-factory/.env`. Collée ici = compromise → à révoquer.
+- **🚨 INVARIANT — le domaine de l'adresse From EST le domaine vérifié dans Resend.** Resend **refuse d'envoyer depuis un domaine non vérifié** (HTTP 500 « Error sending confirmation email » observé en run réel). Le domaine de `email_from` (l'apex `<domain>`, **ou** le sous-domaine `mail.<domain>`, selon l'adresse choisie) est donc **exactement** celui que l'étape 11 crée + vérifie dans Resend (`POST /domains`). **Resend gratuit = 1 SEUL domaine** (erreur 403 « plan includes 1 domain » au-delà) → le domaine d'envoi est un **choix unique** : on ne peut pas vérifier `mail.<domain>` **et** l'apex ; changer d'adresse plus tard = **remplacer** le domaine (delete + add + re-DNS), jamais empiler. C'est pour ça qu'on **demande** l'adresse ici plutôt que d'imposer un défaut sur un sous-domaine que l'apex ne vérifiera pas.
+- **Forcing-question — l'adresse d'expédition (From)** :
+  - **Ask exact** : « Quelle adresse d'expéditeur pour tes emails (confirmation de compte, transactionnels) ? Ex. `no_reply@<domain>` (sur l'apex) **ou** `contact@mail.<domain>` (sur un sous-domaine `mail.`). **Le domaine de cette adresse sera celui vérifié dans Resend** — et Resend gratuit n'en autorise **qu'un seul**. »
+  - **Défaut proposé (overridable)** : `no_reply@<domain>` sur l'**apex** ; **mais** si l'apex sert déjà de l'email (MX/records existants qu'on ne veut pas toucher — cf. sandbox `safety-rails.md` §2), proposer plutôt un **sous-domaine** `no_reply@mail.<domain>` (isole la délivrabilité de l'apex prod). Défaut **proposé, jamais imposé** : l'utilisateur tranche.
+  - **Push-until** : une adresse email **valide** (format `local@domaine`), dont le **domaine est `<domain>` ou un sous-domaine de `<domain>`** (l'étape 11 doit pouvoir créer les records DNS de vérif sur la zone Cloudflare connectée en §3). Un domaine **hors** de la zone → refuser (on ne pourra pas le vérifier).
+  - **Red-flags — à ne pas accepter** :
+    - une adresse sur un **domaine tiers** non connecté (ex. `@gmail.com`, ou un domaine absent des zones Cloudflare) → invérifiable dans Resend → refuser, revenir sur `<domain>`/sous-domaine.
+    - vouloir **deux** adresses sur **deux** domaines distincts (apex **et** `mail.`) « pour être sûr » → non : Resend gratuit = 1 domaine, **un seul** choix. Trancher.
+  - **MOU (à re-challenger)** : « mets ce que tu veux » → proposer le défaut (`no_reply@<domain>` ou `no_reply@mail.<domain>` si apex déjà email) et confirmer. **FORT (à accepter)** : « `no_reply@speechflow.fr` » / « `contact@mail.speechflow.fr` » → format valide + domaine dans la zone, accepté ; ce domaine devient le domaine d'envoi vérifié.
 - **Critère de passage (présence + capacité d'écriture)** :
   1. la variable `RESEND_API_KEY` **existe** dans `.env` et est **non-vide/non-placeholder** (vérifier la présence par nom, pas la valeur).
   2. **capacité de gestion de domaine** : appeler `GET /domains` (`Bash`/curl, clé lue en `$VAR` depuis `.env`, jamais affichée) — `curl -sS -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $RESEND_API_KEY" https://api.resend.com/domains`. **200 = Full access confirmé.** **401 `restricted_api_key` = clé Sending-only** → insuffisante pour la vérif domaine (étape 11) → **`"none"`** + inviter à recréer une clé **Full access**. *C'est une lecture qu'une clé Sending-only ne peut pas faire → bon proxy non destructif du droit d'écriture. Ne pas envoyer d'email de test ici.*
-- **Écriture** : `providers.email = "resend"` (ou `"postmark"`, ou `"none"` si sauté).
+  3. `config.email_from` **capturée** (forcing ci-dessus), domaine ⊆ zone Cloudflare connectée.
+- **Écriture** : `providers.email = "resend"` (ou `"postmark"`, ou `"none"` si sauté) **+** `email_from = "<adresse choisie>"` (non-secret, `config.json` — jamais `.env` ; schéma : `config-schema.md §email_from`). Le **domaine** de cette adresse est le domaine d'envoi que l'étape 11 vérifiera dans Resend.
 - **Red-flags** :
   - `.env` contient `RESEND_API_KEY=changeme` → traiter comme **absent**, ne pas marquer `connected`.
   - `GET /domains` renvoie **401** (clé Sending-only) → traiter comme **scope insuffisant**, `"none"`, ne pas marquer `connected`.
+  - `email_from` sur un **domaine non couvert** par la zone Cloudflare (apex/sous-domaine de `<domain>`) → invérifiable dans Resend → re-poser l'adresse, ne pas la figer.
 
 ### 6. Paiement — Stripe (**OPTIONNEL**) — **provider-only (honnête)**
 - **But** : autoriser produits/prix/webhooks — **seulement si l'utilisateur veut vendre**.
