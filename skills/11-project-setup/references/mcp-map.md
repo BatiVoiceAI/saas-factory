@@ -70,6 +70,7 @@ managed = Supabase MCP cloud (migrations) + API Management (Auth) :
      — PAS le MCP DB) :
      smtp_host=smtp.resend.com, smtp_port=465|587, smtp_user=resend, smtp_pass=$RESEND_API_KEY,
      smtp_sender_name=<projet>, smtp_admin_email=noreply@<domain>,
+     mailer_otp_exp=600, mailer_otp_length=6 (defaut Supabase=8 → PIN a 6 = nb cases input chassis),
      site_url + uri_allow_list (https://<slug>.<domaine>/auth/callback),
      mailer_autoconfirm=false (confirmation requise, public) | true (dev/perso)
      → sonde d'idempotence : lire la config Auth actuelle, patcher SEULEMENT si différente

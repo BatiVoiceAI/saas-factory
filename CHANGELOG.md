@@ -2,6 +2,11 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.4.1] — 2026-07-12
+### Corrigé (trouvé par un run réel — « Poser »)
+- **OTP longueur** : `provisioner-db` pinne désormais `mailer_otp_length = 6` (API Management + env GoTrue self-host). Le défaut Supabase est **8** alors que l'input OTP du châssis n'accepte que 6 cases → sans le pin, le code reçu par email ne rentrait pas dans l'input et la vérif échouait pour **tous** les projets OTP. Invariant posé : `mailer_otp_length` (Supabase) = nb de cases de l'input (`auth-form.tsx`).
+- Aligné les listes de champs Auth (`provisioning-plan.md`, `mcp-map.md`).
+
 ## [0.4.0] — 2026-07-12
 
 Refonte qualité majeure, déclenchée par l'usage réel (premier SaaS déployé : `booking.speechflow.fr`). Objectif : passer de « génère un SaaS qui compile » à « livre un produit **pro, complet et vérifié**, pour SaaS public / outil interne / outil perso ».
