@@ -16,4 +16,4 @@ Le déploiement **publie publiquement et peut dépenser** → `_shared/safety-ra
 | 17 Deploy | tout validé (étape 15), `tech/provisioning-log.md`, `~/.saas-factory/config.json`, `seo/*` (si `type=public`) | `deploy/log.md` + URL live + tracking actif |
 
 ## Calibrage
-`type = perso/interne` → **saute le SEO** (16) ; le déploiement (17) peut être privé/interne. `public` → les deux.
+Route selon la matrice canonique (`skills/saas-factory/references/routing.md`, renvoi local : `references/routing.md`) : `type = perso/interne` → SEO (16) sauté + noindex, déploiement (17) privé/interne ; `public` → les deux étapes. Portes actives par type : liste réelle dans la matrice canonique.

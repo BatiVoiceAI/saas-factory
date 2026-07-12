@@ -71,7 +71,7 @@ Avant de conclure « personne n'active », élimine la cause n°1 de faux zéro 
 - [ ] Sentry reçoit bien des events (au moins les sessions), sinon la « bonne santé » est peut-être un angle mort.
 - [ ] Pas de rupture évidente post-deploy (un event qui s'arrête net à la date du dernier déploiement = régression de tracking, pas de comportement).
 
-Un « 0 % d'activation » avec un tracking muet est un **bug de mesure**, pas un signal produit — dis-le et renvoie le fix vers l'étape 17.
+Un « 0 % d'activation » avec un tracking muet est un **bug de mesure**, pas un signal produit — dis-le et route le fix correctement : le tracking se **code en Phase 4** (12-build instrumente les `capture()`), puis se **re-déploie via l'étape 17**. Jamais « vers 17 » directement : 17 ship, il n'écrit pas de code.
 
 ## Étape 1 — lire PostHog (ordre imposé)
 1. **Acquisition** : volume de nouveaux visiteurs + répartition par canal. Sert d'abord le GATE.
@@ -91,9 +91,9 @@ Pour chaque marche, **écris le chiffre + sa qualification** (faible/correct/for
 ## Catalogue de cas limites (mode d'échec → conduite)
 | Cas | Symptôme | Conduite |
 |---|---|---|
-| **Zéro data** | rien dans PostHog | check tracking vivant → si muet, bug étape 17 ; si vraiment 0 visiteur, problème d'acquisition (Phase 5), pas de métrique à lire |
+| **Zéro data** | rien dans PostHog | check tracking vivant → si muet, tracking jamais câblé : **fix Phase 4 (12-build) puis re-deploy via 17** ; si vraiment 0 visiteur, problème d'acquisition (Phase 5), pas de métrique à lire |
 | **Volume sous le bruit** | n très faible | bilan pré-signal, valeurs absolues, aucune piste sur les ratios |
-| **Tracking cassé** | event s'arrête à la date d'un deploy | régression de tracking → fix côté 17, ne pas conclure au comportement |
+| **Tracking cassé** | event s'arrête à la date d'un deploy | régression de tracking → **fix Phase 4 (12-build) puis re-deploy via 17** ; ne pas conclure au comportement |
 | **Pic de bot / spam** | acquisition qui explose sans activation | isole/exclut le trafic non humain avant de lire les taux ; sinon tous les ratios sont faux |
 | **Funnel incomplet** | une marche n'est pas trackée | dis-le explicitement (« marche X non mesurée »), n'infère pas la valeur manquante |
 | **Stripe non branché** | pas de revenu mesurable | note « revenu non instrumenté » ; ne déduis pas la conversion des inscrits |

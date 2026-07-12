@@ -12,6 +12,12 @@ Le produit est en ligne. On **lit ce qu'il fait en vrai** → on décide **quoi 
 ## HARD GATE — périmètre : on observe, on ne construit pas
 Cette étape est un **overlay de lecture**. On **n'écrit pas de code**, on ne modifie pas le produit, on ne relance pas de build : on lit la donnée et on propose des pistes. Et on **ne tranche pas kill/continue ici** — cette décision appartient à l'étape 19 ; le bilan **informe** la porte, il ne la franchit pas. Toute action qui sort de « lire + proposer 1-3 pistes » est hors périmètre.
 
+## Garde type (si invoquée seule)
+Lis `type` dans `.saas-factory/state.md` (défaut prudent : `public`) et calibre la lecture — la route canonique vit dans `skills/saas-factory/references/routing.md` :
+- `public` → funnel **AARRR complet** (la procédure ci-dessous, telle quelle).
+- `interne` → **adoption interne** : qui utilise, à quelle fréquence, sur le workflow cœur — pas d'acquisition ni de revenu marché.
+- `perso` → **usage réel, allégé** : l'outil sert-il vraiment (fréquence, dernière utilisation) — pas de funnel, pas de %.
+
 ## À lire d'abord (une fois)
 `_shared/lessons.md`, `_shared/safety-rails.md` ; si présent, `skills/phase-6-after/references/conventions.md`. Puis les **inputs** : le PRD (`product/*`) + `product/pricing.md` (l'attendu) + le déploiement (étape 17, tracking actif).
 **Pré-vol honnêteté** : on lit la donnée telle qu'elle est. On **ne moyenne pas** un mauvais signal avec un bon pour un tiède rassurant, on **ne comble pas** un trou de tracking par une estimation présentée comme un fait, et on distingue toujours **[Data]** (mesuré) / **[Estimate]** (extrapolé) / **[Assumption]** (inféré). Un bilan qui rassure à tort fait perdre à l'utilisateur son prochain sprint — c'est un échec.

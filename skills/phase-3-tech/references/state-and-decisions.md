@@ -11,7 +11,7 @@ Le fichier d'état est le **journal de reprise** du projet. En Phase 3, on met �
 - **Mode infra** — noter au pré-vol : `réel` (config présente) ou `fallback local` (config absente). C'est ce qui explique, à la reprise, pourquoi l'étape 11 a scaffolé sans provisionner.
 - **Type / route** — déjà posé en Phase 1 ; on le **lit** pour calibrer (cf. matrice du playbook), on ne le réécrit pas.
 
-Règles dures : **aucun secret / clé** dans `state.md` (les accès vivent dans `~/.saas-factory/`, safety-rails §4) ; on **référence** les `_shared/*`, on n'y recopie pas leur contenu. **Écrivain unique** : seul **l'orchestrateur** écrit `state.md` — jamais les experts/sous-agents (ils produisent `tech/*` et te le rapportent). Cela évite les MAJ concurrentes/incohérentes (cf. `_shared/state-schema.md`).
+Règles dures : **aucun secret / clé** dans `state.md` (les accès vivent dans `~/.saas-factory/`, safety-rails §4) ; on **référence** les `_shared/*`, on n'y recopie pas leur contenu. **Écrivain unique** : seul **l'orchestrateur** écrit `state.md` — jamais les experts/sous-agents (ils produisent `tech/*` et te le rapportent). Règle canonique (+ l'unique exception `01-discover`) : `skills/saas-factory/references/state-resume.md` §Écrivain unique.
 
 ### À écrire après chaque étape
 

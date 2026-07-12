@@ -2,7 +2,7 @@
 name: phase-3-tech
 description: >-
   Phase 3 de SaaS Factory — Cadrage technique (rôle CTO). Orchestre les 3 étapes expertes (09-architecture → 10-execution-plan → 11-project-setup) : définit COMMENT on construit — architecture & stack, plan d'exécution (graphe de tâches parallélisé), setup & provisioning automatique du projet. 100 % autonome, zéro intervention utilisateur. À utiliser après la validation du produit (Phase 2), pour passer du QUOI au COMMENT et préparer le build.
-allowed-tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch
+allowed-tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch, Task, Skill
 ---
 
 # SaaS Factory — Phase 3 : Cadrage technique (orchestrateur · rôle CTO)
@@ -11,13 +11,15 @@ Tu incarnes le **CTO** de la fabrique de micro-SaaS. Cette phase passe du **QUOI
 
 **HARD GATE (phase).** Ici tu définis le **COMMENT** technique — pas de build de feature (Phase 4). **Zéro intervention utilisateur** : toute la phase est **autonome** (les décisions se tranchent seules et se loguent ; le provisioning de l'étape 11 est **pré-autorisé** par `infra-setup`).
 
-## À lire d'abord (une fois)
-`references/conventions.md` (persona CTO, zéro-intervention, contrat d'artefacts, réutilisation/moat, déterminisme) + `_shared/lessons.md` + `_shared/safety-rails.md` + `_shared/stack-defaults.md` + `_shared/blocks/README.md` + `_shared/validation-cascade.md`. Ces règles priment sur ton comportement par défaut. **Discipline « lire une fois »** : ces blocs se lisent au démarrage de la phase, pas à chaque étape ; chaque expert relira au besoin ses propres `_shared/*` — ne les recharge pas toi-même entre deux étapes (détail : `references/orchestration-playbook.md`).
+## À lire d'abord
+`references/conventions.md` (persona CTO, zéro-intervention, contrat d'artefacts, réutilisation/moat, déterminisme).
+
+> Discipline `_shared` : le **master** a déjà lu `_shared/*` (`lessons.md`, `safety-rails.md`, `stack-defaults.md`, `blocks/README.md`, `validation-cascade.md`, …) au démarrage — ils **priment** et sont déjà en contexte. Ne les relis pas, ne les fais **pas relire** par chaque étape. Charge le détail d'une étape (ses `references/`) **au moment** où elle s'exécute. Détail : `references/orchestration-playbook.md`.
 
 ## Références (la profondeur — charge à l'usage)
 Le SKILL reste l'**aperçu scannable** ; la mécanique d'orchestration vit dans `references/` :
 - **`references/conventions.md`** — persona CTO, zéro-intervention, contrat d'artefacts, réutilisation & moat, déterminisme.
-- **`references/orchestration-playbook.md`** — le **flux exécutable** : ce que fait (et ne fait pas) l'orchestrateur, table de séquence (étape → invoque → lit → écrit → décisions), matrice de calibrage/routage (public / interne / perso), pré-vol infra (config présente/absente → réel vs fallback), discipline « lire `_shared` une fois », boucle nominale.
+- **`references/orchestration-playbook.md`** — le **flux exécutable** : ce que fait (et ne fait pas) l'orchestrateur, table de séquence (étape → invoque → lit → écrit → décisions), calibrage de profondeur par type (le skip-set vit dans la matrice canonique `skills/saas-factory/references/routing.md`), contrôle de réception anti-squelette, pré-vol infra (config présente/absente → réel vs fallback), discipline « lire `_shared` une fois », boucle nominale.
 - **`references/state-and-decisions.md`** — tenue de `.saas-factory/state.md` étape par étape, **procédure de reprise**, **protocole d'autonomie** (pourquoi zéro porte, comment les décisions se loguent, marqueurs `[SÉCU]`), **matrice de retour arrière** (incohérence PRD → Phase 2 ; échec provisioning → rollback + repli honnête), passation vers la Phase 4.
 
 ## Principe directeur — déterminisme + autonomie bornée

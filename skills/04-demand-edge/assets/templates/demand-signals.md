@@ -2,8 +2,8 @@
 *SaaS Factory — Phase 1, étape 4 · basé sur review-mining (market.md) + positioning.md · {date}*
 
 ## 1. Signal de demande — {plausiblement fort / moyen / faible}
-- **Volume & notes** : {agrégé + par concurrent}
-- **Douleurs partagées** : {thème — sévérité (agacement/bloquant/rédhibitoire) — preuve (quote / source / date)}
+- **Volume & notes** : {agrégé + par concurrent · bande retenue (élevé/moyen/faible) + justification de la bande (contexte marché)}
+- **Douleurs partagées** : {thème — sévérité (agacement/bloquant/rédhibitoire) — preuve (quote / source+URL / date / vérifié ou [snippet — non vérifié])}
 - **Features réclamées** : {liste + fréquence}
 - **Signaux de churn** : {raison — preuve}
 - **Verdict (humble)** : demande plausiblement {…}. À valider par toi.

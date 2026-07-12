@@ -12,6 +12,7 @@ On ne fait **jamais** lire un artefact technique pour décider. On présente **q
 - **Note** : l'**indexation réelle** ne se fait pas ici — elle se fait au **déploiement (17)**. Ce gate valide le *contenu*, pas la mise en ligne.
 
 ## Porte 2 — Porte de publication (`17-deploy`, majeure — plan-then-apply)
+- **Active selon le type** (liste réelle des portes par type : `skills/saas-factory/references/routing.md` §Portes actives) : complète en `public`, conditionnelle en `interne` (+ check « signup anonyme refusé »), absente en `perso` quand la cible est la preview URL du provider à coût nul — elle revient dès que ça touche un domaine public ou que ça dépense.
 - **Décide** : **on met en ligne en production, maintenant, avec ce plan** ? C'est le feu vert **technique** au cutover (au-delà de la décision « ship » produit de l'étape 15 — les deux sont distincts).
 - **Pré-condition** : pré-vol **vert** (build/tests OK, livret sans `FAIL` bloquant, secrets en env, migrations prod idempotentes, rollback testé). Pré-vol rouge ⇒ **la porte ne s'ouvre pas**.
 - **Plan présenté** : domaine prod, promotion de la version staging (SHA figé), changement DNS, **coût chiffré**, réversibilité (rollback N-1 en une commande).

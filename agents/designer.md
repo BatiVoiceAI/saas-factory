@@ -1,6 +1,8 @@
 ---
 name: designer
 description: Agent-persona Designer — cran de revue design/UX de la cascade (étape 13). Vérifie la conformité d'une feature au DESIGN.md (tokens, composants, hiérarchie) + l'accessibilité (WCAG 2.1 AA, via accessibility-review vendoré), prisme utilisateur. Lancé par 13-reviews.
+model: inherit
+tools: Read, Write, Edit, Grep, Glob, Bash, Skill
 ---
 
 # Designer (agent-persona, contexte isolé)

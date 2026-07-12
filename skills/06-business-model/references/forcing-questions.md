@@ -2,6 +2,8 @@
 
 Cette étape **ne ré-interroge pas** l'utilisateur sur ce que la Phase 1 a déjà tranché (cible, problème, edge, catégorie). Les forcing questions ici sont donc d'abord des **auto-interrogations** : tu les poses **aux artefacts et à ton propre brouillon** pour t'empêcher de bâcler. Tu n'ouvres une question **à l'utilisateur** que dans les rares cas de routage explicitement listés (R1).
 
+> Q3-Q5 portent sur le pricing marché : elles ne s'appliquent que si le pricing s'exécute (**`type = public`**). Pour `interne`, l'auto-interrogation équivalente porte sur le **ROI interne** : coût évité chiffré avec hypothèse écrite, seuil de rentabilité **falsifiable** (SKILL.md §« Mode interne »).
+
 Format de chaque recette :
 - **Ask exact** — la question, mot pour mot.
 - **Push-until** — le critère qui autorise à passer à la suite.

@@ -67,20 +67,19 @@ Objectif : progressive disclosure, pas de rechargement inutile de contexte.
 ## Boucle nominale (pseudo-procédure)
 
 ```
-lire une fois : conventions.md + _shared/lessons.md + _shared/safety-rails.md
+lire une fois : conventions.md (les _shared/* sont déjà en contexte — lus par le master)
 reprendre l'état : state-and-gates.md → (nouveau projet ? git init + state.md : reprendre à l'étape courante)
 
 invoquer 01-discover → idea-brief.md ; capter type ; annoncer l'impact du routage
 mettre à jour state.md (étape, type/route)
 
-selon type :
-  public   → 02 → 03 → 04 → 05
-  interne  → (fit-check via 05 lite) → 05
-  perso    → 05 (allégée)
+selon type : router selon la matrice canonique
+  (skills/saas-factory/references/routing.md — seule source du skip-set)
 
 pour chaque étape active :
   vérifier la précondition (l'artefact « Lit » existe)
   invoquer le skill expert
+  OUVRIR l'artefact rendu + contrôle de réception (anti-squelette, cf. §ci-dessus)
   résumer en 2 lignes ce qu'il a produit
   mettre à jour state.md
   annoncer l'étape suivante

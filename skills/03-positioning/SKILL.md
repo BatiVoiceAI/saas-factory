@@ -22,7 +22,7 @@ Tu **formalises** le positionnement du produit face au marché réel : contre qu
 ## Ce que fait cette étape (et pourquoi)
 Sans cadre, le positionnement se bricole au feeling et finit générique. Le framework **April Dunford** impose un ordre de raisonnement (l'alternative d'abord, la catégorie en dernier) qui évite le piège n°1 — se comparer à soi-même au lieu de se comparer à **ce que le client ferait sans toi**.
 
-**HARD GATE / frontière (anti-doublon).** Ici tu **formalises** l'angle ; le brut vient des manques concurrents de l'étape 2. Tu **ne nommes pas l'edge** et tu **ne tranches pas** « edge réel ou pas » : ça, c'est l'**étape 4**. Un seul traitement par décision.
+**HARD GATE / frontière (anti-doublon).** Le brut vient des manques concurrents de l'étape 2 ; tu formalises ici l'angle candidat — chaîne Dunford **jusqu'à l'Onliness candidate incluse**. LA seule frontière : **le verdict edge (réel / faible / absent) appartient à l'étape 4** — elle reprendra ta phrase, précisera la niche et tranchera. Pas de verdict, pas de Go ici. Un seul traitement par décision.
 
 ## Entrées / sortie (contrat)
 - **Lit :** `research/idea-brief.md` (étape 1) + `research/market.md` (étape 2 : profils, prix, matrice, review-mining, manques).
@@ -60,8 +60,7 @@ Des 2 waves, **n'exécute que ce que `market.md` ne couvre pas** — typiquement
 ### 5. Formalise l'angle différenciant (candidat)
 Prends les **faiblesses / plaintes récurrentes / ouvertures** de `market.md` et **exprime-les en langage Dunford** : quel attribut répond à un manque **partagé par plusieurs** concurrents → quel value theme → quelle formulation Onliness *candidate*.
 
-**Stop ici.** Tu écris un **angle candidat formalisé**, pas un verdict. Pas de nom d'edge, pas de conclusion « c'est notre edge ». L'étape 4 nommera + décidera. Écris-le noir sur blanc : « Angle candidat — nommage et verdict edge = étape 4. »
-> Frontière anti-doublon en machine à états + garde de sortie (auto-contrôle) : `matrices-decision.md` § Frontière anti-doublon et `forcing-questions.md` § Garde de sortie.
+**Stop ici.** Tu livres un **angle candidat formalisé** (jusqu'à l'Onliness candidate incluse), pas un **verdict** : aucune conclusion « edge réel / faible / absent » ni « c'est notre edge ». Note-le en une ligne dans le fichier : « Angle candidat — verdict edge = étape 4. »
 
 ### 6. Écris `research/positioning.md`
 Le **résultat consolidé** dans ce fichier (template `assets/templates/positioning.md`) — **pas** les fichiers épars du moteur (messaging/brand/copy = hors Phase 1). Termine par flags + sources (protocole d'honnêteté).

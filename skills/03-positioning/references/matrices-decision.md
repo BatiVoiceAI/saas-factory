@@ -67,27 +67,12 @@ Chaque champ que l'intake du moteur réclame, et d'où le tirer sans re-question
 | Partagé par **plusieurs** concurrents + relié à une plainte | **Formalise** en attribut → value theme → Onliness candidate |
 | Isolé sur **1** concurrent | Mentionne comme piste **faible**, ne bâtis pas l'angle dessus |
 | Souhaité mais **non observé** dans les données | **Ignore** — jamais d'angle inventé |
-| Tenté d'écrire « c'est notre edge » | **STOP** — nommage + verdict = étape 4 |
+| Tenté de trancher « edge réel » / « c'est notre edge » | **STOP** — verdict edge = étape 4 |
 
 ---
 
-## Frontière anti-doublon (HARD GATE) — qui fait quoi
+## Frontière anti-doublon (la seule règle)
 
-Machine à états de la décision « edge », répartie sur 3 étapes. Reste dans ta case.
+02 **observe** les manques · 03 **formalise** l'angle candidat (chaîne Dunford jusqu'à l'Onliness candidate) · 04 **tranche** le verdict edge (réel / faible / absent) en reprenant ta phrase et en précisant la niche · 05 **pèse** dans la décision Go/Ajuster/No-Go.
 
-```
- étape 2 (market)        étape 3 (CE SKILL)         étape 4 (demand-edge)     étape 5
- ─────────────────       ──────────────────         ─────────────────────     ────────
- OBSERVE les manques ──▶ FORMALISE l'angle    ──▶   NOMME l'edge         ──▶  PÈSE dans
- (ouvertures, jamais     candidat (Dunford)         + TRANCHE (réel/            la décision
-  inventés)              PAS de nom, PAS de          faible/absent)             Go/Ajuster/
-                         verdict                     PAS de Go                  No-Go
-```
-
-| Si tu es tenté de… | C'est le job de… | Fais plutôt |
-|---|---|---|
-| Nommer l'edge (« notre edge = X ») | étape 4 | Écris « angle candidat », + phrase-garde |
-| Trancher « edge réel ou pas » | étape 4 | Laisse le verdict ouvert |
-| Conclure « on fonce » / Go | étape 5 | Ne décide rien |
-| Inférer le volume de demande | étape 4 | Reste sur le positionnement |
-| Écrire taglines / messaging canal | Phase 2 | Reste sur la tranche validation |
+Interdit en étape 3 — rien d'autre : le **verdict edge**, le **Go**, l'inférence de demande (étape 4), les taglines/messaging canal (Phase 2).

@@ -52,6 +52,13 @@ Le **flux exécutable** de la phase. Le SKILL est l'aperçu ; ici, la mécanique
 
 Entre chaque ligne : tu mets à jour `.saas-factory/state.md`, tu résumes en 2 lignes, tu annonces la suivante. Le QA Analyst n'est pas « une étape » linéaire : il **ouvre** (ligne 0) puis **repasse** compiler le livret après 12/13/14 (voir §QA Analyst).
 
+## Contrôle de réception des artefacts (anti-squelette)
+
+L'existence d'un fichier ne prouve rien — un sous-agent qui rend un stub plausible ne doit pas franchir le maillon. À chaque artefact rendu (`status/*`, `qa/*`, verdicts), avant de le déclarer « fait » dans `state.md` :
+1. **Ouvre l'artefact reçu** (Read) — jamais de « croire sur parole ».
+2. **Checklist minimale par type** : sections requises présentes, **verdict au format** `PASS/CONCERNS/FAIL/WAIVED` + confiance + preuve citée (`fichier:ligne`, capture, sortie de test), **preuve non vide** (un `PASS` sans preuve = finding supprimée, cf. conventions §3), taille plancher plausible (un `qa/report.md` de 10 lignes ne couvre pas un parcours A→Z).
+3. **Stub / squelette → renvoi à l'étape** qui l'a produit, avec le **manque nommé** (verdict sans preuve, parcours non exécuté, section vide), dans le budget d'itération de la feature — pas de montée au cran suivant ni de porte 15 sur un livret creux.
+
 ## Ouverture — la discipline du QA Analyst
 Avant 12, **toujours** : invoque `qa-analyst` pour écrire la recette. Sans recette écrite d'abord, les tests dev/cascade/faux-client n'ont pas de référentiel commun et le livret ne se compile pas.
 - **Ligne 0 (ouverture)** : recette (`qa/test-plan.md`) dérivée des critères d'acceptation (PRD, étape 7) + spec de validation (plan, étape 10). Par feature × par niveau : quel test, quel critère de passage.
@@ -73,7 +80,7 @@ La cascade (13) et le faux-client (14) **bouclent** : un `FAIL` renvoie au dev (
 - **14** : passe 1 (features seules) **avant** passe 2 (intégration A→Z) — c'est en passe 2 que sortent les bugs de jonction que la cascade par-feature ne voit pas.
 
 ## Discipline « lire `_shared` une fois »
-Les blocs partagés (`_shared/validation-cascade.md`, `_shared/test-dossier.md`, `_shared/lessons.md`, `_shared/safety-rails.md`) + `references/conventions.md` se lisent **au démarrage de la phase**, par toi l'orchestrateur. **Ne les recharge pas** entre deux étapes. Chaque skill expert relira ce dont il a besoin à son propre démarrage (c'est écrit dans son « À lire d'abord ») — tu ne le fais pas à sa place. Ça évite le rechargement en boucle et garde le contexte propre.
+Sous le master, les blocs partagés (`_shared/validation-cascade.md`, `_shared/test-dossier.md`, `_shared/lessons.md`, `_shared/safety-rails.md`) sont **déjà en contexte** (lus une fois au démarrage de session) et **priment** — ne les relis pas, ne les fais pas relire. Toi, l'orchestrateur, tu lis **une fois** `references/conventions.md` (local) au démarrage de la phase. Chaque skill expert relira ce dont il a besoin à son propre démarrage (c'est écrit dans son « À lire d'abord ») — tu ne le fais pas à sa place. Ça évite le rechargement en boucle et garde le contexte propre.
 
 ## Valeur de l'orchestrateur (ce que TU fais, vs les experts)
 | Toi (`phase-4-build`) | Les experts (12/13/14/15) |

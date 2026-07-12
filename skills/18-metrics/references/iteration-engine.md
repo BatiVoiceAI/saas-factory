@@ -39,13 +39,14 @@ T │  BOUCHE-TROU  │    PIÈGE      │  faible
 ## Routage fuite → levier (condition → type de piste)
 | Fuite dominante (étape 3) | Type de piste (le changement testable) | Métrique cible |
 |---|---|---|
-| Bug sur le chemin d'activation | corriger l'erreur Sentry (+ signal étape 17) | taux d'activation |
+| Bug sur le chemin d'activation | corriger l'erreur Sentry (fix codé en Phase 4, re-déployé via 17) | taux d'activation |
 | Onboarding trop lourd | retirer une étape / pré-remplir / démo | taux d'activation, délai signup→magique |
 | Moment magique flou | rendre le résultat visible plus tôt | taux d'activation |
 | Rétention plate mais > 0 | renforcer la boucle de retour (rappel, valeur récurrente) | rétention D7/D30 |
 | Rétention → 0 (pas de fit) | **PAS une piste d'optimisation** → signal fond pour l'étape 19 | (question de continuité) |
 | Conversion sous l'hypothèse | déplacer le paywall / clarifier la valeur payante | conversion free→payant |
 | Mauvais trafic (acquisition) | resserrer message/canal (peut renvoyer Phase 5) | activation des nouveaux du canal |
+| Fuite d'acquisition **SEO** (impressions hautes / CTR bas dans GSC, ou organique quasi nul malgré l'indexation — `type=public`) | → **mécanisme 5 de 16-seo** (itération post-launch sur données GSC réelles) — pas une piste produit, ne pas la bricoler ici | impressions → clics organiques (CTR), activation des entrées organiques |
 
 ## Recette forcing — valider une piste
 Avant d'écrire une piste, passe-la au filtre :

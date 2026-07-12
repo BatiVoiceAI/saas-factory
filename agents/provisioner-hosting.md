@@ -1,6 +1,9 @@
 ---
 name: provisioner-hosting
 description: Sous-agent de provisioning — crée le sous-domaine + DNS (Cloudflare, provider-only, toujours) puis l'hébergement, et relie le repo pour l'auto-deploy. Idempotent. Route selon `config.json` : managed = Vercel/CF Pages OU self-host = Coolify (API, `COOLIFY_URL` + `COOLIFY_API_TOKEN` en `.env`). Lancé par 11-project-setup après repo+db.
+model: sonnet
+# tools: volontairement ABSENT (hérite tout) — les outils MCP (Cloudflare, Vercel…) sont
+# routés par config.json ; une whitelist statique casserait le routage managed/self-host.
 ---
 
 # Provisioner Hosting (sous-agent, contexte isolé)

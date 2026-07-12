@@ -30,7 +30,7 @@ Ne relis pas les 4 fichiers en entier « pour t'imprégner ». Extrais **exactem
 | Input | Ce que tu en sors | Le piège à éviter |
 |---|---|---|
 | `idea-brief.md` | Problème + cible + **`type`** (public/interne/perso) | Prendre le problème d'origine tel quel alors que 02-04 l'ont nuancé |
-| `market.md` | Taille (avec hypothèse), dynamique, top concurrents + leur force | Recopier un chiffre nu sans l'hypothèse de calcul |
+| `market.md` | Taille servable + dynamique (**hérités du § « Taille servable & dynamique »**, produits à l'étape 2 — jamais recalculés ici), top concurrents + leur force | Recopier un chiffre nu sans l'hypothèse ; improviser une taille si la section manque (input anormal → flag) |
 | `confidence.md` | Le **score de confiance** de la recherche marché + ses trous | L'ignorer : une confiance basse doit teinter tout le verdict |
 | `positioning.md` | Catégorie retenue, alternatives réelles, angle | Confondre « angle marketing » et « edge produit » |
 | `demand-signals.md` | Signal **par proxy** + edge (ou son absence assumée) | Lire le proxy comme une demande *prouvée* |
@@ -51,6 +51,18 @@ Confronte les inputs **deux à deux** et cherche activement la contradiction. C'
 | idea-brief × 02-04 | La cible d'origine a été **démentie** par la recherche | « Tu visais X, la donnée pousse vers Y » |
 
 **Interdit :** moyenner deux signaux opposés pour produire un « ça peut marcher » rassurant. Une tension se **nomme**, elle ne se dissout pas.
+
+## Énumérer les risques — mini-taxonomie (5 familles)
+
+Le 4e axe du verdict (Risques) exige une **énumération**, pas une intuition. Passe les 5 familles sur les 4 inputs : famille vide → écris « rien d'identifié » ; famille pleine → nomme le risque + sa preuve. Puis ordonne **tueur d'abord** (un seul non contournable = axe Risques **Faible** → No-Go tendanciel, cf. `verdict-engine.md`).
+
+| Famille | La question à se poser | Exemple de tueur |
+|---|---|---|
+| **Marché** | Le créneau se ferme-t-il (déclin, saturation, mauvais timing) ? | catégorie en déclin structurel |
+| **Concurrence** | Un incumbent peut-il l'absorber d'un geste (bundle, gratuit, riposte rapide) ? | leader qui offre la feature en standard demain |
+| **Exécution / technique** | Une dépendance ou une complexité peut-elle couler le build (API tierce critique, intégration lourde, données introuvables) ? | tout repose sur une API fermée ou hors budget |
+| **Distribution** | Sait-on **atteindre** la cible à coût sain (canal, accès, CAC) ? | cible injoignable hors salons physiques |
+| **Réglementaire / dépendance** | Une règle ou une plateforme tierce peut-elle interdire ou étrangler (RGPD, données sensibles, CGU d'un tiers) ? | produit dépendant d'un scraping que les CGU interdisent |
 
 ### Recette forcing — nommer la tension (usage interne, pas de question à l'utilisateur ici)
 - **Cherche jusqu'à** : au moins **1 contradiction explicite** entre deux inputs, ou la preuve écrite qu'il n'y en a pas (« les 4 inputs convergent : demande proxy + marché en croissance + edge net + peu de concurrents »).
@@ -77,6 +89,7 @@ Un input peut manquer légitimement (route allégée) ou anormalement (bug amont
 - [ ] `type` relu depuis `idea-brief.md` → mode complet ou allégé décidé.
 - [ ] Score de `confidence.md` intégré comme plafond de confiance du verdict.
 - [ ] Au moins une passe de la matrice de confrontation faite ; tensions **nommées** (ou convergence prouvée).
+- [ ] Les **5 familles de risques** passées : risques nommés + preuve, ordonnés tueur d'abord (ou « rien d'identifié » par famille).
 - [ ] Chaque input manquant qualifié (normal vs anormal) et tracé — rien de comblé.
 
 ## Modes d'échec de cette étape

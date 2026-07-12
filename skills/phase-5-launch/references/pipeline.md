@@ -65,10 +65,17 @@ La séquence exacte de la phase, ce que chaque étape **produit**, les **règles
 
 | # | Étape | Rôle | Actif si | Produit (artefacts) | Porte |
 |---|---|---|---|---|---|
-| 1 | `16-seo` | Marketing | `type = public` | `seo/topic-cluster-map.md`, `seo/plan.md`, pages optimisées dans le code | 🚪 gate humain publication contenu (interne à l'étape) |
-| 2 | `17-deploy` | Release Eng / CTO | toujours | `deploy/log.md`, URL live, tracking PostHog+Sentry actif | 🚪 porte de publication (plan-then-apply) + canary |
+| 1 | `16-seo` | Marketing | `type = public` (route selon routing.md) | `seo/topic-cluster-map.md`, `seo/plan.md`, pages optimisées dans le code | 🚪 gate humain publication contenu (interne à l'étape) |
+| 2 | `17-deploy` | Release Eng / CTO | toujours | `deploy/log.md`, URL live, tracking PostHog+Sentry actif | 🚪 porte de publication (plan-then-apply, **selon le type** — liste réelle : routing.md canonique) + canary |
 
 Le **contrat lit/écrit exact** par étape vit dans `references/conventions.md` (§ Contrat d'artefacts) et dans chaque `SKILL.md` d'étape — cette table donne seulement le **chaînage**.
+
+## Contrôle de réception des artefacts (anti-squelette)
+
+L'existence d'un fichier ne prouve rien. À chaque artefact rendu par une étape, avant de le déclarer « fait » dans `state.md` :
+1. **Ouvre l'artefact reçu** (Read) — jamais de « croire sur parole ».
+2. **Checklist minimale par type** : sections requises présentes (clusters + pages ≤ plafond dans `seo/plan.md` ; pré-vol, plan, décision de porte, résultat canary dans `deploy/log.md`), verdicts au format attendu, **preuves non vides** (URL réelles, sorties de checks, pas de placeholders), taille plancher plausible.
+3. **Stub / squelette → renvoi à l'étape** qui l'a produit, avec le **manque nommé** (canary non exécuté, plan sans coût/réversibilité, page SEO creuse), dans le budget d'itération — pas de sortie de phase sur un log creux.
 
 ## Règles d'enchaînement (déterminisme)
 1. **Ordre fixe** : 16 puis 17. Jamais 17 avant 16 quand 16 est active — le déploiement indexe les pages produites par le SEO (l'indexation réelle se fait **au déploiement**, pas au SEO).

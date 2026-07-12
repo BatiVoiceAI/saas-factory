@@ -18,12 +18,12 @@ Même principe qu'en Phase 1 : chaque étape suit une **procédure normée**, ja
 ## Contrat d'artefacts
 | Étape | Lit | Écrit |
 |---|---|---|
-| 6 Business model | `opportunity-brief`, `positioning` | `product/business-model.md`, `product/pricing.md` *(si public/interne — sauté en perso)* |
+| 6 Business model | `opportunity-brief`, `positioning` | `product/business-model.md`, `product/pricing.md` *(pricing si public ; étape entière sautée en perso — route selon routing.md)* |
 | 7 PRD | `idea-brief`, `opportunity-brief`, `positioning`, `demand-signals`, `product/business-model.md` | `product/product-spec.md`, `product/features/NN-*.md`, `product/user-stories.md`, `product/feature-prioritization.md`, `product/mvp-definition.md` |
 | 8 Design | `product-spec`, `positioning`, `idea-brief`, `product/pricing.md`, `_shared/design-doctrine.md`, `_shared/landing-playbook.md` | `DESIGN.md`, `design/mockups/` |
 
 ## Calibrage par type (public / interne / perso)
-Le `type` est **fixé en Phase 1** (`01-discover`) et vit dans `.saas-factory/state.md`. On ne le redemande pas : on **calibre** la profondeur des 3 étapes. En bref — **public** : tout complet · **interne** : pas de pricing GTM (coût/fit interne à la place), design sobre · **perso** : business model minimal, pricing sauté, PRD resserré (MVP + must-have), design minimal. Règle d'or : on **allège**, on ne **supprime jamais** le PRD (étape 7) ni le `DESIGN.md` (source de vérité du build). Les matrices détaillées, étape par étape, sont dans `references/orchestration-playbook.md`.
+Le `type` est **fixé en Phase 1** (`01-discover`) et vit dans `.saas-factory/state.md`. On ne le redemande pas. **Le skip-set vit dans la matrice canonique `skills/saas-factory/references/routing.md` — route selon elle** ; ici, le calibrage de profondeur. En bref — **public** : tout complet · **interne** : 06 allégée (ROI interne, pas de pricing marché), design sobre · **perso** : 06 **sautée** (routing.md), PRD resserré (MVP + must-have), design minimal. Règle d'or : on **allège**, on ne **supprime jamais** le PRD (étape 7) ni le `DESIGN.md` (source de vérité du build). Le calibrage détaillé, étape par étape, est dans `references/orchestration-playbook.md`.
 
 ## Portes & état
 Deux portes (PRD en fin d'étape 7, charte dans l'étape 8), portées par les experts, jamais franchies sans décision explicite. La tenue de `state.md`, la procédure de reprise et la **matrice de retour arrière** (« Ajuster » → quelle étape reboucler) vivent dans `references/orchestration-playbook.md`.

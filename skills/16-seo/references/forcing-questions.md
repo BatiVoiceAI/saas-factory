@@ -78,7 +78,7 @@ Avant de figer la liste des pages (mécanisme 2.3, M5).
 
 ## 4. Gate humain de publication (la SEULE interaction utilisateur — `AskUserQuestion`)
 
-Le mécanisme 4. On **ne publie pas** de contenu public au nom de l'utilisateur sans son OK explicite (`_shared/safety-rails.md` §1, `quality-guardrails.md` §5). C'est un vrai arrêt utilisateur, pas une auto-interrogation.
+Le mécanisme 4. On **ne publie pas** de contenu public au nom de l'utilisateur sans son OK explicite (`_shared/safety-rails.md` §1, `quality-guardrails.md` §5). C'est un vrai arrêt utilisateur, pas une auto-interrogation. **Périmètre : les pages éditoriales (livrable b) uniquement** — le socle technique (3-A : sitemap, robots, metadata, JSON-LD) est du **code déjà committé**, il n'attend pas ce gate et ne se montre pas ici.
 
 **Ask exact.**
 > « Voici les **{n} pages** prêtes à être publiées, les **mots-clés visés** par chacune, et le résultat du self-assessment qualité. [récap : page → mot-clé → PASS]. Je publie **ces pages telles quelles** ? (oui / je veux revoir X / non) »
@@ -89,9 +89,10 @@ Le mécanisme 4. On **ne publie pas** de contenu public au nom de l'utilisateur 
 | Réponse | Interprétation correcte |
 |---|---|
 | « ça a l'air bien » (sans « publie ») | Pas un OK de publication — reformule la demande d'OK explicite |
-| pas de réponse / hors sujet | **Ne pas publier**, livrer « prêt, en attente de validation » |
+| pas de réponse / hors sujet | **Ne pas publier**, livrer « prêt, en attente de validation » — le socle technique reste committé |
 | « fais au mieux » | Ne **pas** l'étendre à la publication publique ; re-demander l'OK ciblé |
 | « oui mais enlève la page 3 » | OK **partiel** : publier le reste, retirer la 3, tracer |
+| « attends le OK pour le sitemap/robots aussi » | Hors périmètre du gate : le socle (3-A) est du code committé sans validation — expliquer la scission, ne pas le dé-committer |
 
 **MOU vs FORT.**
 - MOU : publier parce que « l'utilisateur a validé le design la semaine dernière ». ❌ (validation ≠ ce lot, ≠ publication)

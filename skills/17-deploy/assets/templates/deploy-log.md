@@ -17,12 +17,18 @@
 | DNS cutover | Cloudflare | … | oui |
 | Tracking | PostHog + Sentry | actif | oui |
 
+## Filet post-launch
+- Alert rule Sentry (erreur sur les routes du parcours cœur → email) : {créée — nom/lien | absente, acté parce que…}
+- Backups Supabase : {état réel acté — quotidien/PITR, rétention}
+- Uptime monitor : {URL du check si `type=public` | N/A (interne/perso), acté}
+
 ## Canary (santé post-deploy)
-- Fenêtre de surveillance : {5–15 min}
+> Seuils chiffrés : source unique `references/canary-rollback.md` — on consigne ici les **valeurs mesurées** et le verdict par rapport à ces seuils.
+- Fenêtre de surveillance : {…}
 - Pages clés (200) : {…}
-- Parcours cœur en prod : {OK / KO}
-- Erreurs Sentry (fenêtre) : {seuils absolus — 0 sur le cœur · < 1/min hors-cœur · crash-free ≥ 99 % ; pas de baseline au 1er ship, > 5× baseline en redéploiement}
-- Core Web Vitals : {LCP < 2,5 s / CLS < 0,1 / INP < 200 ms — valeurs mesurées}
+- Parcours cœur en prod : {OK / KO — incl. réception réelle de l'email de connexion (statut Resend)}
+- Erreurs Sentry (fenêtre) : {valeurs mesurées vs seuils canary-rollback.md}
+- Core Web Vitals : {valeurs mesurées vs seuils canary-rollback.md}
 - **Verdict** : {sain → Phase 6} | {échec → rollback effectué}
 
 ## Rollback (si déclenché)
@@ -35,4 +41,4 @@
 {https://…}
 
 ## Concerns documentés (du livret)
-{les `CONCERNS`/`WAIVED` restants, honnêtement}
+{les `CONCERNS`/`WAIVED` restants, honnêtement — y compris toute décision « déférée » re-portée au pré-vol, avec sa raison}

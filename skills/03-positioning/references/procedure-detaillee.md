@@ -23,13 +23,13 @@ Sous-procédures exhaustives pour chaque étape de la « Procédure normée » d
                            │              validation Onliness + Moore
                            │                        │
                            └──────────────────────▶ ANGLE CANDIDAT formalisé
-                                                     │  (pas de nom d'edge,
-                                                     │   pas de verdict)
+                                                     │  (Onliness candidate incluse,
+                                                     │   pas de verdict edge)
                                                      ▼
                                           research/positioning.md
                                                      │
                                                      ▼
-                              étape 4 (04-demand-edge) : nomme + tranche l'edge
+                              étape 4 (04-demand-edge) : tranche le verdict edge
 
   * [2] Attributs = ⏸ point de pause founder (voir forcing-questions.md)
 ```
@@ -145,13 +145,13 @@ C'est le cœur de l'étape. La procédure fine par composant — forcing-questio
 1. Reprends les **manques / plaintes récurrentes / ouvertures** de `market.md` (bloc « Ouvertures observées »).
 2. Filtre : ne garde que les manques **partagés par plusieurs concurrents** (un manque isolé sur 1 concurrent ≠ angle structurel).
 3. Exprime chaque manque partagé en chaîne Dunford : quel **attribut** y répond → quel **value theme** → quelle formulation **Onliness candidate**.
-4. Écris noir sur blanc, dans le fichier : « **Angle candidat — nommage de l'edge et verdict "edge réel ou pas" = étape 4.** »
+4. Note en une ligne dans le fichier : « **Angle candidat — verdict edge = étape 4.** »
 
-**Critère de passage (HARD GATE).** La sortie contient un *angle candidat formalisé* et **aucun** des éléments suivants : un nom d'edge, une phrase « c'est notre edge », un verdict Go, un verdict « edge réel/faible/absent ». Si l'un apparaît → tu as empiété sur l'étape 4, réécris.
+**Critère de passage (HARD GATE).** La sortie contient un *angle candidat formalisé* (chaîne attribut → value theme → Onliness candidate) et **aucun verdict** : ni « edge réel/faible/absent », ni « c'est notre edge, défendable », ni Go. Si un verdict apparaît → tu as empiété sur l'étape 4, réécris.
 
-**Micro-exemple.** market.md montre que 3 concurrents sur 4 ont des avis se plaignant de « configuration initiale interminable ». → angle candidat : attribut « onboarding sans configuration » → value theme « opérationnel en 10 min, pas 10 jours » → Onliness candidate « le seul {catégorie} qui démarre sans setup ». Tu **n'écris pas** « notre edge = zero-config ». Ce nommage est le job de l'étape 4.
+**Micro-exemple.** market.md montre que 3 concurrents sur 4 ont des avis se plaignant de « configuration initiale interminable ». → angle candidat : attribut « onboarding sans configuration » → value theme « opérationnel en 10 min, pas 10 jours » → Onliness candidate « le seul {catégorie} qui démarre sans setup ». Tu **n'écris pas** « c'est notre edge, défendable » — trancher est le job de l'étape 4.
 
-**Mode d'échec.** Conclure « donc notre edge c'est X, on fonce » → double traitement de la décision, l'étape 4 n'a plus rien à trancher et le principe « 1 seul traitement par décision » est cassé. **Contre-mesure :** la phrase-garde obligatoire au point 4.
+**Mode d'échec.** Conclure « edge réel, on fonce » → double traitement de la décision, l'étape 4 n'a plus rien à trancher et le principe « 1 seul traitement par décision » est cassé. **Contre-mesure :** la règle unique — le verdict edge appartient à l'étape 4.
 
 ---
 
@@ -165,7 +165,7 @@ C'est le cœur de l'étape. La procédure fine par composant — forcing-questio
 3. Termine par **Red flags / Yellow flags / Sources** (protocole d'honnêteté). Tague les sources par tier ; les avis concurrents restent **Tier 3**.
 4. Vérifie la **definition-of-done** (`checklists-modes-echec.md` § DoD) avant de clôturer.
 
-**Critère de passage.** `research/positioning.md` existe, suit le template, se termine par flags+sources, contient l'angle candidat + la phrase-garde étape 4, et **aucun secret/clé**.
+**Critère de passage.** `research/positioning.md` existe, suit le template, se termine par flags+sources, contient l'angle candidat (verdict edge = étape 4), et **aucun secret/clé**.
 
 **Mode d'échec.** Déverser les 5 fichiers du moteur (doc + statement + alternatives + category + messaging) dans research/ → tu importes la Phase 2 dans la Phase 1 (violation calibration). **Contre-mesure :** un seul fichier, la tranche Phase 1 uniquement.
 

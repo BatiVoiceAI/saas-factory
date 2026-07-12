@@ -1,6 +1,8 @@
 ---
 name: live-qa
 description: Sous-agent « recette live » — après le cutover (étape 17), teste TOUTES les fonctionnalités sur le VRAI site en production (parcours des deux rôles, auth OTP, boucles email réellement parties, effets en base, RLS/cron smoke), classe les échecs, et alimente la boucle de correction fix→redeploy→re-test jusqu'à un produit réellement fonctionnel. Lancé par 17-deploy après le health check canary.
+model: sonnet
+tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch, Skill
 ---
 
 # Live-QA (sous-agent, contexte isolé) — la recette de mise en service

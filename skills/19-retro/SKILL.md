@@ -1,7 +1,7 @@
 ---
 name: 19-retro
 description: >-
-  Étape 19 (Phase 6 · après) de SaaS Factory — Retro, mémoire & kill/continue (rôles Eng Manager / CEO). La boucle se referme : rétrospective (ce qui a marché/raté — build, méthode, produit), capture des leçons dans la mémoire qui compound (learnings.jsonl + lessons.md), et décision explicite kill/continue selon un critère écrit (+ post-mortem 5 lignes si kill). Se déclenche pour « rétro », « bilan », « kill or continue », en fin de cycle.
+  Étape 19 (Phase 6 · après) de SaaS Factory — Retro, mémoire & kill/continue (rôles Eng Manager / CEO). La boucle se referme : rétrospective (ce qui a marché/raté — build, méthode, produit), capture des leçons dans la mémoire qui compound (learnings.jsonl + lessons-learned.md), et décision explicite kill/continue selon un critère écrit (+ post-mortem 5 lignes si kill). Se déclenche pour « rétro », « bilan », « kill or continue », en fin de cycle.
 allowed-tools: Read, Write, Edit, AskUserQuestion, Bash
 ---
 
@@ -10,10 +10,11 @@ allowed-tools: Read, Write, Edit, AskUserQuestion, Bash
 La boucle se referme. Deux jobs : **apprendre** (pour que le prochain projet soit meilleur) et **décider** (continuer ou tuer, sans s'acharner). La rétro n'est pas de la cérémonie — c'est le mécanisme qui rend SaaS Factory meilleur à chaque cycle et qui empêche l'acharnement sur un mort.
 
 ## HARD GATE — périmètre : on apprend et on décide, on ne construit pas
-Cette étape **ne code rien** et ne relance aucun build : on mène la rétro, on capture la mémoire, on tranche kill/continue. Si « Continue » sort de la porte, on ne réimplémente pas ici — on **réamorce l'étape 18** avec un budget d'itérations borné. Toute action qui sort de « rétro + mémoire + décision » est hors périmètre.
+Cette étape **ne code rien** et ne relance aucun build : on mène la rétro, on capture la mémoire, on tranche kill/continue. Si « Continue » sort de la porte, on ne réimplémente pas ici — on **route vers la Phase 4** (nouvelle piste à builder) **ou la Phase 5** (relance/correctif déployable) avec un budget d'itérations borné ; la re-mesure (18) vient **après** le re-déploiement, jamais en réamorce directe (routage : `phase-6-after/references/gate-and-state.md`). Toute action qui sort de « rétro + mémoire + décision » est hors périmètre.
 
 ## À lire d'abord (une fois)
-- `_shared/lessons.md` — la mémoire à enrichir (les règles d'or déjà capitalisées).
+- `_shared/lessons.md` — les règles d'or **livrées avec le plugin** (lecture seule : on n'y écrit jamais pendant une rétro).
+- `~/.saas-factory/lessons-learned.md` — les règles d'or **capitalisées par tes projets** (la mémoire à enrichir — hors plugin, survit aux updates ; créée au premier cycle si absente).
 - `_shared/safety-rails.md` — les garde-fous (budget de boucle §7, secrets §4).
 - **Inputs** : le bilan métriques (`metrics/review.md`, étape 18) + le critère de kill posé au lancement (`.saas-factory/state.md`) + l'historique des leçons (`~/.saas-factory/learnings.jsonl`).
 
@@ -27,15 +28,15 @@ gstack `/retro` (rétro d'ingénierie) + la mémoire compound déjà prévue dan
 
 ## Procédure (aperçu — détail dans les références)
 1. **Rétro** — ce qui a **marché** / **raté**, sur 3 plans : le **build** (la machine a-t-elle bien tourné ?), la **méthode** (le pipeline SaaS Factory lui-même), le **produit** (a-t-il trouvé son marché ?). Procédure exhaustive + forcing-questions → `references/retro-procedure.md`.
-2. **Mémoire qui compound** — capture les leçons dans `~/.saas-factory/learnings.jsonl` (leçon + confiance + source + date) ; si une leçon est **transverse**, mets à jour `_shared/lessons.md`. C'est ce qui rend chaque projet suivant meilleur. Schéma, barème, dédup → `references/memory-compound.md`.
-3. **Kill / Continue** — applique le **critère écrit** (`references/kill-continue.md`). **Continue** → boucle d'itération (retour étape 18 / plus haut). **Kill** → post-mortem 5 lignes + archive propre (façon dossier `Echec/`).
+2. **Mémoire qui compound** — capture les leçons dans `~/.saas-factory/learnings.jsonl` (leçon + confiance + source + date) ; si une leçon est **transverse**, remonte-la dans `~/.saas-factory/lessons-learned.md` (hors plugin — survit aux updates ; jamais d'écriture dans `_shared/`). C'est ce qui rend chaque projet suivant meilleur. Schéma, barème, dédup → `references/memory-compound.md`.
+3. **Kill / Continue** — applique le **critère écrit** (`references/kill-continue.md`). **Continue** → boucle d'itération : **Phase 4** (nouvelle piste) ou **Phase 5** (relance/correctif), re-mesure en 18 après re-déploiement. **Kill** → post-mortem 5 lignes + archive propre (façon dossier `Echec/`).
 
 ## La porte (kill/continue)
 Présente le bilan (métriques + rétro) + le critère, puis `AskUserQuestion` : **Continuer** (itérer) · **Kill** (arrêter proprement) · **Pause/park**. Un kill documenté n'est pas un échec — c'est une décision rapide qui **libère l'énergie**. Ne franchis pas sans décision explicite. Recette de la porte (Ask exact / Push-until / Red-flags / routage) → `references/kill-continue.md`.
 
 ## Contrat d'artefacts
-- **Lit** : `metrics/review.md` (étape 18), `_shared/lessons.md`, `.saas-factory/state.md` (critère de kill posé au lancement), `~/.saas-factory/learnings.jsonl` (historique).
-- **Écrit** : `retro/retro.md` (template), `~/.saas-factory/learnings.jsonl` (append), MAJ `_shared/lessons.md` (si leçon transverse), MAJ `.saas-factory/state.md`. Si Kill : la section post-mortem (5 lignes) de `retro/retro.md` remplie + archive `Echec/`.
+- **Lit** : `metrics/review.md` (étape 18), `_shared/lessons.md`, `~/.saas-factory/lessons-learned.md` (si présent), `.saas-factory/state.md` (critère de kill posé au lancement), `~/.saas-factory/learnings.jsonl` (historique).
+- **Écrit** : `retro/retro.md` (template), `~/.saas-factory/learnings.jsonl` (append), MAJ `~/.saas-factory/lessons-learned.md` (si leçon transverse — jamais `_shared/lessons.md`, qui est livré avec le plugin), MAJ `.saas-factory/state.md`. Si Kill : la section post-mortem (5 lignes) de `retro/retro.md` remplie + archive `Echec/`.
 
 ## Garde-fous
 - **Honnêteté d'abord** (`_shared/lessons.md`, anti-flagornerie) : on nomme les échecs, on ne les moyenne pas. Une rétro flatteuse est inutile.
@@ -44,4 +45,4 @@ Présente le bilan (métriques + rétro) + le critère, puis `AskUserQuestion` :
 - **Secrets** : rien de sensible dans `retro.md`, `learnings.jsonl`, ni `state.md` (`_shared/safety-rails.md` §4).
 
 ## Sortie & état
-`retro/retro.md` (template) + mémoire mise à jour (`learnings.jsonl`, `lessons.md`). Mets à jour `.saas-factory/state.md`. **Fin du cycle** — le pipeline complet (idée → déployé → mesuré → appris) est bouclé. Continue → réamorce à l'étape 18. Kill → cycle clos, mémoire enrichie pour le prochain projet.
+`retro/retro.md` (template) + mémoire mise à jour (`learnings.jsonl`, `lessons-learned.md`). Mets à jour `.saas-factory/state.md`. **Fin du cycle** — le pipeline complet (idée → déployé → mesuré → appris) est bouclé. Continue → route vers la **Phase 4** (nouvelle piste) ou la **Phase 5** (relance/correctif) selon la nature de l'itération ; la re-mesure (18) vient après le re-déploiement. Kill → cycle clos, mémoire enrichie pour le prochain projet.

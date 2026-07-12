@@ -2,7 +2,7 @@
 name: phase-5-launch
 description: >-
   Phase 5 de SaaS Factory — Lancement (rôles Marketing · Release Eng / CTO). Orchestre les 2 étapes (16-seo → 17-deploy) : SEO de base si usage public, puis déploiement en production (plan-then-apply : promotion staging→prod, DNS, tracking, health checks). À utiliser après la décision « ship » de la revue client (étape 15).
-allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, Grep, Glob, Task
+allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, Grep, Glob, Task, Skill
 ---
 
 # SaaS Factory — Phase 5 : Lancement (orchestrateur)
@@ -20,13 +20,13 @@ Prérequis : décision **« ship »** à l'étape 15. Le produit est validé + p
 
 ## Références du chef d'orchestre (charge à la demande)
 La profondeur du **routage/portes/état** vit ici — ouvre la bonne au bon moment, ne précharge pas :
-- `references/pipeline.md` — la **carte** de la phase (diagramme ASCII, séquence exacte, ce que chaque étape produit, règles d'enchaînement + retours arrière internes).
-- `references/routing.md` — le **calibrage** `type` → route (public / interne / perso → étapes actives/sautées).
+- `references/pipeline.md` — la **carte** de la phase (diagramme ASCII, séquence exacte, ce que chaque étape produit, contrôle de réception anti-squelette, règles d'enchaînement + retours arrière internes).
+- `references/routing.md` — l'**application de la route** (renvoi à la matrice canonique `skills/saas-factory/references/routing.md` + règles locales d'application).
 - `references/gates.md` — la **gestion des portes** (le gate humain SEO de 16, la porte de publication de 17 : ce que chaque 🚪 décide + retours arrière).
 - `references/state-resume.md` — **état, reprise & discipline `_shared` une fois** (quand/quoi mettre à jour dans `.saas-factory/state.md`, table de reprise).
 
 ## Le pipeline — 2 étapes expertes
-1. **`16-seo`** (rôle Marketing, **si `type = public`**) — base SEO saine (mots-clés → clusters, pages de qualité **plafonnées**, on-page + technique), **gate humain avant publication**. → écrit `seo/topic-cluster-map.md` + `seo/plan.md` + optimisations code. `type != public` ⇒ **sautée**.
+1. **`16-seo`** (rôle Marketing, **si `type = public`** — route selon `routing.md`) — base SEO saine (mots-clés → clusters, pages de qualité **plafonnées**, on-page + technique), **gate humain avant publication**. → écrit `seo/topic-cluster-map.md` + `seo/plan.md` + optimisations code. `type != public` ⇒ **sautée + noindex**.
 2. **`17-deploy`** (rôle Release Eng / CTO) — **plan-then-apply** du déploiement prod : pré-vol → plan → 🚪 porte de publication → apply (migrations → promotion staging→prod → cutover DNS → tracking PostHog + Sentry) → **health check canary** (échec → rollback N-1). S'inspire des patterns gstack `land-and-deploy` + `canary` (inspirés, non vendorés). → écrit `deploy/log.md` + URL live + tracking actif.
 
 ## Diagramme de flux (détail : `references/pipeline.md`)
@@ -66,7 +66,7 @@ La profondeur du **routage/portes/état** vit ici — ouvre la bonne au bon mome
 - **Fin de Phase 5 : produit en ligne** → Phase 6 (mesure & retro).
 
 ## Calibrage (détail : `references/routing.md`)
-`type = perso/interne` → **saute le SEO** (16) ; le déploiement (17) peut être privé/interne (mais garde sa porte + son canary). `public` → les deux étapes. Le routage saute une **étape**, jamais la porte de publication de 17.
+`type = perso/interne` → **saute le SEO** (16, + noindex) ; le déploiement (17) reste actif, privé/interne, avec son canary. `public` → les deux étapes. Les **portes suivent la liste réelle par type** (matrice canonique `skills/saas-factory/references/routing.md` §Portes actives) : porte de publication complète en public, conditionnelle en interne (+ check « signup anonyme refusé »), absente en perso sur preview URL à coût nul — la porte revient dès que ça touche un domaine public ou que ça dépense.
 
 ## Sortie
 À **chaque transition** (fin d'étape, franchissement de porte) : mets à jour `.saas-factory/state.md` (`references/state-resume.md`), résume en 2 lignes, annonce la suivante. Fin de phase → **Phase 6**.

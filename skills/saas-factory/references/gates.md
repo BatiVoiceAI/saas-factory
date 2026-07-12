@@ -13,6 +13,8 @@ Une **porte = une décision de l'utilisateur, en clair + preuve**. Jamais faire 
 | **Déploiement** | `17-deploy` (P5) | plan-then-apply : publie-t-on réellement ? | **OK** → publie + P6 · **non** → on ne publie pas |
 | **Kill / Continue** | `19-retro` (P6) | on poursuit ou on tue la piste ? | **continue** → itère (retour P4/P5) · **kill** → post-mortem + archive |
 
+Les portes **réellement actives selon le `type`** (ex. porte Déploiement absente en perso sur preview URL à coût nul, conditionnelle en interne) : liste réelle dans `references/routing.md` §Portes actives par type — cette table décrit le cas complet (public).
+
 ## Protocole de porte (identique partout)
 1. La phase experte présente : **résumé business** (1-2 pages non-tech pour les grosses portes) + **verdict honnête** (anti-flagornerie — pas de « tout est parfait »).
 2. `AskUserQuestion` avec les options réelles de cette porte.

@@ -9,7 +9,7 @@ metrics/review.md ┐
 state.md (critère) ┼──> [RÉTRO 3-plans] ──> retro/retro.md
 _shared/lessons.md ┘         │                      │
                              ▼                      ▼
-                    leçons candidates ──> memory-compound.md ──> learnings.jsonl (+ lessons.md si transverse)
+                    leçons candidates ──> memory-compound.md ──> learnings.jsonl (+ ~/.saas-factory/lessons-learned.md si transverse)
                                                                         │
                                                                         ▼
                                                                  [PORTE kill/continue] ──> kill-continue.md
@@ -17,7 +17,7 @@ _shared/lessons.md ┘         │                      │
 
 ## Ordre d'exécution (ne pas sauter d'étape)
 
-1. **Charger les faits** avant toute opinion. Lis `metrics/review.md` (les chiffres), `.saas-factory/state.md` (le critère de kill posé au lancement + l'historique des décisions), `_shared/lessons.md` (ce qu'on savait déjà). Interdit de commencer la rétro « de mémoire ».
+1. **Charger les faits** avant toute opinion. Lis `metrics/review.md` (les chiffres), `.saas-factory/state.md` (le critère de kill posé au lancement + l'historique des décisions), `_shared/lessons.md` + `~/.saas-factory/lessons-learned.md` si présent (ce qu'on savait déjà). Interdit de commencer la rétro « de mémoire ».
 2. **Balayer les 3 plans** (build / méthode / produit) — pour chacun, remplir *a marché* **et** *a raté*. Une case *a raté* vide sur un plan = signal d'auto-complaisance → forcer (voir forcing-questions).
 3. **Extraire les leçons candidates** — chaque *a raté* et chaque *a marché non évident* devient une leçon candidate (une phrase actionnable). Les leçons partent vers `memory-compound.md`.
 4. **Remplir `retro/retro.md`** (template `assets/templates/retro.md`).
@@ -57,11 +57,11 @@ Pour chaque plan, remplir **les deux colonnes**. Le *a marché* n'est pas de la 
 
 ## Checklist definition-of-done (rétro)
 
-- [ ] `metrics/review.md`, `state.md`, `_shared/lessons.md` **lus** avant d'écrire.
+- [ ] `metrics/review.md`, `state.md`, `_shared/lessons.md` (+ `lessons-learned.md` si présent) **lus** avant d'écrire.
 - [ ] Les 3 plans ont **≥ 1 ligne concrète** en *a marché* **et** en *a raté*.
 - [ ] Chaque *raté* est un **fait daté ou chiffré**, pas une impression.
 - [ ] **≥ 1 leçon candidate** actionnable extraite (partira vers `learnings.jsonl`).
-- [ ] Les leçons transverses sont **repérées** (drapeau oui/non) pour `_shared/lessons.md`.
+- [ ] Les leçons transverses sont **repérées** (drapeau oui/non) pour `~/.saas-factory/lessons-learned.md`.
 - [ ] Aucun secret dans `retro.md` (`safety-rails` §4).
 - [ ] `retro/retro.md` rempli à partir du template.
 

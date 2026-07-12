@@ -28,7 +28,16 @@ Fais les 4 passes **dans cet ordre**. Chaque passe a un critère de passage (« 
 - **Comment lire** :
   - Volume **élevé** = marché actif, des gens paient déjà pour résoudre ce problème.
   - Volume **très faible** = deux hypothèses opposées → marché **immature** (personne n'a encore le réflexe d'acheter) **ou** faible **switching** (les gens restent, rien ne les pousse à écrire). **Dis laquelle** tu retiens, avec l'indice qui te fait pencher (ex. présence de discussions Reddit actives = plutôt immature ; silence total = plutôt niche minuscule). Ne devine pas en silence.
-- **Critère de passage** : tu as un chiffre agrégé + au moins la répartition sur les 2-3 concurrents principaux. Sinon → trou de données déclaré.
+- **Bandes indicatives (« élevé » n'est jamais un feeling)** — retiens une bande selon le contexte marché et **écris la justification** de la bande retenue :
+
+  | Contexte marché | Élevé | Moyen | Faible |
+  |---|---|---|---|
+  | Niche B2B FR (métier précis, 1 pays) | ≥100 avis <24 mois | 20-100 | <20 |
+  | B2B international (catégorie établie) | ≥1 000 avis <24 mois | 200-1 000 | <200 |
+  | B2C / prosumer large | ≥5 000 avis <24 mois | 500-5 000 | <500 |
+
+  Règles : (1) on compte les avis **<24 mois** — le vieux stock ne dit rien de la demande actuelle ; (2) la bande retenue s'écrit dans `demand-signals.md` **avec sa justification** (ex. « bande niche B2B FR : cible = ~8 000 salons, 1 pays, 1 langue ») ; (3) contexte hors table → construis ta bande **par analogie** et justifie-la. Jamais un « volume élevé » nu.
+- **Critère de passage** : chiffre agrégé + répartition sur les 2-3 concurrents principaux + **bande retenue avec justification écrite**. Sinon → trou de données déclaré.
 
 ### Passe 2 — Plaintes récurrentes (le cœur du signal)
 - **Quoi extraire** : les *pain themes* qui reviennent chez **plusieurs** concurrents, chacun avec sa **sévérité**.
@@ -41,7 +50,7 @@ Fais les 4 passes **dans cet ordre**. Chaque passe a un critère de passage (« 
   | **Rédhibitoire** | Cause documentée de départ / non-adoption. | « J'ai résilié : pas de conformité RGPD. » |
 
 - **Test « partagé »** : un thème compte comme *partagé* s'il apparaît chez **≥2 concurrents distincts**. Une douleur partagée = problème **structurel** de la catégorie = vraie demande. Une douleur mono-concurrent = peut-être juste un mauvais produit, pas un besoin de marché (→ ça deviendra un *yellow flag*, cf. Passe côté edge).
-- **Preuve obligatoire** : chaque thème retenu porte au moins **1 quote + source + date**. Pas de quote → le thème n'existe pas dans la sortie.
+- **Preuve obligatoire** : chaque thème retenu porte au moins **1 quote + source (avec URL) + date + statut de vérification** (verbatim vérifié ou `[snippet — non vérifié]`, selon le marqueur WebFetch de l'étape 2 — cf. `adversarial-verification.md` règle dure n°2). Pas de quote → le thème n'existe pas dans la sortie.
 - **Critère de passage** : au moins les thèmes classés par sévérité et marqués partagé/isolé.
 
 ### Passe 3 — Features réclamées
@@ -59,7 +68,7 @@ Fais les 4 passes **dans cet ordre**. Chaque passe a un critère de passage (« 
 
 ## 2. Rubrique déterministe → verdict
 
-On applique la table du SKILL.md **sans négocier**. Rappel + précisions de départage :
+**Source unique** de la rubrique (le SKILL.md n'en porte que les libellés + le renvoi ici). On l'applique **sans négocier** :
 
 | Verdict | Conditions **toutes** requises |
 |---|---|
@@ -123,6 +132,7 @@ Détail complet dans `adversarial-verification.md`. En bref, ici : tag chaque so
 ## 5. Definition-of-Done du bloc 1
 
 - [ ] Volume agrégé **+** réparti par concurrent principal (ou trou déclaré).
+- [ ] Volume qualifié via une **bande chiffrée** (contexte + justification écrite), pas au feeling.
 - [ ] Interprétation du volume faible tranchée (immature vs. faible switching), avec l'indice.
 - [ ] Douleurs classées par sévérité **et** marquées partagé (≥2 concurrents) / isolé.
 - [ ] Chaque douleur retenue porte quote + source + date.

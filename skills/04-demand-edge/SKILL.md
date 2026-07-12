@@ -51,22 +51,15 @@ Trois verdicts possibles : **Fort / Moyen / Faible**. La rubrique déterministe 
 Formule **humble** : « demande **plausiblement** {forte/moyenne/faible} », preuves à l'appui (quote + source + date).
 
 ### Vérif adversariale (obligatoire)
-Applique `vendor/startup-skill/startup-competitors/references/verification-agent.md` + `honesty-protocol.md` : **tag chaque source par tier** (avis = **Tier 3** ; un verdict « Fort » ne peut pas reposer sur une seule source Tier 3) ; **écris ce qui confirmerait** (inscriptions, willingness-to-pay, liste d'attente) **et ce qui infirmerait** (avis >18 mois, un seul concurrent, plaintes « nice-to-have ») ; **déclare les trous**.
+Applique `vendor/startup-skill/startup-competitors/references/verification-agent.md` + `honesty-protocol.md` : **tag chaque source par tier** (avis = **Tier 3** ; un verdict « Fort » ne peut pas reposer sur une seule source Tier 3) ; **vérifie l'authenticité des quotes** (verbatim dont la page n'a pas été ouverte à l'étape 2 = `[snippet — non vérifié]`, il ne soutient ni « demande Forte » ni « Edge réel ») ; **écris ce qui confirmerait** (inscriptions, willingness-to-pay, liste d'attente) **et ce qui infirmerait** (avis >18 mois, un seul concurrent, plaintes « nice-to-have ») ; **déclare les trous**.
 > Recette détaillée (matrice tier × verdict, triptyque, passe honnêteté, exemple rempli) → `references/adversarial-verification.md`.
 
 ## BLOC 2 — Edge
 > Procédure exhaustive (machine à états, matrice de tranche, test de défendabilité, forcing-questions, sortie « pas d'edge », DoD, modes d'échec) → `references/edge-procedure.md`.
 
-1. **Reprends l'angle candidat** de `positioning.md` + les **manques concurrents** de `market.md`.
-2. **Nomme l'axe** en une phrase orientée client : *le seul {catégorie} qui {différenciateur} pour {niche}*. C'est **ici** qu'on nomme.
-3. **Tranche** avec des critères :
-
-| Verdict edge | Critères |
-|---|---|
-| **Edge réel** | Répond à un manque **partagé** par plusieurs concurrents · **réclamé** dans les avis · **défendable** (pas copiable en un sprint). |
-| **Edge faible** | Manque réel mais **isolé** (1 concurrent) **ou** facilement rattrapable. |
-| **Pas d'edge** | Aucun manque partagé exploitable. |
-
+1. **Reprends l'angle candidat** de `positioning.md` (phrase Onliness candidate comprise) + les **manques concurrents** de `market.md`.
+2. **Formule l'axe** : reprends la phrase de l'étape 3, précise la niche — une phrase orientée client : *le seul {catégorie} qui {différenciateur} pour {niche}*.
+3. **Tranche** : trois verdicts possibles — **Edge réel / Edge faible / Pas d'edge**. Les critères des trois, la matrice de départage et le test de défendabilité vivent dans `references/edge-procedure.md` §2 — **source unique**. En un mot : Edge réel = manque **partagé** (≥2 concurrents) + **réclamé** dans les avis + **défendable** (pas copiable en un sprint).
 4. **Si pas d'edge : dis-le, net.** N'invente rien. Écris que le produit reste **viable à features égales, bien exécuté sur une niche** — et renvoie l'arbitrage « on y va quand même ? » à l'étape 5.
 
 ## Clôture d'étape

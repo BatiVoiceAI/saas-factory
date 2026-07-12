@@ -10,6 +10,8 @@
 |---|---|---|---|---|---|
 | … | info / comm. / trans. | … | … | … | … |
 
+{Volumes : `[estimé, non mesuré]` par défaut (fallback gratuit, M1) ; chiffres mesurés seulement si un outil data est provisionné via `infra-setup`.}
+
 ## Maillage interne
 {pillar ↔ clusters, anti-orphelins}
 

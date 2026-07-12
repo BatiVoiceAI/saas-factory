@@ -31,11 +31,13 @@ Le provisioning s'appuie sur les **MCP officiels des éditeurs** (`references/mc
 ## Procédure — machine à états, sous-agents dispatchés
 Suis `references/provisioning-plan.md` (ordre + dépendances + parallélisme + machine à états par ressource). Pour chaque ressource, dispatche le **sous-agent** dédié (`Task`) via son contrat exact (`references/subagent-contracts.md`) ; il provisionne idempotemment et écrit son verdict dans `status/provision-<resource>.md`.
 
+**Type de produit.** Le `type` (`public` / `interne` / `perso`, lu dans `research/idea-brief.md`) module le provisioning — DNS, enrollment (signup/invitations/compte seedé), email, billing. Matrice **unique** + obligation de **log des allègements** (jamais silencieux) : `references/provisioning-plan.md` §« Routage par type de produit ».
+
 1. **Scaffold local** — `git init` + structure de l'archétype + **blocs câblés** au niveau code (depuis `_shared/blocks/` + le split réutiliser/build de l'étape 9). Génère le **`CLAUDE.md` projet** (template `assets/templates/project-claude-md.md`) = source de vérité des agents de build (Phase 4). *Sous-procédure + DoD : `references/scaffold-procedure.md`.*
 2. **`provisioner-repo`** — crée le **repo GitHub** + push initial + **GitHub Actions** (CI). *[parallélisable]*
 3. **`provisioner-db`** — crée le **projet Supabase** + applique les **migrations** (modèle de données étape 9 → tables + **RLS**). `confirm_cost` auto. *[parallélisable]*
 4. **`provisioner-email`** — configure **Resend** (domaine + emails de confirmation) ; publie **ses propres** records DNS de vérification (DKIM/SPF/DMARC/MX) en appelant **directement le MCP Cloudflare**, sans passer par `provisioner-hosting`. *[parallélisable, non-bloquant]*
-5. **`provisioner-hosting`** — record de routage **`projet.tondomaine.com`** + DNS (Cloudflare) + projet **d'hébergement** (Vercel/CF/Coolify) + **relie le repo GitHub** (auto-deploy). *[après repo+db ; email non-bloquant]*
+5. **`provisioner-hosting`** — record de routage **`projet.tondomaine.com`** + DNS (Cloudflare) selon le type (`perso` : URL par défaut du provider, **pas de DNS public**) + projet **d'hébergement** (Vercel/CF/Coolify) + **relie le repo GitHub** (auto-deploy ; app GitHub absente côté Vercel → repli deploy-hook/CI, `references/mcp-map.md`). *[après repo+db ; email non-bloquant]*
    > Contrats de délégation exacts (Objectif/Idempotence/DoD/Rollback/Red-flags) des étapes 2→5 : `references/subagent-contracts.md`.
 6. **Câblage des secrets** — injecte les creds de chaque ressource dans les **secrets GitHub Actions** + l'env de l'hébergeur (via MCP), depuis `~/.saas-factory/`. Jamais en dur. *Matrice secret→destination + règle client/serveur : `references/secrets-wiring.md`.*
 7. **Billing (optionnel)** — si `providers.billing = stripe` : câble Stripe (mode test).
@@ -55,7 +57,7 @@ Suis `references/provisioning-plan.md` (ordre + dépendances + parallélisme + m
 - `references/reference-skills.md` — skills de compétence (anti-hallucination RLS/DNS).
 
 ## Contrat d'artefacts
-Lit : `tech/architecture.md`, `tech/decisions.md` (les ADR de stack de l'étape 9 dont dépend le provisioning), `tech/execution-plan.md`, `_shared/*`, `~/.saas-factory/config.json`. Écrit : repo (GitHub + local scaffané), `CLAUDE.md` (racine), `tech/provisioning-log.md`, `status/provision-*.md`, `tech/api-keys-guide.md` (si fallback), `.saas-factory/state.md`.
+Lit : `tech/architecture.md`, `tech/decisions.md` (les ADR de stack de l'étape 9 dont dépend le provisioning), `tech/execution-plan.md`, `research/idea-brief.md` (type de produit — routage par type), `_shared/*`, `~/.saas-factory/config.json`. Écrit : repo (GitHub + local scaffané), `CLAUDE.md` (racine), `tech/provisioning-log.md`, `status/provision-*.md`, `tech/execution-plan.md` (**annotations « pré-câblée au scaffold » uniquement**, cf. `references/scaffold-procedure.md` étape 5 bis), `tech/api-keys-guide.md` (si fallback), `.saas-factory/state.md`.
 
 ## Porte — aucune
 Phase 3 = zéro intervention. Provisioning pré-autorisé. Fallback = mode local + guide, sans porte.

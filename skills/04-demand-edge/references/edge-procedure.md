@@ -2,7 +2,7 @@
 
 Réf. de profondeur pour l'étape 4. Principe qui gouverne tout ce bloc : **edge = bonus, jamais inventé.** Trouvé → on le nomme. Pas trouvé → on le dit franchement. Un produit à features égales, **bien exécuté sur une niche**, reste viable. Gonfler un edge inexistant envoie construire sur du vide.
 
-**Rappel HARD GATE (anti-doublon).** L'étape 3 **formalise** l'angle · **toi tu nommes + tu tranches**. Toi tu **produis** le verdict edge · l'étape 5 le **pèse** dans la décision. Ne décide **pas** Go ici.
+**Rappel HARD GATE (anti-doublon).** L'étape 3 a livré l'angle candidat (Onliness candidate comprise) : tu le reprends, tu précises la niche, et **tu tranches — le verdict edge t'appartient**. Toi tu **produis** le verdict · l'étape 5 le **pèse** dans la décision. Ne décide **pas** Go ici.
 
 ---
 
@@ -42,10 +42,10 @@ Le flux est **séquentiel** : on ne nomme pas un edge avant d'avoir vérifié qu
 - **Croisement** : l'angle candidat tombe-t-il sur un manque **partagé** ? C'est la question qui décide tout.
 - **Critère de passage** : chaque manque porte une preuve (quote/matrice) + son marquage partagé/isolé.
 
-### Étape 1.3 — Nommer l'axe
+### Étape 1.3 — Formuler l'axe
 - **Format imposé** (orienté client, une phrase) :
   > « **le seul {catégorie} qui {différenciateur} pour {niche}** »
-- C'est **ici** qu'on nomme (l'étape 3 formalise le positionnement global ; ici on nomme l'**axe différenciant** précis).
+- Pars de la **phrase Onliness candidate de l'étape 3** : ajoute/précise la **niche** — c'est la même phrase, menée au bout, pas une réinvention.
 - **Test de la phrase** : si tu peux remplacer le nom d'un concurrent dans « le seul … » sans que ce soit faux, l'axe n'est **pas** différenciant → ce n'est pas un edge.
 - Si aucun axe ne tient → écris explicitement « **pas d'edge clair** » et saute à §3.
 
@@ -55,6 +55,8 @@ Applique la table de critères (§2). Puis, selon le verdict, la sortie (§2 + �
 ---
 
 ## 2. Matrice de tranche (verdict edge)
+
+**Source unique** des critères (le SKILL.md n'en porte que les libellés + le renvoi ici).
 
 | Verdict edge | Les **trois** critères |
 |---|---|
@@ -155,6 +157,6 @@ Recette : **Ask exact / Push-until / Red-flags / MOU-vs-FORT**.
 | **Feature prise pour un moat** | « Notre edge = feature X. » | Test de défendabilité (§2) : feature seule = faiblement défendable. |
 | **UX-hand-waving** | « Meilleure expérience » sans quote. | Exiger un manque UX précis, réclamé, daté. |
 | **Prix confondu avec edge** | « On sera moins cher. » | Reclasser en pari GTM, pas en edge. |
-| **Doublon avec l'étape 3** | Re-formaliser le positionnement au lieu de nommer l'axe. | Respecter le HARD GATE : ici on **nomme + tranche**, pas on formalise. |
+| **Doublon avec l'étape 3** | Refaire la synthèse Dunford au lieu de trancher. | Reprends la phrase Onliness candidate de 03 telle quelle, précise la niche, **tranche** — la synthèse est déjà faite. |
 | **Décision Go anticipée** | Conclure « on y va ». | Interdit ici. Arbitrage → étape 5. |
 | **Refus de dire « pas d'edge »** | Maquiller un manque isolé en avantage. | §3 : la sortie « pas d'edge » est une issue légitime, écris-la net. |

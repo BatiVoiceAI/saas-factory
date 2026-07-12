@@ -16,7 +16,7 @@
 
 ## Angle différenciant — FORMALISÉ (candidat)
 {L'attribut qui répond à un manque concurrent **partagé**, exprimé en value theme + Onliness candidate.}
-> Nommage de l'edge et décision « edge réel ou pas » = **étape 4**. Pas de double traitement ici.
+> Angle candidat — verdict edge = **étape 4** (elle reprend la phrase, précise la niche, tranche).
 
 ## Red flags / Yellow flags / Sources
 {Ce qui fragilise le positionnement · données datées · sources (protocole d'honnêteté du moteur).}

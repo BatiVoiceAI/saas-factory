@@ -80,18 +80,6 @@ Trancher entre 3-5 candidats sans tomber dans la création gratuite.
 
 ---
 
-## 4. Garde de sortie — ne pas déborder sur l'edge (Étape 5)
+## 4. Garde de sortie — une règle, pas une cérémonie (Étape 5)
 
-Ce n'est pas une question au founder : c'est un **auto-contrôle** avant d'écrire l'angle.
-
-**Ask exact (à te poser à toi-même) :**
-> « Ce que je m'apprête à écrire **nomme-t-il** l'edge ou **tranche-t-il** "edge réel/faible/absent" ? »
-
-**Push-until.** La sortie contient un *angle candidat* + la phrase-garde « nommage + verdict = étape 4 », et **aucun** verdict. Stop seulement là.
-
-**Red-flags (à refuser dans ta propre sortie) :**
-- « Notre edge, c'est X. » → supprime, remplace par « angle candidat : X ».
-- « C'est défendable / c'est un vrai edge. » → verdict, interdit ici.
-- « Donc on fonce. » → décision Go, = étape 5.
-
-**Routage.** Angle candidat → `positioning.md` + consommé par l'étape 4 qui, elle, nomme et tranche.
+La sortie ne contient **ni verdict edge** (« edge réel / faible / absent », « c'est notre edge, défendable ») **ni Go**. C'est la seule interdiction — l'Onliness candidate, elle, fait partie de ton livrable. Verdict edge = étape 4 ; décision = étape 5.

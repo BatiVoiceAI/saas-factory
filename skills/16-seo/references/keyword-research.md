@@ -5,11 +5,8 @@ Procédure normée : trouver les bons mots-clés et les structurer, **selon la n
 ## Sources (ancrage projet)
 `research/positioning.md` (catégorie, angle, niche), `research/idea-brief.md` (cible, écosystème), le PRD (features = intentions de recherche). C'est ça qui cadre les mots-clés — jamais de page blanche.
 
-## Data (une source par défaut)
-- **Défaut : MCP DataForSEO** (Apache, cheap) — volume, difficulté, SERP.
-- **Option : MCP Ahrefs** (si connecté) — premium.
-- **Itération : MCP Google Search Console** (gratuit) — données **réelles** post-lancement.
-- **Fallback gratuit** (sans MCP) : Google Suggest, People Also Ask, analyse des concurrents (de `research/market.md`).
+## Data (routage M1 — source unique : `decision-matrices.md`)
+**Défaut assumé = fallback GRATUIT** : Google Suggest, People Also Ask, recherches associées, analyse des concurrents (de `research/market.md`) — recherche web manuelle + heuristiques, volumes `[estimé, non mesuré]`, priorisation par fit produit (M3). DataForSEO / Ahrefs = **upgrade optionnel**, seulement si **provisionné en amont via `infra-setup`** (jamais de config d'API demandée en cours d'étape). GSC = itération (mécanisme 5). Détail et règles : **matrice M1**.
 
 ## Procédure
 1. **Seed** : dérive 10-30 mots-clés graines de la niche + positionnement + features.
@@ -34,15 +31,15 @@ Trois puits, jamais la page blanche :
 
 ### 2. Étendre — via la data (M1)
 Chaque graine → variations, longue traîne, questions :
-- **DataForSEO / Ahrefs** : suggestions, « also rank for », questions.
-- **Fallback gratuit** : Google Suggest (autocomplétion), People Also Ask, colonne « recherches associées », mots-clés visibles chez les concurrents (`research/market.md`).
+- **Fallback gratuit (défaut)** : Google Suggest (autocomplétion), People Also Ask, colonne « recherches associées », mots-clés visibles chez les concurrents (`research/market.md`).
+- **DataForSEO / Ahrefs (upgrade, si provisionné via `infra-setup`)** : suggestions, « also rank for », questions, volumes mesurés.
 - **Critère de passage :** chaque graine a produit ses variations longue traîne + les questions associées. On a un pool large avant de trier.
 
 ### 3. Qualifier — intention + opportunité (M2, M3)
 Pour chaque mot-clé du pool :
 - **Intention** (M2 de `decision-matrices.md`) : info / commerciale / transactionnelle / navigationnelle.
 - **Difficulté** : qui rank déjà ? (gros acteurs en SERP ⇒ difficulté haute ⇒ on écarte).
-- **Volume** : mesuré (M1) ou `[estimé, non mesuré]` — **jamais** un faux chiffre.
+- **Volume** : `[estimé, non mesuré]` par défaut ; mesuré seulement si un upgrade M1 est provisionné — **jamais** un faux chiffre.
 - **Fit produit** : la page répondrait-elle vraiment à cette requête ?
 - **Scoring** (M3) : priorité ≈ **fit × accessibilité avant volume**. On vise la **longue traîne accessible** ; un micro-SaaS ne se place **pas** sur les génériques concurrentiels.
 - **Critère de passage :** chaque mot-clé retenu passe M3 (fit fort + accessible). Les génériques et le hors-périmètre sont écartés, tracés « rejet + raison ».
@@ -65,6 +62,6 @@ Niche : *outil de {tâche} pour {métier de terrain}*.
 
 ## Modes d'échec fréquents
 - **Viser le générique** (« logiciel {catégorie} ») : on ne rankera jamais → longue traîne (M3).
-- **Volume inventé** : chiffres précis sans source → `[estimé]` ou brancher M1.
+- **Volume inventé** : chiffres précis sans source → `[estimé]` (le défaut gratuit assume l'estimation) ; mesuré seulement via un upgrade provisionné (M1).
 - **Clusters cannibales** : deux pages même SERP → fusionner (M5).
 - **Page blanche** : mots-clés sortis de l'imagination → toujours ancrer sur positioning + PRD.

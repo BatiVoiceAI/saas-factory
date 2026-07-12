@@ -39,8 +39,14 @@ La carte détaillée de la phase : l'ordre exact d'invocation, ce que chaque ét
 
 L'ordre est **déterministe** : jamais `19` avant `18`, jamais de build inséré au milieu (HARD GATE de la phase).
 
+## Contrôle de réception des artefacts (anti-squelette)
+L'existence d'un fichier ne prouve rien. À chaque artefact rendu (`metrics/review.md`, `retro/retro.md`), avant de le déclarer « fait » dans `state.md` :
+1. **Ouvre l'artefact reçu** (Read) — jamais de « croire sur parole ».
+2. **Checklist minimale par type** : sections requises présentes (funnel chiffré + santé + 1-3 pistes dans `metrics/review.md` ; leçons + confrontation au critère de KILL dans `retro/retro.md`), verdict au format attendu, **preuves non vides** (chiffres réels PostHog/Sentry, pas de funnel inventé ni de placeholders), taille plancher plausible.
+3. **Stub / squelette → renvoi à l'étape** qui l'a produit, avec le **manque nommé** (funnel sans chiffres, rétro sans leçon, critère non confronté), dans le budget d'itération — pas de porte kill/continue posée sur un artefact creux.
+
 ## Calibrage par `type` (routage)
-Le `type` a été capté à l'étape 1 et propagé dans `state.md` (`Type / route`). Il ne se **re-demande pas** ici — on applique la route enregistrée.
+Le `type` a été capté à l'étape 1 et propagé dans `state.md` (`Type / route`). Il ne se **re-demande pas** ici — on applique la route enregistrée. **Le skip-set et les portes par type vivent dans la matrice canonique : route selon `skills/saas-factory/references/routing.md`** (pour P6 : les 2 étapes tournent pour tous les types). Ci-dessous, le calibrage de profondeur.
 
 | Aspect | Public (SaaS sérieux) | Interne | Perso |
 |---|---|---|---|

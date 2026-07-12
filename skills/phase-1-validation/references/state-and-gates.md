@@ -20,7 +20,7 @@ Champs tenus par l'orchestrateur en Phase 1 (sous-ensemble du schéma global) :
 
 **Cadence d'écriture** : une mise à jour **en sortie de chaque étape** (étape courante + résumé implicite) et **une à la porte** (décision + date). Pas d'écriture au milieu d'une étape — c'est l'expert qui travaille.
 
-**Écrivain unique** : c'est **toi, l'orchestrateur**, qui écris `state.md` — **jamais** les experts/sous-agents. Ils produisent leur artefact (`research/*`) et te le rapportent ; toi seul consignes. Cela évite les MAJ concurrentes/incohérentes (cf. `_shared/state-schema.md`).
+**Écrivain unique** : c'est **toi, l'orchestrateur**, qui écris `state.md` — **jamais** les experts/sous-agents. Règle canonique + l'unique exception (`01-discover` peut initialiser `state.md` sur projet neuf, sans parallélisme) : `skills/saas-factory/references/state-resume.md` §Écrivain unique. Ne redéfinis pas la règle ici.
 
 ## 2. Reprise (reprenabilité)
 

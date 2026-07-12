@@ -11,9 +11,9 @@
 | Produit (le marché) | … | … |
 
 ## Leçons (→ mémoire)
-> Chaque leçon part aussi dans `~/.saas-factory/learnings.jsonl` (une ligne JSON). Transverse & confiance ≥ 5 → remonte dans `_shared/lessons.md`. Voir `references/memory-compound.md`.
+> Chaque leçon part aussi dans `~/.saas-factory/learnings.jsonl` (une ligne JSON). Transverse & confiance ≥ 5 → remonte dans `~/.saas-factory/lessons-learned.md` (jamais dans le répertoire du plugin). Voir `references/memory-compound.md`.
 
-| Leçon (actionnable) | Plan | Confiance /10 | Transverse ? (→ `lessons.md`) |
+| Leçon (actionnable) | Plan | Confiance /10 | Transverse ? (→ `lessons-learned.md`) |
 |---|---|---|---|
 | … | build/méthode/produit | … | oui / non |
 
@@ -23,7 +23,7 @@
 - **Critère écrit** (du lancement, `state.md`) : {…}
 - **Confronté aux métriques** (`metrics/review.md`) : {…}
 - **Décision** : Continuer | Kill | Pause — le {date}
-- **Si Continuer** : budget d'itérations = {…} ; pistes (1-3, chacune reliée à une métrique) : {…}
+- **Si Continuer** : budget d'itérations = {…} ; pistes (1-3, chacune reliée à une métrique) : {…} ; cible du retour : {Phase 4 (nouvelle piste) | Phase 5 (relance/correctif)} — re-mesure en 18 après re-déploiement
 - **Si Pause** : date de réévaluation : {…}
 
 ## Si Kill — post-mortem (5 lignes)

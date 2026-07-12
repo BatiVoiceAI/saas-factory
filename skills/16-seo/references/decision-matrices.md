@@ -1,21 +1,25 @@
 # Référence — Matrices de décision (étape 16)
 
-Condition → action, pour chaque point où l'étape **tranche sans interroger l'utilisateur** (le seul arrêt utilisateur est le gate humain de publication, mécanisme 4). On applique la matrice, on n'improvise pas. Ces matrices rendent l'étape **déterministe** et gardent le SEO du côté « qualité mesurée », jamais « volume ».
+Condition → action, pour chaque point où l'étape **tranche sans interroger l'utilisateur** (le seul arrêt utilisateur est le gate humain de publication du contenu **éditorial**, mécanisme 4 — le socle technique 3-A se committe sans gate). On applique la matrice, on n'improvise pas. Ces matrices rendent l'étape **déterministe** et gardent le SEO du côté « qualité mesurée », jamais « volume ».
 
 ---
 
 ## M1 — Source de données mots-clés → outil (mécanisme 1.2)
 
-Une seule source par défaut, on ne cumule pas. On monte en gamme seulement si l'outil est connecté.
+**Le défaut est GRATUIT et assumé** : recherche web manuelle + heuristiques. Les outils data sont un **upgrade optionnel**, utilisés **seulement s'ils ont été provisionnés en amont via `infra-setup`** — on ne demande **jamais** une config d'API en cours d'étape. Une seule source à la fois, on ne cumule pas.
 
 | Situation | Source à utiliser | Ce qu'on en tire | Limite |
 |---|---|---|---|
-| **Défaut** (rien de spécial) | **MCP DataForSEO** (Apache, cheap) | volume, difficulté, SERP | coût minime à la requête |
-| **Ahrefs connecté** | **MCP Ahrefs** (premium) | métriques riches, backlinks | uniquement si déjà branché |
-| **Post-lancement** | **MCP Google Search Console** (gratuit) | données **réelles** (impressions/clics) | seulement au mécanisme 5 |
-| **Aucun MCP data** | **Fallback gratuit** : Google Suggest + People Also Ask + concurrents (`research/market.md`) | intentions, longue traîne, questions | volumes **estimés**, à marquer `[non mesuré]` |
+| **Défaut** (rien de provisionné) | **Fallback gratuit assumé** : Google Suggest + People Also Ask + recherches associées + concurrents (`research/market.md`), via recherche web manuelle | intentions, longue traîne, questions, SERP observée | volumes **estimés**, à marquer `[estimé, non mesuré]` |
+| **DataForSEO provisionné** (`infra-setup`) | **MCP DataForSEO** (upgrade optionnel — Apache, cheap) | volume, difficulté, SERP mesurés | coût minime à la requête |
+| **Ahrefs provisionné** (`infra-setup`) | **MCP Ahrefs** (upgrade optionnel — premium) | métriques riches, backlinks | uniquement si déjà branché |
+| **Post-lancement, GSC provisionné** | **MCP Google Search Console** (gratuit) | données **réelles** (impressions/clics) | seulement au mécanisme 5 ; sans GSC → constat honnête « pas de données », rien d'inventé |
 
-**Règle :** ne **jamais** inventer un chiffre de volume. Sans source mesurée, les volumes sont `[estimé]` et on priorise par pertinence produit + longue traîne, pas par un faux chiffre.
+**Règles :**
+- Le fallback gratuit n'est **pas un mode dégradé** : c'est le régime nominal, suffisant pour une base SEO de qualité mesurée (la priorisation M3 pèse fit × accessibilité **avant** volume).
+- Ne **jamais** inventer un chiffre de volume. Sans source mesurée (le cas par défaut), les volumes sont `[estimé]` et on priorise par pertinence produit + longue traîne, pas par un faux chiffre.
+- Un outil non provisionné ne se configure pas ici : c'est le job de `infra-setup`, une fois, en amont. Pas de demande de clé API ad hoc en cours de route.
+- La **garde d'entrée par type reste inchangée** : `type != public` ⇒ pas de SEO du tout (garde d'entrée, `procedure-detaillee.md`) — aucune source, gratuite ou payante, ne s'y substitue.
 
 ---
 
@@ -79,7 +83,7 @@ Garder la **longue traîne accessible**. On ne se place PAS sur les génériques
 
 ---
 
-## M6 — Type de schema JSON-LD à poser (mécanisme 3.2, `schema-dts`)
+## M6 — Type de schema JSON-LD à poser (mécanismes 3-A et 3-B, `schema-dts`)
 
 | Page | Type schema.org | Champs clés |
 |---|---|---|
@@ -95,7 +99,7 @@ Garder la **longue traîne accessible**. On ne se place PAS sur les génériques
 
 ---
 
-## M7 — Sitemap / robots selon le stack (mécanisme 3.3)
+## M7 — Sitemap / robots selon le stack (mécanisme 3-A — socle committé sans gate)
 
 Router selon le framework généré par la Factory (Phase 3). **Natif d'abord.**
 
@@ -110,7 +114,7 @@ Router selon le framework généré par la Factory (Phase 3). **Natif d'abord.**
 
 ---
 
-## M8 — Seuils Core Web Vitals (mécanisme 3.4, `unlighthouse` en gate)
+## M8 — Seuils Core Web Vitals (mécanisme 3-A, re-passé en 3-B — `unlighthouse` en gate)
 
 | Métrique | Seuil « bon » (gate PASS) | À revoir | Mauvais |
 |---|---|---|---|
@@ -118,7 +122,7 @@ Router selon le framework généré par la Factory (Phase 3). **Natif d'abord.**
 | **CLS** (Cumulative Layout Shift) | ≤ 0,1 | 0,1-0,25 | > 0,25 |
 | **INP** (Interaction to Next Paint) | ≤ 200 ms | 200-500 ms | > 500 ms |
 
-**Règle :** `unlighthouse` en **gate** — les 3 métriques dans le vert (+ score SEO et a11y OK) avant de considérer le mécanisme 3 fait. « À revoir » ou « mauvais » sur une métrique → corriger (image lourde → optimiser/lazy, layout shift → dimensions fixes, JS bloquant → défer) puis re-mesurer. On ne publie pas une landing rouge.
+**Règle :** `unlighthouse` en **gate** — les 3 métriques dans le vert (+ score SEO et a11y OK) avant de considérer le mécanisme 3-A (puis 3-B) fait. « À revoir » ou « mauvais » sur une métrique → corriger (image lourde → optimiser/lazy, layout shift → dimensions fixes, JS bloquant → défer) puis re-mesurer. On ne publie pas une landing rouge.
 
 ---
 

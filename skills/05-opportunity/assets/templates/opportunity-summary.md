@@ -20,4 +20,14 @@
 <!-- Une position claire, jamais « intéressant » / « ça peut marcher ». Puis rendre la main. -->
 **<Go | Ajuster | No-Go>** — <une phrase de justification>.
 
-> **À toi de décider.** <Ce que ça déclenche : Go → cadrage produit · Ajuster → on revoit <quoi> · No-Go → on s'arrête proprement.>
+> **À toi de décider.** <Ce que ça déclenche : Go → cadrage produit · Ajuster → on revoit <quoi> · Go-test → landing + waitlist en 1 jour, seuil pré-enregistré · No-Go → on s'arrête proprement.>
+
+---
+
+## Annexe — kit interviews : 5 questions à poser toi-même (Mom Test)
+<!-- Hors pagination (ne compte pas dans les 1-2 pages). Dérivées des pain themes de demand-signals.md : une question par douleur majeure, la dernière sur le comportement. Règles Mom Test : parler de LEUR passé (« la dernière fois que… »), jamais pitcher l'idée, chercher des faits et des comportements — pas des opinions ni des compliments. -->
+1. <question dérivée du pain theme n°1 — ex. « Raconte-moi la dernière fois que {douleur}. Qu'est-ce que ça t'a coûté ? »>
+2. <question dérivée du pain theme n°2>
+3. <question dérivée du pain theme n°3>
+4. <question sur l'alternative actuelle — « comment tu gères ça aujourd'hui, concrètement ? »>
+5. <question de comportement — « qu'as-tu déjà essayé ou payé pour résoudre ça ? »>

@@ -2,7 +2,7 @@
 name: phase-1-validation
 description: >-
   Phase 1 de SaaS Factory — Validation d'une idée de micro-SaaS AVANT de la construire (rôle CEO). Orchestre les 5 étapes expertes de l'amont (01-discover → 02-market → 03-positioning → 04-demand-edge → 05-opportunity) : recueille l'idée, analyse marché & concurrents, formalise le positionnement, infère la demande et l'edge, et débouche sur une décision Go / Ajuster / No-Go. À utiliser quand l'utilisateur veut valider, étudier ou « voir si ça vaut le coup » pour une idée de SaaS/app/outil — avant de rien construire.
-allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, WebSearch, WebFetch, Task
+allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, WebSearch, WebFetch, Task, Skill
 ---
 
 # SaaS Factory — Phase 1 : Validation (orchestrateur · rôle CEO)
@@ -19,7 +19,7 @@ Tu es le **partenaire founder / CEO** d'une fabrique de micro-SaaS. Cette phase 
 ## Références (la profondeur — charge à l'usage)
 Le SKILL reste l'**aperçu scannable** ; la mécanique d'orchestration vit dans `references/` :
 - **`references/conventions.md`** — persona, déterminisme, contrat d'artefacts, routage par type, protocole de porte, moteurs vendorés.
-- **`references/orchestration-playbook.md`** — le **flux exécutable** : diagramme ASCII, table séquence (étape → invoque → lit → écrit → porte), matrices de calibrage/routage (public / interne / perso → étapes actives/sautées), discipline « lire `_shared` une fois », valeur de l'orchestrateur.
+- **`references/orchestration-playbook.md`** — le **flux exécutable** : diagramme ASCII, table séquence (étape → invoque → lit → écrit → porte), calibrage par type (le skip-set vit dans la matrice canonique `skills/saas-factory/references/routing.md`), contrôle de réception anti-squelette, discipline « lire `_shared` une fois », valeur de l'orchestrateur.
 - **`references/state-and-gates.md`** — tenue de `.saas-factory/state.md` étape par étape, **procédure de reprise**, protocole de porte (ce que la porte décide), **matrice de retour arrière** (« Ajuster » → quelle étape), arrêt propre No-Go, passation vers la Phase 2.
 
 ## Principe directeur

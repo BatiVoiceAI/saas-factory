@@ -34,8 +34,8 @@ Une même chute de funnel a trois causes possibles — le diagnostic change la p
     │           │               │
     ▼           ▼               ▼
  fix tech    simplifier      écart PRD de fond
- (→ 17)      le flow         → question de fit
-                              (nourrit l'étape 19)
+ (code en P4, le flow        → question de fit
+ ship via 17)                 (nourrit l'étape 19)
 ```
 
 Ne conclus jamais « désintérêt » sans avoir éliminé **bug** (Sentry) puis **friction** (nombre d'étapes) — c'est l'erreur de lecture la plus coûteuse.
@@ -57,7 +57,7 @@ Le réflexe à combattre : moyenner un bon et un mauvais signal en un tiède ras
 ## Routage par cas — quel écart pointe vers quoi
 | Écart dominant | Ce que ça informe | Où ça va |
 |---|---|---|
-| **Santé** (bug sur le chemin) | fix technique | piste « corriger X » (étape 4) + signal à l'étape 17 |
+| **Santé** (bug sur le chemin) | fix technique | piste « corriger X » (étape 4) — le fix se code en Phase 4, se re-déploie via 17 |
 | **Acquisition** (mauvais trafic) | message/audience | piste ciblage/positionnement (peut renvoyer Phase 5) |
 | **Pricing** | paywall/packaging | piste d'expérimentation prix (étape 4) |
 | **PRD friction** | onboarding/flow | piste de simplification (étape 4) |

@@ -15,7 +15,7 @@ Comment tenir `.saas-factory/state.md`, **reprendre** un run interrompu, gérer 
 
 **Jamais de secret** dans state.md (les accès vivent dans `~/.saas-factory/`). Le détail par feature vit dans `status/<feature>.md` ; state.md n'en garde que le **renvoi + le cran atteint**.
 
-**Écrivain unique — critique en Phase 4.** Les features tournent **en parallèle** (plusieurs sous-agents dev/reviewers) : si chacun écrivait `state.md`, les MAJ seraient concurrentes et incohérentes. Donc **seul l'orchestrateur écrit `state.md`**. Chaque sous-agent écrit **son** `status/<feature>.md` (une feature = un fichier, pas de collision) et te rapporte son cran ; **toi seul** reportes le renvoi + le cran dans `state.md`, à la frontière d'étape (cf. `_shared/state-schema.md`).
+**Écrivain unique — critique en Phase 4.** Les features tournent **en parallèle** (plusieurs sous-agents dev/reviewers) : chaque sous-agent écrit **son** `status/<feature>.md` (une feature = un fichier, pas de collision) et te rapporte son cran ; **toi seul** reportes le renvoi + le cran dans `state.md`, à la frontière d'étape. Règle canonique (+ l'unique exception `01-discover`) : `skills/saas-factory/references/state-resume.md` §Écrivain unique.
 
 ## Procédure de reprise (reprenabilité)
 Au (re)démarrage de la Phase 4, **ne repars jamais de zéro**. Séquence :

@@ -16,6 +16,13 @@ La **dernière étape du build**, et le **seul contact humain**. Le produit a pa
 ## À lire d'abord
 `_shared/lessons.md`, `_shared/safety-rails.md`, `_shared/validation-cascade.md` (le budget), `_shared/test-dossier.md` (le livret = « ce qui en ressort ») ; `references/review-package.md` (étape 1), `references/guided-test.md` (étape 2), `references/feedback-elicitation.md` (étape 3, recettes de questions), `references/feedback-to-tasks.md` (étape 4), `references/iteration-gate.md` (étapes 5-6, re-dispatch + porte). Agent : `client-liaison` (feedback → tâches).
 
+## Garde type (locale)
+Lis `Type / route` dans `.saas-factory/state.md` **avant** de dérouler (matrice canonique : `skills/saas-factory/references/routing.md`) :
+- **public** → l'humain est le **founder** : cérémonie complète (paquet + test guidé + feedback + porte).
+- **interne** → l'humain est le **sponsor interne** : mêmes 6 étapes, parcours métier internes, langage « adoption équipe », pas de discours marché.
+- **perso** → l'humain, c'est **toi** : version très courte — URL + « ce qui en ressort » + porte ship/itérer/stop, sans cérémonie de paquet.
+Type absent (invocation isolée) → défaut prudent **public**, et signale l'anomalie.
+
 ## Les 6 étapes
 1. **Paquet de revue** (`references/review-package.md`) — l'**URL staging** + un **résumé en langage clair** (ce qui a été construit, le workflow cœur) + **« ce qui en ressort »** du livret (santé) + **honnêtement** les `CONCERNS`/`WAIVED`. Prépare un accès de test guidé. *(Réutilise gstack `document-release` + `qa`.)*
 2. **Guider le test** (`references/guided-test.md`) — une courte checklist « essaie ça » : les **parcours cœur A→Z** + l'edge. L'humain clique, zéro compétence technique. *(Base : `kata-verify-work`, persona founder.)*
@@ -25,7 +32,7 @@ La **dernière étape du build**, et le **seul contact humain**. Le produit a pa
 6. **LA PORTE — ship / itérer / stop** (`references/iteration-gate.md`, `AskUserQuestion`) — l'humain décide : **Ship** (→ Phase 5, `CONCERNS` documentés) · **Itérer** (sur X, dans le budget) · **Stop/park**. Bouton **« ship en l'état »**.
 
 ## Contrat d'artefacts
-Lit : `qa/test-booklet.md` (« ce qui en ressort » + `CONCERNS`/`WAIVED`), `product/*` (l'attendu du PRD), le staging (URL étape 11), `.saas-factory/state.md` (budget client). Écrit : le paquet de revue rempli (`product/review-package.md`, template `assets/templates/review-package.md`), `product/client-feedback.md` (verbatim, template), `product/client-review-tasks.md` (tâches classées + routées, template) via `client-liaison`, et `.saas-factory/state.md` (porte 15 + budget). **Jamais de secret** dans un artefact (accès démo → env / oral, `safety-rails` §4).
+Lit : `qa/test-booklet.md` (« ce qui en ressort » + `CONCERNS`/`WAIVED`), `product/*` (l'attendu du PRD), le staging (URL étape 11), `.saas-factory/state.md` (budget client + `Type / route` pour la garde type). Écrit : le paquet de revue rempli (`product/review-package.md`, template `assets/templates/review-package.md`), `product/client-feedback.md` (verbatim, template), `product/client-review-tasks.md` (tâches classées + routées, template) via `client-liaison`, et `.saas-factory/state.md` (porte 15 + budget). **Jamais de secret** dans un artefact (accès démo → env / oral, `safety-rails` §4).
 
 ## La porte (fin d'étape)
 Présente le produit (URL + résumé clair + ce qui en ressort) + les options via `AskUserQuestion`. **Ne franchis jamais sans décision explicite.** Ship → Phase 5. Itérer → boucle (budget). Stop → park propre + post-mortem court.

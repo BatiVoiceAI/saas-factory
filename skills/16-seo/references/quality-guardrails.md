@@ -19,8 +19,8 @@ Signaux concrets : source/auteur crédible · contenu **spécifique à la niche*
 ## 4. Anti-cannibalisation
 Deux pages ne ciblent **jamais la même intention** (sinon elles se concurrencent dans les SERP).
 
-## 5. Gate humain (obligatoire)
-Avant publication des pages SEO : **`AskUserQuestion`** — l'humain voit les pages + les mots-clés visés, et **valide**. On ne publie pas de contenu public au nom de l'utilisateur sans son OK (`_shared/safety-rails.md`).
+## 5. Gate humain (obligatoire — pages éditoriales uniquement)
+Avant publication des pages **éditoriales** (livrable b) : **`AskUserQuestion`** — l'humain voit les pages + les mots-clés visés, et **valide**. On ne publie pas de contenu public au nom de l'utilisateur sans son OK (`_shared/safety-rails.md`). **Périmètre :** le gate couvre le **contenu** ; le **socle technique** (livrable a — sitemap, robots, metadata, JSON-LD) n'est **pas** du contenu public : c'est du code, committé **sans gate**, immédiatement — le retenir « en attente » est un mode d'échec, pas de la prudence.
 
 > **Qualité mesurée · valeur réelle · plafond dur · validation humaine.** C'est le frein que l'open-source n'a pas.
 
@@ -50,7 +50,7 @@ Une page qui ne coche aucun signal E-E-A-T échoue le garde-fou 2 par constructi
 Procédure : pour chaque **paire** de pages retenues, appliquer M5 (`decision-matrices.md`) — même intention / SERP partagée ⇒ **fusionner** en une page. Recette d'auto-contrôle : `forcing-questions.md` §3.
 
 ### E. Gate humain (garde-fou 5)
-Recette exacte de l'`AskUserQuestion` (ce qu'on montre, ce qui compte comme OK, ce qui n'en est pas un) : `forcing-questions.md` §4. Règle d'or : **validation ≠ ce lot**, et **pas de réponse = pas de publication**. L'OK est explicite, porte sur le lot montré, et se trace (date) dans `seo/plan.md`.
+Recette exacte de l'`AskUserQuestion` (ce qu'on montre, ce qui compte comme OK, ce qui n'en est pas un) : `forcing-questions.md` §4. Règle d'or : **validation ≠ ce lot**, et **pas de réponse = pas de publication** — des pages éditoriales seulement : le socle technique est déjà committé et n'entre pas dans ce lot. L'OK est explicite, porte sur le lot montré, et se trace (date) dans `seo/plan.md`.
 
 ## Micro-exemple — une page qui passe vs une qui échoue
 - **Échoue :** « Qu'est-ce que {catégorie} ? » — 800 mots génériques, vrais nulle part, écrits pour le mot-clé. Aucun E-E-A-T, lecteur non satisfait ⇒ **coupée**.

@@ -25,6 +25,7 @@ Au vu de `metrics/review.md` **confronté** au `Critère de KILL` écrit dans `s
         │                                          (règle d'or n°9)
    ┌────┴─────────────┐                                   │
    ▼ nouvelle piste   ▼ relance / correctif        archive propre du projet
+- **CONTINUE vers Phase 5 (SEO)** — si `metrics/review.md` revele une **fuite d'acquisition SEO** (impressions hautes / CTR bas, pages non rankees) : re-boucle sur `16-seo` mecanisme 5 (iteration contenu/technique) puis re-deploy, coherent avec `18-metrics/references/iteration-engine.md`.
   Phase 4 (build)    Phase 5 (deploy)              (repo, ressources, état = clos)
    → 12-build …       → 17-deploy                          │
         │                   │                              │
@@ -33,8 +34,7 @@ Au vu de `metrics/review.md` **confronté** au `Critère de KILL` écrit dans `s
        à terme, re-boucle en Phase 6            leçons remontées en mémoire
        (mesurer la nouvelle itération)          (lessons.md + learnings.jsonl)
 ```
-- **CONTINUE → Phase 4** quand l'itération est une **nouvelle feature / piste** (les 1-3 pistes de `metrics/review.md`) : on re-descend dans le build multi-agents.
-- **CONTINUE → Phase 5** quand c'est une **relance / correctif déployable** sans re-build lourd : on repasse par `17-deploy` (plan-then-apply s'applique de nouveau).
+- **CONTINUE → Phase 4** quand l'itération est une **nouvelle feature / piste** (les 1-3 pistes de `metrics/review.md`) : on re-descend d
 - **KILL** → **post-mortem de 5 lignes**, archive propre, et surtout : **on capitalise** — c'est un kill qui a de la valeur seulement si la mémoire en sort enrichie.
 - Le retour arrière **traverse toujours l'orchestrateur de la phase cible** (jamais d'appel direct à une étape hors de sa phase) — cohérence avec le master.
 
@@ -49,7 +49,7 @@ Format : `_shared/state-schema.md`. À **chaque transition** de la phase, mettre
 - **Si KILL** : marquer le projet **clos** + lien vers `retro/retro.md` (post-mortem).
 - **Mémoire** : cocher que `learnings.jsonl` et `_shared/lessons.md` ont été enrichis (l'actif long terme est le vrai livrable).
 
-**Écrivain unique** : seul **l'orchestrateur** écrit `state.md` — jamais 18/19 ni un sous-agent. Ils produisent leur artefact (`metrics/*`, `retro/*`) et te le rapportent ; toi seul consignes, à chaque transition. Cela évite les MAJ concurrentes/incohérentes (cf. `_shared/state-schema.md`).
+**Écrivain unique** : seul **l'orchestrateur** écrit `state.md` — jamais 18/19 ni un sous-agent. Ils produisent leur artefact (`metrics/*`, `retro/*`) et te le rapportent ; toi seul consignes, à chaque transition. Règle canonique (+ l'unique exception `01-discover`) : `skills/saas-factory/references/state-resume.md` §Écrivain unique.
 
 **Interdit d'état (sécurité)** : jamais de secret / clé dans `state.md` ni dans aucun artefact de projet (`safety-rails.md` §4). La mémoire projet vit dans `~/.saas-factory/` ; aucun secret n'y est écrit non plus.
 

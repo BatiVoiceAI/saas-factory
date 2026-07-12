@@ -14,7 +14,8 @@ Comment l'orchestrateur de phase tient `.saas-factory/state.md`, reprend une pha
 3. pré-vol infra : ~/.saas-factory/config.json présent ?
       oui ──▶ provisioning/déploiement pré-autorisé (safety §1 bis)
       non ──▶ mode local/fallback (jamais bloquant, §6) — le déploiement guidera
-4. router : type=public ▶ 16 puis 17 · type=perso/interne ▶ 17 seul (16 sautée)
+4. router : appliquer la matrice canonique (routing.md local = renvoi vers
+   skills/saas-factory/references/routing.md — seule source du skip-set et des portes par type)
 5. dérouler (pipeline.md)
 ```
 
@@ -32,7 +33,7 @@ Comment l'orchestrateur de phase tient `.saas-factory/state.md`, reprend une pha
 | `17` fait | `étape 17 fait` · **déployé** · URL live · version · Statut `fait` |
 | porte **en attente** | Statut `porte en attente` (à la reprise : re-présenter, ne pas rejouer) |
 
-**Écrivain unique** : seul **l'orchestrateur de phase** écrit `state.md` — jamais 16/17 ni un sous-agent. Ils produisent leur artefact (`seo/*`, `deploy/*`) et te le rapportent ; toi seul consignes, à chaque transition. Cela évite les MAJ concurrentes/incohérentes (cf. `_shared/state-schema.md`).
+**Écrivain unique** : seul **l'orchestrateur de phase** écrit `state.md` — jamais 16/17 ni un sous-agent. Ils produisent leur artefact (`seo/*`, `deploy/*`) et te le rapportent ; toi seul consignes, à chaque transition. Règle canonique (+ l'unique exception `01-discover`) : `skills/saas-factory/references/state-resume.md` §Écrivain unique.
 
 **Interdits d'état (sécurité)** : jamais de secret/clé/token dans `state.md` ni dans `deploy/log.md` ni collé en conversation (safety §4). Les accès infra vivent dans `~/.saas-factory/` (config + `.env` chmod 600) ou côté connecteur MCP/OAuth.
 

@@ -1,7 +1,7 @@
 ---
 name: 06-business-model
 description: >-
-  Étape 6 (Phase 2 · cadrage produit) de SaaS Factory — Business model & pricing (rôle CEO + PM). Pose le modèle économique (lean canvas) et le pricing (modèle + paliers ancrés sur la valeur et le benchmark concurrent), en pilotant la tranche « Strategy » du moteur vendoré startup-design. Se déclenche pour « business model », « pricing », « combien le vendre », après validation de l'opportunité (Phase 1).
+  Étape 6 (Phase 2 · cadrage produit) de SaaS Factory — Business model & pricing (rôle CEO + PM). Pose le modèle économique (lean canvas) et le pricing (modèle + paliers ancrés sur la valeur et le benchmark concurrent) — pricing marché produit SEULEMENT si le produit est public ; interne = ROI interne (coût évité, temps gagné) ; perso = sans pricing. Pilote la tranche « Strategy » du moteur vendoré startup-design. Se déclenche pour « business model », « pricing », « combien le vendre », après validation de l'opportunité (Phase 1).
 allowed-tools: Read, Write, Edit, Bash
 ---
 
@@ -18,8 +18,8 @@ Tu poses deux choses : le **business model** (comment le produit crée et capte 
 **HARD GATE / frontière (anti-doublon).** Ici : business model + pricing. Les **features et specs** = étape 7. Les **projections financières détaillées** = hors Phase 2. Un seul traitement par décision.
 
 ## Entrées / sortie (contrat)
-- **Lit :** `research/opportunity-brief.md` (marché, edge, concurrents, risques) + `research/positioning.md` (angle, catégorie, value themes). Pour le **pricing uniquement** : `research/market.md` (prix concurrents relevés à l'étape 2) — l'ancre de marché.
-- **Écrit :** `product/business-model.md` (template `assets/templates/business-model.md`) **toujours**. `product/pricing.md` (template `assets/templates/pricing.md`) **conditionnel** : pour un SaaS **public/interne** (destiné à être vendu). **Saute-le** en mode **perso** (produit non commercialisé) — dans ce cas, note dans `business-model.md` que le pricing est hors périmètre.
+- **Lit :** `research/idea-brief.md` (**type/route** — pilote le sort du pricing), `research/opportunity-brief.md` (marché, edge, concurrents, risques) + `research/positioning.md` (angle, catégorie, value themes). Pour le **pricing uniquement** : `research/market.md` (prix concurrents relevés à l'étape 2) — l'ancre de marché.
+- **Écrit :** `product/business-model.md` (template `assets/templates/business-model.md`) **toujours**. `product/pricing.md` (template `assets/templates/pricing.md`) **SEULEMENT si `type = public`** (produit vendu sur un marché). **`interne`** → pas de pricing marché : le bloc 6 du canvas porte un **ROI interne** d'environ 10 lignes (voir §« Mode interne ») dans `business-model.md`. **`perso`** → sauté ; note dans `business-model.md` que le pricing est hors périmètre. Défaut prudent si le type manque = `public`.
 - Rien d'autre. Jamais de secret ni de clé dans le fichier.
 
 ## Principe : tu EXÉCUTES le moteur, tu ne refais pas la stratégie
@@ -48,6 +48,7 @@ De la Phase 4, n'exécute que ce que la Phase 1 **ne couvre pas** : **channels**
 Le **lean canvas 9 blocs** consolidé. Une page, dense, chaque bloc rattaché à un artefact Phase 1. Sous-procédure bloc par bloc, ordre de remplissage, matrices et DoD : `references/lean-canvas.md`.
 
 ### 5. Pose le pricing (procédure normée micro-SaaS)
+> **Garde type (lu dans `research/idea-brief.md`).** Les mouvements 5-6 ne s'exécutent que si **`type = public`**. `interne` → saute-les et écris le **ROI interne** (§« Mode interne » ci-dessous) dans `business-model.md`. `perso` → saute-les, une ligne « pricing hors périmètre (outil perso) » dans `business-model.md`.
 > On **vendorera plus tard** un skill de pricing dédié (`coreyhaines31/marketingskills:pricing`). En attendant, applique cette procédure — ne l'improvise pas. Version exhaustive (matrices freemium/trial, choix d'axe de scaling, échelle ancrée, DoD, anti-patterns) : `references/pricing-procedure.md`.
 1. **Benchmark.** Relève les prix concurrents dans `research/market.md` : point d'entrée, point haut, inclus par palier, axe de scaling. L'**ancre de marché**.
 2. **Ancrage sur la valeur (pas cost-plus).** Le prix se justifie par la **valeur du job résolu** (VPC), pas le coût de hosting. Situe-le face à l'**alternative actuelle** (ce que la cible paie/perd aujourd'hui sans l'outil).
@@ -55,7 +56,17 @@ Le **lean canvas 9 blocs** consolidé. Une page, dense, chaque bloc rattaché à
 4. **Ancrage des paliers.** Un palier « ancre » haut rend le palier cible **raisonnable** ; un point d'entrée bas réduit la friction. **Nomme** le palier que l'early adopter prendra en premier.
 
 ### 6. Écris `product/pricing.md`
-Modèle + **table des paliers** (nom · prix · pour qui · inclus · limite) + justification d'ancrage (valeur + benchmark) + hypothèses à tester.
+Modèle + **table des paliers** (nom · prix · pour qui · inclus · limite) + justification d'ancrage (valeur + benchmark) + hypothèses à tester. **Type `public` uniquement** (garde du mouvement 5).
+
+## Mode interne — ROI interne, pas de pricing marché (~10 lignes)
+Un outil interne ne se vend pas : des paliers Starter/Pro/Team ou un freemium n'ont **aucun objet** (aligné sur le playbook Phase 2 : « coût évité », pas « destiné à être vendu »). À la place, le bloc 6 du canvas — lu comme « **valeur captée** » — porte un **ROI interne d'environ 10 lignes** :
+1. **Coût évité** — ce que le process actuel coûte (heures × taux horaire interne, erreurs, licences de l'outil remplacé). `[Estimate]` avec hypothèse écrite.
+2. **Temps gagné** — heures/mois économisées, et **par qui** (les utilisateurs internes concernés).
+3. **Coût de l'outil** — infra + maintenance, ordre de grandeur (recoupe le bloc 7 du canvas).
+4. **Seuil de rentabilité** — une phrase **falsifiable** : « l'outil se paie si ≥ N heures/mois économisées ».
+5. **Hypothèses `[Assumption]`** — à valider auprès du **sponsor interne** (revue étape 15, persona sponsor).
+
+Interdits en mode interne : paliers, freemium/trial, benchmark concurrent, `product/pricing.md` (réservé au type `public`).
 
 ## Garde-fous
 - **Léger, pas bâclé.** Un lean canvas + un pricing ancré suffisent. Pas de projections financières.

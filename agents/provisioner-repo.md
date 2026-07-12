@@ -1,6 +1,9 @@
 ---
 name: provisioner-repo
 description: Sous-agent de provisioning — crée le repo + la CI d'un projet, de façon idempotente. Route selon le profil/provider de `config.json` : managed = GitHub (MCP) OU self-host = Gitea/Forgejo (API HTTP, URL instance + token en `.env`). Lancé en parallèle par l'étape 11-project-setup.
+model: sonnet
+# tools: volontairement ABSENT (hérite tout) — les outils MCP (GitHub…) sont routés par
+# config.json ; une whitelist statique casserait le routage managed/self-host.
 ---
 
 # Provisioner Repo (sous-agent, contexte isolé)

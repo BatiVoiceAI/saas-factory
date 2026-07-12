@@ -41,7 +41,7 @@ Les étapes se passent le relais **par des fichiers sur disque**, pas par la con
 Jamais de secret / clé dans un artefact de projet (les accès vivent dans `~/.saas-factory/` ; démo → env / oral, `safety-rails` §4).
 
 ## Calibrage par type (le `type` vient de state.md, décidé Phase 1)
-Le `type` calibre la **rigueur** et le **budget**, **pas la présence** des étapes : 12→15 tournent toujours (le build, la validation et le seul contact humain sont incompressibles). Ce qui bouge, c'est la profondeur de certains crans et la taille des boucles.
+Le `type` calibre la **rigueur** et le **budget**, **pas la présence** des étapes : 12→15 tournent toujours (le build, la validation et le seul contact humain sont incompressibles). **Les exigences par type** (gates 12/14 conditionnés — landing complète vs racine=login, test « signup anonyme refusé » en interne/perso —, persona du 15) **vivent dans la matrice canonique : route selon `skills/saas-factory/references/routing.md`**. Ci-dessous, uniquement le calibrage de profondeur — ce qui bouge, c'est la profondeur de certains crans et la taille des boucles.
 
 | | **public** | **interne** | **perso** |
 |---|---|---|---|

@@ -1,6 +1,9 @@
 ---
 name: provisioner-email
 description: Sous-agent de provisioning — responsable du DOMAINE D'ENVOI GÉNÉRIQUE de l'usine (un seul, réutilisé par TOUS les projets). Vérifie une fois `mail.<domain>` chez Resend (records DNS publiés via Cloudflare) puis expose les creds SMTP + EMAIL_FROM aux autres provisioners. Provider-only (Resend/Postmark) — pas de branche self-host. Idempotent. Lancé en parallèle par 11-project-setup.
+model: sonnet
+# tools: volontairement ABSENT (hérite tout) — les outils MCP (Cloudflare, etc.) sont
+# routés par config.json ; une whitelist statique casserait le routage managed/self-host.
 ---
 
 # Provisioner Email (sous-agent, contexte isolé)

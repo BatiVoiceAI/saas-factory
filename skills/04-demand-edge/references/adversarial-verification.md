@@ -20,6 +20,16 @@ Tier 3 ─ opinion / déclaratif : avis clients, notes d'étoiles, commentaires.
 
 **Règle dure** : les avis concurrents sont **Tier 3**. Un verdict « Fort » (demande) ou « Edge réel » **ne peut pas** reposer sur une seule source Tier 3. Il faut soit croiser plusieurs plateformes, soit remonter un signal Tier 2 (churn, recherche).
 
+### Règle dure n°2 — authenticité des verbatims (anti-preuve-fabriquée)
+
+L'étape 2 consigne **par verbatim** : l'URL de la page source + le marqueur « **ouvert via WebFetch : oui / non** » (`raw/review-mining.md`, `raw/forum-mining.md`). Ici, tu relis ce marqueur :
+
+- Quote avec marqueur « **non** » (page jamais ouverte, texte issu d'un snippet de recherche) **ou sans URL** → étiquette-la **`[snippet — non vérifié]`** dans `demand-signals.md`.
+- Un `[snippet — non vérifié]` peut **illustrer** un thème, mais **ne soutient ni « demande Forte » ni « Edge réel »** : toute preuve porteuse de ces deux verdicts est un verbatim **vérifié** (URL + ouvert via WebFetch = oui).
+- Pas de re-scraping ici (l'étape 4 n'ouvre pas de pages) : si les preuves porteuses sont toutes des snippets → **descends le verdict**, ne « répare » pas la preuve.
+
+Pourquoi si dur : un snippet paraphrasé qui passe pour un verbatim est une preuve fabriquée — exactement là où le biais d'optimisme s'exerce.
+
 ### Où trouver du Tier 2 dans le matériau existant
 - **Churn** (Passe 4 du bloc demande) = Tier 2 : c'est un comportement.
 - **Signaux GTM** de la Wave 3 (`research-wave-3-gtm-signals.md`) : volume de recherche, dynamique de contenu = Tier 2.
@@ -64,6 +74,8 @@ Pour **chaque** verdict (demande ET edge), écris les trois. C'est le format que
 
 Si le matériau ne permet pas d'atteindre l'exigence → **descends le verdict**, ne force pas la preuve.
 
+> Dans tous les cas : les preuves porteuses d'un « Forte » ou d'un « Edge réel » sont des **verbatims vérifiés** (URL + ouvert via WebFetch = oui) — les `[snippet — non vérifié]` ne comptent pas dans l'exigence (règle dure n°2, §1).
+
 ---
 
 ## 4. Passe honnêteté (honesty-protocol) — checklist de sortie
@@ -72,6 +84,7 @@ Avant d'écrire `demand-signals.md`, relis avec l'œil « cette idée devrait-el
 
 - [ ] Ai-je un verdict que je **voudrais** vrai mais que la preuve ne soutient pas ? → corrige-le.
 - [ ] Chaque affirmation forte porte-t-elle une preuve datée et sourcée ?
+- [ ] Aucun `[snippet — non vérifié]` ne porte un « Forte » ni un « Edge réel » ?
 - [ ] Ai-je écrit au moins un « ce qui infirmerait » par verdict ?
 - [ ] Les trous sont-ils **visibles** (pas noyés) ?
 - [ ] Le vocabulaire reste-t-il humble (« plausiblement », « à valider par toi ») ?

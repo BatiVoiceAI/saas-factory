@@ -1,5 +1,6 @@
 # Pricing : {produit}
 *SaaS Factory — Phase 2, étape 6 · ancré valeur + benchmark · {date}*
+> Produit **uniquement si `type = public`**. `interne` → ROI interne dans `business-model.md` (pas de pricing marché) ; `perso` → sauté.
 
 ## Modèle
 {freemium / free-trial} + {2-3} paliers payants · **axe de scaling** : {par siège / par usage / par volume / par features}

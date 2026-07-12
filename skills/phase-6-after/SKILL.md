@@ -2,7 +2,7 @@
 name: phase-6-after
 description: >-
   Phase 6 de SaaS Factory — Après (rôles PM / CEO / Eng Manager). Orchestre les 2 étapes (18-metrics → 19-retro) : une fois le SaaS en ligne, mesure les métriques d'activation et propose des itérations, puis fait la rétro, enrichit la mémoire qui compound, et tranche kill/continue. À utiliser après le déploiement (Phase 5).
-allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, Grep, Glob, Task
+allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, Grep, Glob, Task, Skill
 ---
 
 # SaaS Factory — Phase 6 : Après (orchestrateur)
@@ -50,7 +50,7 @@ Jamais de kill **ni** de continue au feeling : on **confronte le critère de KIL
 
 ## Calibrage par `type`
 - **Public** → funnel complet + santé + itération priorisée + porte kill/continue argumentée.
-- **Interne / perso** → métriques **allégées** (usage réel, pas d'obsession du funnel d'activation), mais **rétro + mémoire toujours** : elles compound quel que soit le type. Matrice : `references/flow.md`.
+- **Interne / perso** → métriques **allégées** (usage réel, pas d'obsession du funnel d'activation), mais **rétro + mémoire toujours** : elles compound quel que soit le type. Profondeur : `references/flow.md` ; skip-set et portes par type : matrice canonique `skills/saas-factory/references/routing.md` (route selon elle).
 
 ## Sortie
 Cycle bouclé (**idée → déployé → mesuré → appris**). À chaque étape : mets à jour `.saas-factory/state.md`, résume en 2 lignes, annonce la suite (itération ou clôture). MAJ d'état + reprenabilité de la phase : `references/gate-and-state.md`.

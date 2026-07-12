@@ -32,11 +32,7 @@ Les étapes se passent le relais **par des fichiers sur disque**, pas par la con
 Ne mets **jamais** de secret ou de clé API dans ces fichiers.
 
 ## Routage par type (décidé à l'étape 1)
-Le `type` capté à l'étape 1 détermine quelles étapes s'exécutent :
-
-- **public** → étapes 2 · 3 · 4 · 5 complètes.
-- **interne entreprise** → **saute** le marché public (2) et l'edge concurrentiel ; à la place, vérifie le **fit** avec les outils / process / contraintes de sécurité de la boîte ; puis étape 5 (décision d'utilité interne).
-- **perso** → **saute** 2 · 3 · 4 ; étape 5 **allégée** (« cet outil te sert à toi — on passe au build ? »).
+Le `type` capté à l'étape 1 détermine quelles étapes s'exécutent. **La table étape × type canonique vit dans `skills/saas-factory/references/routing.md` — route selon elle** (aucune copie locale : le skip-set n'a qu'une source). Ce qui reste local : le calibrage des étapes actives — interne remplace la recherche marché par un **fit-check** entreprise porté par l'étape 5 en lite-mode ; perso débouche sur une étape 5 **allégée** (« cet outil te sert à toi — on passe au build ? »).
 
 Dis toujours à l'utilisateur, au moment du choix de type, **l'impact** de son choix (ce qu'on fait ou saute).
 

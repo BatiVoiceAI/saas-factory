@@ -4,7 +4,7 @@ Le verdict est le produit de l'étape 5. Il croise **4 axes** — marché × edg
 
 ## Les 4 axes (comment coter chacun, sobrement)
 
-Pas de score chiffré agrégé (un « 7,4/10 » est une fausse précision). On cote chaque axe **Fort / Moyen / Faible**, avec la preuve derrière.
+Pas de score chiffré agrégé (un « 7,4/10 » est une fausse précision). On cote chaque axe **Fort / Moyen / Faible**, avec la preuve derrière. Deux axes se **cotent** ici (Marché, Risques), deux **s'héritent** de l'étape 4 (Demande, Edge — table d'héritage ci-dessous).
 
 | Axe | Fort | Moyen | Faible |
 |---|---|---|---|
@@ -12,6 +12,26 @@ Pas de score chiffré agrégé (un « 7,4/10 » est une fausse précision). On c
 | **Edge** | Angle net défendable | Pas d'edge mais niche claire (pari exéc.) | Ni edge ni niche → bataille de prix |
 | **Demande** (proxy) | Signal proxy dense et récurrent | Signal présent mais banalisé | Signal ténu / inféré de rien |
 | **Risques** | Pas de tueur identifié | Tueurs gérables | Un tueur non contournable |
+
+- **Marché** : hérite de `market.md` § « Taille servable & dynamique » (produit à l'étape 2, [Estimate] bottom-up + hypothèse) — on ne recalcule ni n'improvise rien ici ; section absente = input anormal (flag), pas un chiffre inventé.
+- **Risques** : énumérés via la mini-taxonomie 5 familles de `synthesis-and-confrontation.md` § Risques — jamais à l'intuition.
+
+## Table d'héritage depuis l'étape 4 (Demande & Edge : on hérite, on ne re-cote pas)
+
+Un seul traitement par décision : les verdicts de `demand-signals.md` se **traduisent**, ils ne se rejugent pas.
+
+| Verdict étape 4 | → Axe hérité (étape 5) |
+|---|---|
+| Demande plausiblement **forte** | Demande **Fort** |
+| Demande plausiblement **moyenne** | Demande **Moyen** |
+| Demande plausiblement **faible** | Demande **Faible** |
+| **Edge réel** | Edge **Fort** |
+| **Edge faible** | Edge **Moyen** (red flag « rattrapable » conservé) |
+| **Pas d'edge** + niche claire assumée | Edge **Moyen** (pari exécution) |
+| **Pas d'edge**, sans niche nette | Edge **Faible** |
+
+**Plafond de confiance.** Si `confidence.md` est bas sur la dimension concernée, ou si les preuves porteuses sont des `[snippet — non vérifié]`, **descends l'axe hérité d'un cran** — jamais l'inverse (on ne remonte pas la confiance en aval).
+**Divergence interdite.** Si la confrontation te fait douter d'un verdict de l'étape 4, la voie est « **Ajuster → reboucler 04** », pas une re-cotation silencieuse ici.
 
 ## Matrice de décision — combinaison des axes → orientation de verdict
 
@@ -54,6 +74,8 @@ L'IA ne fait **pas** d'interviews terrain (cf. `conventions.md`, principe n°3).
 
 ## Definition of Done — verdict
 - [ ] Les 4 axes cotés Fort/Moyen/Faible, chacun avec sa preuve.
+- [ ] Demande & Edge **hérités** de l'étape 4 via la table d'héritage (aucune re-cotation) ; plafond `confidence.md` appliqué.
+- [ ] Marché hérité de `market.md` § « Taille servable & dynamique » ; Risques énumérés via les 5 familles.
 - [ ] Lecture « maillon faible d'abord » faite (Demande/Risques peuvent primer).
 - [ ] Position nette prise — aucun mot-valise.
 - [ ] Clause « ce qui le ferait basculer » présente.
@@ -64,5 +86,6 @@ L'IA ne fait **pas** d'interviews terrain (cf. `conventions.md`, principe n°3).
 - **La flagornerie.** Le verdict rassure au lieu de trancher. *Parade :* honesty-protocol + bannir la liste de mots-valises.
 - **La fausse précision.** Un score agrégé « 7,4/10 ». *Parade :* Fort/Moyen/Faible + raisonnement, pas de note.
 - **La certitude sur du proxy.** « Demande prouvée ». *Parade :* garde-fou humilité, plafond de confiance.
+- **La re-cotation silencieuse.** L'étape 5 « re-juge » Demande ou Edge et diverge de l'étape 4 sans le dire. *Parade :* table d'héritage ; un doute = Ajuster → 04, pas une divergence muette.
 - **Le verdict fermé.** Aucune condition de bascule. *Parade :* clause obligatoire.
 - **Le tueur noyé.** Un risque fatal dilué parmi dix mineurs. *Parade :* lecture maillon faible + risques ordonnés.

@@ -29,8 +29,8 @@ Definition-of-done, catalogue de cas limites, modes d'échec + parade, et hand-o
 - [ ] Red flags / Yellow flags / Sources présents.
 
 **Frontière & sortie**
-- [ ] Angle candidat formalisé, **sans** nom d'edge, **sans** verdict, **sans** Go.
-- [ ] Phrase-garde « nommage + verdict edge = étape 4 » écrite noir sur blanc.
+- [ ] Angle candidat formalisé (jusqu'à l'Onliness candidate incluse) — **sans verdict edge, sans Go**.
+- [ ] La ligne « Angle candidat — verdict edge = étape 4 » figure dans le fichier.
 - [ ] **Un seul** fichier écrit : `research/positioning.md` (pas les 5 livrables épars du moteur).
 - [ ] Aucun secret / clé dans le fichier.
 - [ ] `.saas-factory/state.md` mis à jour (étape 3 faite, catégorie, angle candidat).
@@ -64,7 +64,7 @@ Definition-of-done, catalogue de cas limites, modes d'échec + parade, et hand-o
 | **Category creation gratuite** | Catégorie inventée non cherchable | Défaut existante ; flag risque ; « le client peut-il la Googler ? » |
 | **Flagornerie** | Tout attribut validé sans challenge | Filtre « ≥2 concurrents l'ont = table stakes » |
 | **Positionnement aspirationnel** | « Nous serons le… » | On positionne sur ce qu'on EST ; roadmap hors scope |
-| **Débordement sur l'edge** | « Notre edge = X, on fonce » | Phrase-garde + auto-contrôle (forcing-questions §4) |
+| **Débordement sur l'edge** | « Edge réel, on fonce » | La règle unique : verdict edge = étape 4 (forcing-questions §4) |
 | **Dérive documentaire** | Chiffres ≠ market.md | Ne relance pas les waves déjà couvertes ; réutilise les artefacts |
 | **Import Phase 2** | 5 fichiers moteur déversés dans research/ | Un seul fichier, tranche validation uniquement |
 | **Fausse certitude** | Claim « Haute » sur un seul avis | Tier des sources ; Tier 3 jamais seul pour un « Haute » |
@@ -74,13 +74,13 @@ Definition-of-done, catalogue de cas limites, modes d'échec + parade, et hand-o
 ## Passation vers l'étape 4
 
 **Ce que l'étape 4 (`04-demand-edge`) consomme de ta sortie :**
-- L'**angle candidat formalisé** (attribut → value theme → Onliness candidate) → elle le **nomme** et le **tranche**.
+- L'**angle candidat formalisé** (attribut → value theme → Onliness candidate) → elle reprend ta phrase, précise la niche et **tranche** le verdict.
 - La **catégorie retenue** → cadre du statement final.
 - Les **manques partagés** que tu as exprimés → recoupés avec le review-mining pour le verdict edge.
 
 **Ce que tu ne lui laisses PAS faire à ta place (tu dois l'avoir fait) :** la synthèse Dunford, la catégorie, la formalisation de l'angle.
-**Ce que tu ne fais PAS à sa place :** nommer l'edge, trancher réel/faible/absent, inférer la demande, décider Go.
+**Ce que tu ne fais PAS à sa place :** trancher le verdict edge (réel/faible/absent), inférer la demande, décider Go.
 
 **Résumé de clôture (2 lignes) — gabarit :**
-> Étape 3 faite. Catégorie retenue : {catégorie} ({type}). Angle candidat : {attribut → value theme → Onliness candidate}. Nommage + verdict edge → étape 4.
+> Étape 3 faite. Catégorie retenue : {catégorie} ({type}). Angle candidat : {attribut → value theme → Onliness candidate}. Verdict edge → étape 4.
 > Prochaine étape : `04-demand-edge` (demande par proxy + verdict edge).

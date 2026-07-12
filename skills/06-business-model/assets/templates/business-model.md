@@ -7,7 +7,7 @@
 3. **Proposition de valeur unique (UVP)** — {← positioning (statement Onliness)}
 4. **Solution** (top 3 features) — {← opportunity-brief (edge), resserré}
 5. **Canaux** — {à esquisser}
-6. **Sources de revenus** — {modèle — détail dans `pricing.md`}
+6. **Sources de revenus** — {public : modèle, détail dans `pricing.md` · interne : **ROI interne** ~10 lignes (coût évité, temps gagné, seuil de rentabilité) · perso : pricing hors périmètre}
 7. **Structure de coûts** — {principaux postes : infra, API/LLM, acquisition}
 8. **Indicateurs clés** (AARRR) — {acquisition, activation, rétention, revenu, référence}
 9. **Avantage déloyal** — {← positioning (edge), ou absence assumée}

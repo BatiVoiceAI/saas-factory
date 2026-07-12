@@ -23,11 +23,11 @@ Template : `assets/templates/opportunity-brief.md`. Labellise **chaque affirmati
 |---|---|---|
 | **Problème** | Repris de l'idea-brief, **resserré** par ce que 02-04 ont confirmé/démenti | « Les PME veulent gagner du temps. » → « [Data] Les cabinets compta <5 pers. perdent ~1 j/mois à relancer les impayés (avis concurrents récurrents). » |
 | **Cible** | Persona précis + segment retenu | « Les indépendants. » → « Freelances facturant >10 clients/mois, déjà sur un outil de facturation. » |
-| **Marché** | Taille **avec** hypothèse de calcul, segment, dynamique | « Marché de plusieurs millions. » → « [Estimate] ~12 000 cabinets FR × 30€/mois = 4,3 M€/an SAM ; dynamique stagnante — source X. » |
+| **Marché** | Taille **avec** hypothèse de calcul, segment, dynamique — **hérités de `market.md` § « Taille servable & dynamique »** (étape 2), jamais recalculés | « Marché de plusieurs millions. » → « [Estimate] ~12 000 cabinets FR × 30€/mois = 4,3 M€/an SAM ; dynamique stagnante — source X. » |
 | **Concurrents** | Menace honnête + **ce qu'ils font bien** | « Concurrents faibles. » → tableau : force réelle + faille exploitable + menace High/Med/Low |
 | **Demande** | Signal **par proxy**, toujours « plausible » | « Forte demande. » → « [Assumption] Demande *plausible* : 200+ avis réclamant la relance auto sur 3 concurrents. » |
 | **Edge** | L'axe différenciant **ou son absence assumée** | « On sera meilleurs. » → « Pas d'edge net → pari exécution + niche cabinets compta (reste viable). » |
-| **Risques** | Les **vrais tueurs d'abord** | « Quelques risques classiques. » → « Tueur #1 : incumbent gratuit bundlé dans l'outil compta dominant. » |
+| **Risques** | Les **vrais tueurs d'abord** — énumérés via les 5 familles (`synthesis-and-confrontation.md` § Risques) | « Quelques risques classiques. » → « Tueur #1 : incumbent gratuit bundlé dans l'outil compta dominant. » |
 | **Pertinence** | Ta lecture argumentée : vaut le coup / pas / à conditions | — |
 | **Verdict** | Croise marché × edge × demande × risques + « ce qui le ferait basculer » | cf. `verdict-engine.md` |
 | **Flags** | **Ne jamais sauter.** Red / Yellow, ou « No flags identified » | — |
@@ -59,12 +59,21 @@ Template : `assets/templates/opportunity-summary.md`. Lisible par un **non-techn
 - **MOU** : « Le marché est intéressant, la demande semble présente, ça vaut le coup de tenter. »
 - **FORT** : « Le besoin est réel et récurrent, mais cinq outils corrects l'adressent déjà et aucun n'est mauvais. Sans angle net, tu te battrais sur le prix — le pire terrain. Je pencherais No-Go, sauf si tu vises une niche qu'aucun ne sert (les cabinets compta), où l'exécution peut suffire. »
 
+### Recette — l'annexe Mom-Test (kit interviews, hors pagination)
+
+Le résumé se termine par une annexe : **5 questions dérivées des pain themes** de `demand-signals.md`, pour que « à valider par toi » devienne actionnable dès la sortie de la porte (et pendant la fenêtre d'un éventuel Go-test).
+
+- **Dérivation** : prends les 3 douleurs les plus sévères (bloquant/rédhibitoire d'abord) → une question **au passé** par douleur (« raconte-moi la dernière fois que… », « qu'est-ce que ça t'a coûté ? ») ; + 1 question sur l'**alternative actuelle** ; + 1 question de **comportement** (« qu'as-tu déjà essayé/payé ? »).
+- **Interdits (Mom Test)** : pitcher l'idée ; le futur hypothétique (« est-ce que tu utiliserais… ? ») ; compter un compliment comme un signal. On cherche des faits et des comportements passés, pas des opinions.
+- L'annexe est **hors pagination** : elle ne compte pas dans les 1-2 pages.
+
 **DoD résumé :**
 - [ ] 1-2 pages MAX, zéro jargon.
 - [ ] Se suffit : trancher sans ouvrir le brief.
 - [ ] Même vérité que le brief (test de cohérence passé), pas plus optimiste.
 - [ ] Recommandation nette (Go/Ajuster/No-Go), pas de mot-valise.
 - [ ] La main est explicitement rendue à l'utilisateur.
+- [ ] Annexe Mom-Test : 5 questions dérivées des pain themes, au passé/comportement — aucune question hypothétique, aucun pitch.
 
 ## Modes d'échec de l'écriture
 - **Le résumé adouci.** Brief lucide, résumé qui rassure. *Parade :* test de cohérence.

@@ -11,6 +11,9 @@
 | Billing | Stripe (test) | {si applicable, sinon —} | — | oui |
 | Observabilité | Sentry / PostHog | {si configuré} | — | oui |
 
+## Allègements par type de produit
+{Si `type` ≠ `public` : **une ligne par réglage allégé ou appel sauté** — « allègement type=`<type>` : `<réglage>` — `<raison>` » (matrice : `references/provisioning-plan.md` §Routage par type de produit). Jamais silencieux — un allègement non logué = échec de la vérif finale. Si `type` = `public` : « aucun ».}
+
 ## Secrets
 Injectés en variables d'environnement (depuis `~/.saas-factory/`), **jamais en dur, jamais commités**.
 

@@ -2,7 +2,7 @@
 name: saas-factory
 description: >-
   Orchestrateur maître de SaaS Factory — transforme une IDÉE en SaaS/app/outil DÉPLOYÉ, de bout en bout. Se déclenche quand l'utilisateur veut créer, lancer ou construire un SaaS, une app ou un outil à partir d'une idée (« construis-moi un SaaS », « j'ai une idée d'app », « transforme cette idée en produit »). Déroule les 6 phases dans l'ordre — Validation → Produit → Technique → Build → Lancement → Après — en enchaînant leurs orchestrateurs de phase, puis chaque étape experte, avec portes de décision, autonomie bornée et mémoire qui compound.
-allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, Grep, Glob, WebSearch, WebFetch, Task
+allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, Grep, Glob, WebSearch, WebFetch, Task, Skill
 ---
 
 # SaaS Factory — Orchestrateur maître (le chef d'orchestre)
@@ -18,12 +18,12 @@ Le vrai rôle : remplacer l'expertise de l'utilisateur par (1) des décisions te
 ## Références du chef d'orchestre (charge à la demande)
 La profondeur vit ici — ouvre la bonne au bon moment, ne les précharge pas toutes :
 - `references/pipeline.md` — la **carte** des 6 phases (diagramme ASCII, séquence, artefacts produits, règles d'enchaînement).
-- `references/routing.md` — le **calibrage** `type` → route (matrice public/interne/perso, étapes actives/sautées).
+- `references/routing.md` — la **matrice CANONIQUE** étape × type (public/interne/perso — la seule table de routage du plugin) + portes actives par type.
 - `references/gates.md` — la **gestion des portes** (ce que chaque 🚪 décide + le graphe des retours arrière).
 - `references/state-resume.md` — **état, reprise & discipline `_shared` une fois** (séquence de démarrage, mise à jour d'état, reprenabilité).
 
 ## Au démarrage (une fois) — détail dans `references/state-resume.md`
-1. **Lis les blocs partagés une seule fois** : `_shared/lessons.md`, `_shared/safety-rails.md`, `_shared/stack-defaults.md`, `_shared/blocks/README.md`, `_shared/validation-cascade.md`, `_shared/test-dossier.md`. Ils priment sur ton comportement par défaut. **Ne les fais pas relire par chaque phase.**
+1. **Lis les blocs partagés une seule fois** : `_shared/lessons.md`, `_shared/safety-rails.md`, `_shared/stack-defaults.md`, `_shared/blocks/README.md`, `_shared/validation-cascade.md`, `_shared/test-dossier.md`, **+ `~/.saas-factory/lessons-learned.md` s'il existe** (leçons capitalisées par tes projets précédents, écrites par `19-retro` — hors plugin, elles complètent `_shared/lessons.md`). Ils priment sur ton comportement par défaut. **Ne les fais pas relire par chaque phase.**
 2. **Reprends l'état** : lis `.saas-factory/state.md` (format `_shared/state-schema.md`). S'il existe → reprends à la phase/étape courante (table de reprise dans `state-resume.md`). Sinon → crée-le (`git init` si besoin).
 3. **Setup infra ?** : si `~/.saas-factory/config.json` n'existe pas, suggère **une fois** `infra-setup` (débloque le provisioning auto des Phases 3/5). Optionnel — sinon mode local/fallback, jamais bloquant.
 
@@ -60,7 +60,7 @@ IDÉE ─▶ P1 validation ─Go▶ P2 product ─validés▶ P3 tech ─▶ P4 
 - **Autonomie bornée** : tout ce qui dépense / publie / touche DNS-BDD-clés passe par `_shared/safety-rails.md` (plan-then-apply), sauf autorisation durable d'`infra-setup`.
 - **Retour arrière autorisé** : une porte peut renvoyer à une phase antérieure (graphe des retours dans `references/gates.md`).
 - **Ship smaller + iterate** : walking skeleton tôt, pas de sur-planification (anti-pattern kairo).
-- **Mémoire qui compound** : la Phase 6 enrichit `_shared/lessons.md` + `~/.saas-factory/learnings.jsonl` → chaque projet suivant est meilleur.
+- **Mémoire qui compound** : la Phase 6 enrichit `~/.saas-factory/learnings.jsonl` + `~/.saas-factory/lessons-learned.md` (hors plugin — survit aux updates ; `_shared/lessons.md` est livré avec le plugin, lecture seule en rétro) → chaque projet suivant est meilleur.
 
 ## Efficience (progressive disclosure)
 Lis `_shared/*` **une fois** au démarrage ; ne fais pas relire par chaque phase. Charge le détail d'une étape (ses `references/`) **au moment** où elle s'exécute. Confie le lourd/parallèle aux **subagents**. Garde ce fichier + les descriptions **courts** (toujours en contexte).

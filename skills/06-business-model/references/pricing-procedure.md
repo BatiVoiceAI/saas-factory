@@ -2,6 +2,8 @@
 
 Procédure normée pour poser le prix (`product/pricing.md`). C'est la **seule variable qui touche directement le revenu** — donc la moitié qu'on soigne, même dans une étape volontairement légère.
 
+> **Garde type — `type = public` UNIQUEMENT.** Cette procédure produit un pricing **marché** : elle ne s'exécute que pour un produit public (type lu dans `research/idea-brief.md`). `interne` → pas de paliers ni de freemium : **ROI interne** ~10 lignes dans `business-model.md` (SKILL.md §« Mode interne »). `perso` → sautée. `product/pricing.md` n'existe que pour le type `public`.
+
 > **Vendoring à venir.** On vendorera plus tard un skill de pricing dédié (`coreyhaines31/marketingskills:pricing`). En attendant, applique **cette** procédure — ne l'improvise pas.
 
 ## L'axiome : ancrer sur la VALEUR, jamais sur le coût

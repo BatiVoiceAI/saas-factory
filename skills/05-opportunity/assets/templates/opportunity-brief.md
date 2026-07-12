@@ -10,7 +10,7 @@
 <Persona précis + segment retenu>
 
 ## Marché
-<!-- Taille AVEC hypothèse de calcul (jamais un chiffre nu), segment, dynamique. Un « $12M en déclin » se dit tel quel. -->
+<!-- Hérité de market.md § « Taille servable & dynamique » (étape 2) — jamais recalculé ici. Taille AVEC hypothèse de calcul (jamais un chiffre nu), segment, dynamique. Un « $12M en déclin » se dit tel quel. Section amont absente = « marché non analysé » + flag, pas une invention. -->
 - **Taille :** <valeur> — [Estimate] <hypothèse de calcul>
 - **Segment :** <segment servi>
 - **Dynamique :** <croissance | stagnation | déclin> — <source>
@@ -30,7 +30,7 @@
 <Edge identifié, ou absence assumée + pari>
 
 ## Risques
-<!-- Les vrais tueurs D'ABORD, pas noyés dans les détails. -->
+<!-- Les vrais tueurs D'ABORD, pas noyés dans les détails. Énumérés via les 5 familles (marché · concurrence · exécution/technique · distribution · réglementaire/dépendance — cf. synthesis-and-confrontation.md §Risques). -->
 - <risque majeur 1>
 - <risque majeur 2>
 
