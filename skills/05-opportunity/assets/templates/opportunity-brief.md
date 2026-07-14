@@ -72,6 +72,16 @@
 <!-- Croise marché × edge × demande × risques, plafonné par §Fiabilité. Honnête et humble. Dire ce qui changerait l'avis. -->
 <Verdict + « ce qui le ferait basculer »>
 
+## Kill-criteria (pré-enregistrés — la grille que 19-retro relèvera)
+<!-- Dérivés de la Phase 8 « Validation » du moteur startup-design (kill-criteria + scorecard). 5-7 conditions d'arrêt/pivot SPÉCIFIQUES et MESURABLES, chacune liée à un seuil + une source de mesure (étape 18). « si < 3/10 interviewés disent qu'ils paieraient X », PAS « si pas de demande ». Fixés MAINTENANT, avant tout effort, pour que l'attachement ne déplace pas les poteaux le jour venu. 19-retro les relève tels quels (ne réinvente pas un seuil après coup). -->
+| # | Condition d'arrêt / pivot (mesurable) | Seuil | Mesuré par (étape 18) |
+|---|---|---|---|
+| 1 | <ex. conversion vue→valeur sur 4 semaines> | < X % | `metrics/review.md` |
+| 2 | <ex. rétention / ré-achat / runs utiles> | < Y | `metrics/review.md` |
+| 3 | <ex. CAC vs LTV tenu> | CAC > LTV | `metrics/review.md` |
+
+**Scorecard (Ph8 — 7 dimensions × 1-10 + verdict)** — <report le scorecard ou au moins son **Verdict** : 8-10 proceed · 6-7 conditional · 4-5 concerns · 1-3 stop/pivot. Rejoué sur les vraies métriques de l'étape 18, un verdict qui retombe en 1-3 = signal de kill/pivot.>
+
 ## Flags
 <!-- Ne pas sauter la section. Si aucun : « No flags identified ». -->
 - **Red :** <issue bloquante ou « — »>
