@@ -6,8 +6,8 @@ de conduite ; les hooks sont appliqués par Claude Code lui-même (pas par le ju
 
 ## Ce qu'il y a ici
 - **`hooks.json`** — déclaration auto-découverte par Claude Code (chemin standard
-  `hooks/hooks.json` du plugin). Deux hooks : `SessionStart` → `announce-plugin-root.sh` ;
-  `PreToolUse` avec `matcher: "Bash"` → `safety-guard.sh`.
+  `hooks/hooks.json` du plugin). Trois hooks : `SessionStart` → `announce-plugin-root.sh` ;
+  `PreToolUse` `matcher: "Bash"` → `safety-guard.sh` ; `PreToolUse` `matcher: "mcp__.*"` → `mcp-guard.sh`.
 - **`announce-plugin-root.sh`** — au démarrage de session, écrit dans le contexte la ligne
   `[saas-factory] {PLUGIN_ROOT} = /chemin/absolu` + la règle de résolution. C'est le **1er
   barreau** de l'échelle du §0 de `_shared/vendored-engine-protocol.md` : sans lui, les
@@ -15,20 +15,26 @@ de conduite ; les hooks sont appliqués par Claude Code lui-même (pas par le ju
   find de l'install). Fail-open : racine introuvable → n'annonce rien, ne casse jamais la
   session. Si `CLAUDE_PLUGIN_ROOT` est absent/invalide (issues connues selon la version),
   le script s'auto-localise.
-- **`safety-guard.sh`** — le garde. Lit le JSON de l'appel d'outil sur **stdin**, décide, répond
+- **`safety-guard.sh`** — le garde Bash. Lit le JSON de l'appel d'outil sur **stdin**, décide, répond
   en **JSON sur stdout** (`permissionDecision`) puis `exit 0`.
 - **`safety-guard.test.sh`** — la batterie de tests (80 cas : deny / ask / allow). À **relancer
   après toute modification** du garde : `bash hooks/safety-guard.test.sh`.
+- **`mcp-guard.sh`** — le garde MCP (même mécanique `permissionDecision`, matcher `mcp__.*`). Ferme
+  l'angle mort MCP (§Périmètre). **`mcp-guard.test.sh`** — 21 cas (destructif → ask / légitime → allow),
+  à relancer après toute modif : `bash hooks/mcp-guard.test.sh`.
 
-## Périmètre — ce que ce hook ne voit PAS (à savoir honnêtement)
-Le matcher est `"Bash"` : le hook n'intercepte **que l'outil Bash**. Concrètement :
-- Les **outils MCP** (`mcp__supabase__*`, `mcp__github__*`, `mcp__cloudflare__*`, MCP Vercel…)
-  **ne passent PAS par ce hook**. Un `DROP TABLE` envoyé via le MCP Supabase, une suppression
-  de repo via le MCP GitHub ou un delete DNS via le MCP Cloudflare ne déclenchent **rien** ici.
-  Pour ces surfaces, les garde-fous restent la **prose** de `_shared/safety-rails.md` (sandbox,
-  idempotence, sondes avant écriture) et les invariants des skills/provisioners — pas ce script.
-- Les autres outils natifs (`Write`, `Edit`…) ne passent pas par ici non plus.
-- Le hook ne voit **pas le chat** : il n'intercepte que les *tool calls* Bash.
+## Périmètre — ce que les hooks voient (à savoir honnêtement)
+Deux gardes `PreToolUse`, deux matchers complémentaires :
+- **`safety-guard.sh` (matcher `"Bash"`)** — n'intercepte que l'outil **Bash** (rm système, git/infra
+  destructif local + vecteurs distants CLI, secret en clair).
+- **`mcp-guard.sh` (matcher `"mcp__.*"`)** — intercepte les **outils MCP** : `DROP`/`TRUNCATE`/`DELETE`
+  sans WHERE dans un payload SQL (Supabase…), et tout outil dont le nom dénote une suppression de
+  ressource distante (`delete`/`destroy`/`remove` : repo GitHub, projet Vercel, DNS/Worker Cloudflare)
+  → **`ask`** (double confirmation §5, jamais `deny` — le provisioning create/insert/select passe).
+  **Ceci referme l'angle mort MCP** que ce README documentait auparavant. Tests : `mcp-guard.test.sh` (21 cas).
+- Restent hors couverture mécanique : les autres outils natifs (`Write`, `Edit`…) et le **chat**
+  (les hooks n'interceptent que des *tool calls*). Là, les garde-fous restent la **prose** de
+  `_shared/safety-rails.md` + les invariants des skills/provisioners.
 
 ## Trois niveaux (alignés sur safety-rails §5 et §4)
 | Tier | Décision | Effet | Périmètre |

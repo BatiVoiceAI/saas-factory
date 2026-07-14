@@ -19,6 +19,15 @@
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/safety-guard.sh\""
           }
         ]
+      },
+      {
+        "matcher": "mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/mcp-guard.sh\""
+          }
+        ]
       }
     ]
   }
