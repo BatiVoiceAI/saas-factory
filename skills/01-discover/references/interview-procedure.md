@@ -128,4 +128,4 @@ L'entretien a un **état courant**. Il ne **monte** d'un cran qu'une fois le **c
 Objectif de chaînage : l'aval **challenge et approfondit**, il ne **re-demande pas** les bases.
 
 ## Règle des questions
-Conduite transverse à **chaque** cran ci-dessus — une question à la fois (`AskUserQuestion`) · chaque question pédagogique · ne poser que ce qui manque (saute et dis-le) · pousser la spécificité sur problème/cible. Détail : *Principe des questions* dans `SKILL.md`.
+Conduite transverse à **chaque** cran ci-dessus — une question à la fois (`AskUserQuestion`) · chaque question pédagogique · ne poser que ce qui manque (saute et dis-le) · pousser la spécificité sur problème/cible · **🚨 plafond DUR de 7 prompts `AskUserQuestion` sur TOUT l'entretien (S0→S12), compteur inclus** : reformulation (S1), archétype/tenancy/locale (S10), KILL + confirmation (S12) comptent TOUS dans les 7 — déduis en silence tout le dérivable, et **si tu atteins 7, arrête de demander** et déduis le reste (« à confirmer en Phase 3 »). Détail : *Principe des questions* dans `SKILL.md`.

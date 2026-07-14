@@ -48,11 +48,12 @@ Tant que le brief n'est pas écrit, tu ne proposes **aucune solution**, tu n'éc
 - **Amorce l'aval** : le brief capte **de quoi lancer les 3 vagues de l'étape 2** sans ré-interroger — surtout les **concurrents connus** (Q4 Alternative actuelle, dont le statu quo Excel/papier/rien) et une **catégorie/marché assez précise pour cadrer une recherche** (déduite de Problème + Écosystème). L'étape 2 branche ces champs sur l'Intake du moteur `startup-competitors` (cf. `02-market/references/intake-mapping.md`) ; un champ flou ici = une recherche floue là-bas.
 
 ## Principe des questions (le cœur du déterminisme ici)
-La qualité du brief dépend entièrement de la conduite de l'entretien. Quatre règles :
+La qualité du brief dépend entièrement de la conduite de l'entretien. Cinq règles :
 - **Une question à la fois** (`AskUserQuestion`). Empiler les questions noie l'utilisateur et produit des réponses bâclées.
 - **Chaque question est pédagogique.** Explique d'abord *ce que tu demandes et pourquoi*, puis **détaille les options**. Une question brute (« quelle est ta cible ? ») renvoie une réponse-catégorie inutilisable.
 - **Ne pose que ce qui manque.** Si la description initiale répond déjà à un point, saute-le et dis-le (« tu as déjà couvert X, je passe »).
 - **Pousse pour la spécificité** sur les deux questions qui décident de tout — **problème** et **cible** — via le patron ci-dessous. La spécificité est la seule monnaie.
+- **🚨 PLAFOND DUR : jamais plus de 7 prompts `AskUserQuestion` sur TOUT l'intake — compte-les.** Exigence fondateur (« 0 à 7 questions, jamais plus »). Le budget de 7 couvre **tout** : questions de contenu **+** reformulation à valider **+** archétype/tenancy/locale **+** critère de KILL **+** confirmation de cadrage. Donc : **déduis en SILENCE** tout ce qui est dérivable (archétype/tenancy/`locale` par défaut — ne demande QUE si vraiment ambigu) ; **fusionne** le critère de KILL et la confirmation de cadrage dans la question de synthèse finale plutôt que d'ajouter des prompts ; priorise **Type → Problème → Cible**, puis le reste seulement s'il manque. **Si tu atteins 7 prompts, ARRÊTE de demander** : déduis le reste et note « à confirmer en Phase 3 ». Un intake à ≤ 7 prompts bien choisis vaut mieux qu'un interrogatoire.
 
 ## Patron de spécificité (à appliquer au problème ET à la cible)
 | | Problème | Cible |
