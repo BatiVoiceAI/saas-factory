@@ -6,8 +6,9 @@ de conduite ; les hooks sont appliqués par Claude Code lui-même (pas par le ju
 
 ## Ce qu'il y a ici
 - **`hooks.json`** — déclaration auto-découverte par Claude Code (chemin standard
-  `hooks/hooks.json` du plugin). Trois hooks : `SessionStart` → `announce-plugin-root.sh` ;
-  `PreToolUse` `matcher: "Bash"` → `safety-guard.sh` ; `PreToolUse` `matcher: "mcp__.*"` → `mcp-guard.sh`.
+  `hooks/hooks.json` du plugin). Quatre hooks : `SessionStart` → `announce-plugin-root.sh` ;
+  `PreToolUse` `matcher: "Bash"` → `safety-guard.sh` ; `PreToolUse` `matcher: "mcp__.*"` → `mcp-guard.sh` ;
+  `SubagentStop` `matcher: "feature-dev"` → `machine-gate.sh`.
 - **`announce-plugin-root.sh`** — au démarrage de session, écrit dans le contexte la ligne
   `[saas-factory] {PLUGIN_ROOT} = /chemin/absolu` + la règle de résolution. C'est le **1er
   barreau** de l'échelle du §0 de `_shared/vendored-engine-protocol.md` : sans lui, les
@@ -22,6 +23,10 @@ de conduite ; les hooks sont appliqués par Claude Code lui-même (pas par le ju
 - **`mcp-guard.sh`** — le garde MCP (même mécanique `permissionDecision`, matcher `mcp__.*`). Ferme
   l'angle mort MCP (§Périmètre). **`mcp-guard.test.sh`** — 21 cas (destructif → ask / légitime → allow),
   à relancer après toute modif : `bash hooks/mcp-guard.test.sh`.
+- **`machine-gate.sh`** — hook `SubagentStop` (matcher `feature-dev`) qui **rend mécanique le plancher
+  machine** (`_shared/lessons.md §18`) : à la fin d'une lane, exécute `verify:machine` dans le projet ;
+  rouge → `{"decision":"block"}` (le feature-dev corrige avant que son DEV-DONE ne remonte la cascade 13).
+  **Fail-open** (cwd illisible / pas de projet / pas de npm → laisse finir). **`machine-gate.test.sh`** — 7 cas.
 
 ## Périmètre — ce que les hooks voient (à savoir honnêtement)
 Deux gardes `PreToolUse`, deux matchers complémentaires :

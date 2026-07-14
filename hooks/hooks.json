@@ -29,6 +29,17 @@
           }
         ]
       }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "feature-dev",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/machine-gate.sh\""
+          }
+        ]
+      }
     ]
   }
 }
