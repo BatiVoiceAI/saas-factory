@@ -2,6 +2,14 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.9.0] — 2026-07-13
+### Ajouté — Chantier B : l'automation devient un archétype de PREMIÈRE CLASSE dans le jugement
+> Trou d'audit (rétro StockSentinel) : 13-reviews, 18-metrics et 19-retro n'avaient AUCUNE conscience d'archétype → un worker headless était faux-négativé par le cran Designer (FAIL « pas d'empty-states »), puis mesuré contre un funnel AARRR inexistant. 12 et 14 étaient conditionnés, pas eux.
+- **Cascade 13 archétype-aware (édition strictement additive — chemin web-saas inchangé, prouvé par diff G4)** : le cran **Designer est `N/A` tracé** pour `automation` (headless, pas de surface), l'edge (boucle fermée + idempotence) passe au **CEO-persona** — exactement ce que l'étape 10 écrivait déjà dans la spec de validation. `N/A` **formalisé dans `verdict-schema.md`**. Câblé dans : `cascade-protocol.md` (chaîne), `agents/designer.md` (garde anti-faux-négatif en tête + verdict N/A), `reviewer-playbooks.md` / `review-gates.md` / `SKILL.md` (cran 3). Plus jamais de FAIL Designer sur du headless.
+- **Walking-skeleton automation** (`12-build/walking-skeleton.md`) : branche headless complète (config zod → 1 run → effet persisté → `run_log` → boucle fermée → idempotence 2-grains) + DoD dédiée ; gestes de fondation web-saas (charte/visuels/shell) déclarés N/A headless.
+- **Plancher machine du châssis automation** : nouveau `_shared/blocks/automation/scripts/verify-machine.mjs` (auto-contenu, zéro dépendance) portant **lint:secrets** (le worker manipule SERVICE_ROLE/RESEND/WEBHOOK) + **lint:sql** (classe 42702 des migrations) ; `npm run verify:machine` **vert** (8 fichiers src + 2 migrations). Comble l'absence de plancher pour l'archétype qui en avait le plus besoin.
+- **18-metrics + 19-retro archétype-aware** : 18 lit des **métriques de run** (succès des runs, entités traitées, idempotence, fraîcheur, taux d'alerte via `run_log`/healthcheck) au lieu d'un funnel PostHog inexistant ; 19 juge le plan « produit » d'un automation sur la fiabilité/idempotence/boucle fermée, critère de kill run-based. `tsc` automation + web-saas verts.
+
 ## [0.8.0] — 2026-07-13
 ### Ajouté — Chantier A : la boucle de MESURE est enfin câblée (pilier de vision tenu)
 > Trou d'audit (run AgencyDesk) : `capture()` n'était posé à AUCUN call-site produit → funnel d'activation muet, Phase 6 aveugle au 1er run. Corrigé de bout en bout, **en miroir des notifications** (câblées au call-site, elles).

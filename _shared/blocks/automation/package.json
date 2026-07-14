@@ -13,7 +13,8 @@
     "test": "node --test --import tsx \"test/**/*.test.ts\"",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
-    "run:once": "tsx src/index.ts"
+    "run:once": "tsx src/index.ts",
+    "verify:machine": "node scripts/verify-machine.mjs"
   },
   "dependencies": {
     "zod": "^3.23.8"

@@ -8,6 +8,7 @@ Tous les crans de la cascade (Tech Lead, CTO, Designer, CEO) rendent leur verdic
   - `CONCERNS` — passe **avec réserve tracée** (non bloquant ; la réserve est loguée pour le client-review).
   - `FAIL` — **veto** → **retour dev** (étape 12).
   - `WAIVED` — dérogation **explicitement tracée + justifiée** (ex. contrainte assumée).
+  - `N/A` — **cran non applicable à l'archétype** (ex. cran **Designer** sur un `automation` headless — pas de surface visuelle). Traçé, **laisse monter** au cran suivant, **jamais un `FAIL`** déguisé. L'edge de la feature est alors porté par un autre cran (automation : boucle fermée + idempotence → **CEO-persona**, `skills/10-execution-plan/references/validation-spec.md` §Variante AUTOMATION). N'utiliser que pour une **non-applicabilité d'archétype**, pas pour esquiver un jugement dû.
 - **Confiance** : **1-10** par finding important (calibration façon gstack).
 - **Preuve citée** : chaque finding **cite la/les ligne(s)** (`fichier:ligne`) qui la motive.
 

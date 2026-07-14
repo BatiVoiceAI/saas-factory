@@ -12,7 +12,26 @@ Avant **tout** fan-out, on fait tourner une tranche verticale mince de bout en b
    └──────────────── une seule tranche verticale, qui TOURNE ────────────────┘
 ```
 
-## Procédure (séquentielle, PAS de parallélisme ici)
+> **La tranche ci-dessus (et toute la procédure web-saas plus bas) est celle de `web-saas`.** Le skeleton est **conditionné par archétype** (`_shared/state-schema.md` §socle-par-archétype). Pour un **`landing`** : tranche = `page statique brandée → formulaire waitlist → POST → lead persisté → confirmation (boucle fermée)` (pas d'auth ni d'entité produit). Pour un **`automation` (headless)**, voir l'encart ci-dessous — les gestes de fondation web-saas (charte, visuels Nano Banana, retrait du shell d'exemple, redirections post-login) sont **N/A** (pas d'UI).
+
+### Walking skeleton `automation` (headless — remplace la procédure web-saas)
+La tranche verticale prouve que **le worker tourne de bout en bout**, pas qu'un écran s'affiche :
+```
+   [ config valide ]──►[ 1 run déclenché ]──►[ effet réel ]──►[ log/run_log ]──►[ boucle fermée ]
+      zod fail-fast ✔      manuel/tick ✔       persisté ✔        historisé ✔       notifie proprio ✔
+   └──────── une seule exécution, idempotente, observable, qui TOURNE ────────┘
+```
+**Gestes de fondation automation** (écrivain unique, avant tout fan-out — châssis `_shared/blocks/automation/`) :
+1. **Config validée** : `config.ts` (zod fail-fast) charge les secrets requis + **au moins un canal de notif** ; un secret manquant plante au démarrage, pas au 1er run.
+2. **Un run s'exécute** : le point d'entrée (`index.ts`) exécute **une** passe du travail cœur (le verbe central du PRD : « surveille X », « synchronise Y ») déclenchée à la main ou par un tick.
+3. **Effet réel persisté** : l'effet attendu est **réellement produit et vérifiable à la source** (ligne écrite / message posté / fichier généré), via `store.ts` (**idempotence d'entité** : index unique partiel + upsert atomique).
+4. **Run historisé** : `runs.ts` écrit dans `run_log` (AU2) — début/fin, statut, logs ; le healthcheck (AU3) reflète le dernier run.
+5. **Boucle fermée** : `notify.ts` **alerte le propriétaire** sur run échoué (toujours) / réussi (selon enjeu) — `Promise.allSettled`, ne lève jamais (AU4, `_shared/boucles-fermees.md`).
+6. **Idempotence 2-grains prouvée** : `idempotency.ts` (grain **run** : claim-avant, fenêtre `windowSec`) + `store.ts` (grain **entité**) — **re-jouer le même déclencheur ne double NI l'effet NI l'entité**. C'est l'edge dur de l'archétype (porté par le CEO-persona en cascade, cf. `skills/13-reviews/references/cascade-protocol.md` §Conditionnement).
+
+**DoD skeleton automation** : `npm run verify:machine` **vert** (plancher, cf. `integration-pass.md`) · 1 run réel exécuté (trace `run_log`) · effet vérifié à la source · **re-run = 0 doublon** (les deux grains) · boucle fermée reçue par le propriétaire · **0 secret en dur** (`lint:secrets`). Mergé sur `main` avant le fan-out. *(Charte / visuels / shell d'exemple / empty-states / redirections post-login = **N/A headless** — ne pas les exiger, faux-négatif d'archétype.)*
+
+## Procédure (séquentielle, PAS de parallélisme ici) — `web-saas`
 0. **Gestes de fondation** (avant de câbler quoi que ce soit, écrivain unique) : applique la **charte** (`app/globals.css` + `tailwind.config` depuis `DESIGN.md`) **et** brande l'**identité** — renseigne `lib/brand.ts` (`name`, `tagline`, `description`) depuis `research/positioning.md` + `product/pricing.md`. C'est ici, une seule fois, que le produit cesse d'être générique : le `<title>`, le wordmark d'auth et la sidebar consomment `lib/brand.ts`. Le défaut `"SaaS Factory Template"` doit avoir **disparu** du repo avant le fan-out.
 0 bis. **Retirer la tuyauterie exemple du châssis** (même écrivain unique, même 1er geste) : le châssis livre un **shell d'exemple** — un **gabarit à cloner, PAS le produit**. Le walking skeleton le **supprime** dès qu'il pose la vraie surface, sur trois artefacts :
    - **entité CRUD d'exemple `items`** : `app/(app)/items/*` (`page.tsx`, `actions.ts`), `components/items/*` (`item-form.tsx`), `lib/schemas/item.ts`, migration `supabase/migrations/0002_items.sql`. *(Le patron générique `lib/crud/factory.ts` **reste** — c'est le modèle qu'on **clone** pour les vraies entités du PRD ; c'est l'**instance `items`** qui disparaît.)*

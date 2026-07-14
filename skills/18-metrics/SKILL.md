@@ -18,6 +18,11 @@ Lis `type` dans `.saas-factory/state.md` (défaut prudent : `public`) et calibre
 - `interne` → **adoption interne** : qui utilise, à quelle fréquence, sur le workflow cœur — pas d'acquisition ni de revenu marché.
 - `perso` → **usage réel, allégé** : l'outil sert-il vraiment (fréquence, dernière utilisation) — pas de funnel, pas de %.
 
+## Garde archétype (AVANT la garde type — change la SOURCE de données)
+Lis `archetype` dans `.saas-factory/state.md`. Le funnel AARRR/PostHog ci-dessous suppose une **surface web avec des utilisateurs** — vrai pour `web-saas` et `landing`, **faux pour `automation`** (headless, pas de PostHog activé à l'étape 17 : `skills/17-deploy/references/automation-deploy.md` retire les events funnel du pré-vol). N'essaie pas de lire un funnel qui n'existe pas — ce serait le symétrique du « funnel muet ».
+- **`web-saas` / `landing`** → funnel PostHog + Sentry, procédure ci-dessous **telle quelle** (calibrée ensuite par `type`).
+- **`automation` (headless)** → **métriques de RUN**, pas d'AARRR. Source = `run_log` (AU2) + healthcheck (AU3) + les notifs de boucle fermée (AU4), pas PostHog. On lit : **taux de succès des runs** (OK / échec sur la fenêtre), **entités traitées** par run (le worker fait-il un vrai travail ou tourne à vide ?), **idempotence tenue** (0 doublon constaté), **fraîcheur** (dernier run réussi vs cadence attendue), **taux d'alerte** (combien de runs ont notifié un échec au propriétaire). L'« activation » d'un automation = **le 1er run réussi qui a produit un effet réel + rapport reçu** (aha moment AU, `skills/07-product-spec/references/completeness-baseline.md`). Le HARD GATE de suffisance et le pré-vol honnêteté s'appliquent identiquement (un `run_log` vide = **rien déployé/déclenché**, pas « 0 % de succès »). Détail Sentry/santé inchangé.
+
 ## À lire d'abord (une fois)
 `_shared/lessons.md`, `_shared/safety-rails.md` ; si présent, `skills/phase-6-after/references/conventions.md`. Puis les **inputs** : le PRD (`product/*`) + `product/pricing.md` (l'attendu) + le déploiement (étape 17, tracking actif).
 **Pré-vol honnêteté** : on lit la donnée telle qu'elle est. On **ne moyenne pas** un mauvais signal avec un bon pour un tiède rassurant, on **ne comble pas** un trou de tracking par une estimation présentée comme un fait, et on distingue toujours **[Data]** (mesuré) / **[Estimate]** (extrapolé) / **[Assumption]** (inféré). Un bilan qui rassure à tort fait perdre à l'utilisateur son prochain sprint — c'est un échec.
@@ -26,8 +31,8 @@ Lis `type` dans `.saas-factory/state.md` (défaut prudent : `public`) et calibre
 **Avant toute lecture de funnel**, vérifie que le volume est suffisant pour que les chiffres veuillent dire quelque chose. Un funnel à 6 visiteurs n'est pas un signal, c'est du bruit — en tirer une piste d'itération est une faute. Si le volume est sous le seuil : **dis-le**, produis un bilan « pré-signal » (santé Sentry + check que le tracking émet bien), et recommande d'attendre / de pousser l'acquisition avant d'itérer. Ne fabrique jamais une lecture statistique sur 3 events. → seuils exacts, check tracking-vivant, sorties possibles : `references/reading-procedure.md`.
 
 ## Le moteur (on dépend)
-- **PostHog** (activation, funnel, rétention) — déjà activé à l'étape 17.
-- **Sentry** (erreurs, crashs, santé).
+- **PostHog** (activation, funnel, rétention) — déjà activé à l'étape 17. **`web-saas` / `landing` uniquement** ; pour `automation`, la source est `run_log` (AU2) + healthcheck (AU3), pas PostHog (cf. Garde archétype).
+- **Sentry** (erreurs, crashs, santé) — universel (web-saas, landing, **et** le worker automation).
 - *(On s'inspire du skill PM `metrics-review` d'Anthropic pour la structure du bilan.)*
 
 ## Références (la profondeur — charge à l'usage)

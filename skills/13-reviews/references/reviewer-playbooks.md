@@ -112,6 +112,9 @@ Sortie de tout cran : un **bloc verdict** (voir `assets/templates/cascade-verdic
 ---
 
 # Cran 3 — Designer (`agents/designer.md`)
+
+> **Conditionnement par archétype (à évaluer AVANT tout).** Ce cran juge une **surface visuelle**. Pour un **`automation`** (headless, pas d'UI), il est **N/A** : rends un verdict `N/A` tracé (« archétype headless — pas de surface à juger ; edge porté par le CEO-persona ») et **laisse monter** la feature vers le CEO-persona. **Ne produis JAMAIS un `FAIL`** pour « `DESIGN.md` non appliqué / pas d'empty-states / a11y non vérifiable » sur du headless — c'est le **faux-négatif d'archétype** (`_shared/state-schema.md` §socle-par-archétype ; l'étape 10 l'a déjà déclaré N/A dans la spec de validation). `web-saas` et `landing` (surfaces réelles) → cran complet ci-dessous, **inchangé**.
+
 **Lentille : conformité `DESIGN.md` + UX + accessibilité + anti-slop.** Il ne juge pas « joli » au feeling : il **compare au système** (DESIGN.md), passe la **checklist anti-slop** de `_shared/design-doctrine.md` (binaire, pas d'interprétation) et **audite l'a11y** avec l'outil vendoré.
 
 ### Sous-procédure (dans l'ordre)

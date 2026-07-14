@@ -16,6 +16,8 @@ Structure d'analyse : *Strengths · Critical · Important · Minor*. On le clone
 > **Traçabilité `[SÉCU]` → registre de solde.** Tout `[SÉCU]` (levé ici ou hérité du plan `tech/execution-plan.md`) doit être **soldé**, jamais perdu : il atterrit dans le registre `tech/plan-ledger.md` (*fait (fichier) / repoussé (raison tracée + décision humaine)*, posé à la passe d'intégration de l'étape 12) et la **porte « plan soldé »** de l'étape 14 **ferme** si un `[SÉCU]` est sans ligne (`skills/14-qa/references/plan-solde-gate.md`, P0.1).
 
 ## Cran 3 — Designer (`agents/designer.md`)
+> **`automation` (headless) → cran N/A** (verdict `N/A` tracé, la feature monte au CEO-persona qui porte l'edge boucle fermée + idempotence) — jamais un `FAIL` pour absence de surface. `web-saas` / `landing` → cran complet ci-dessous. Cf. `cascade-protocol.md` §Conditionnement + `agents/designer.md`.
+
 **Conformité `DESIGN.md` + UX + accessibilité + anti-slop/convergence** : tokens / composants / hiérarchie visuelle, **états** (loading / vide / erreur / succès), parcours clair ; **a11y** via le moteur vendoré `{PLUGIN_ROOT}/vendor/accessibility-review/SKILL.md` (exécuté — playbook Designer ; WCAG 2.1 AA : contraste, clavier, cibles 44px, lecteur d'écran) ; **anti-slop + porte distinctiveness** via la checklist binaire de `_shared/design-doctrine.md` (**19 points**), passée **point par point** sur le rendu desktop + mobile — dont **rationale par page tenu** (18 : la surface correspond à sa ligne « intention » de `DESIGN.md`) et **`prefers-reduced-motion` respecté** (19). **Un marqueur coché = `FAIL`** → retour dev (pas de rustine ponctuelle).
 
 ## Cran 4 — CEO (`agents/ceo.md`)
