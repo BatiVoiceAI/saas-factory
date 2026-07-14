@@ -58,7 +58,13 @@ C'est ce que **l'humain lit à la porte** : **zéro jargon**, **auto-suffisant**
 Croise **marché × edge × demande × risques**. **On hérite, on ne re-cote pas** : Demande & Edge héritent des verdicts de l'étape 4 (table d'héritage, plafonnée par `market.md` §Fiabilité) ; Marché hérite de `market.md` § « Taille servable & dynamique » ; Risques s'énumèrent via la mini-taxonomie (5 familles). Deux garde-fous : **anti-flagornerie** (prends position, bannis « intéressant » / « ça peut marcher » ; si l'idée doit mourir, dis-le + dis ce qui changerait ton avis) ; **humilité** (demande inférée des avis → « plausible », « à valider par toi », jamais une certitude). → Table d'héritage + cotation des axes + matrice de décision + clause « ce qui le ferait basculer » : `references/verdict-engine.md`.
 
 ### 5. LA PORTE — décision explicite via `AskUserQuestion`
-Présente le **bloc §Décision — le POURQUOI** (en tête du brief, non-technique, auto-suffisant) + ton **verdict**, puis demande explicitement l'issue. **N'écris jamais la suite sans sa réponse.** → Machine à états, recette forcing de la porte (réponses à refuser) + routage détaillé : `references/gate-and-routing.md`.
+**D'abord, rends le brief en DOCUMENT accessible** (exigence fondateur : tout livrable présenté à l'humain est consultable par un non-tech, pas du markdown brut en chat). Lance le renderer zéro-dépendance :
+```bash
+node {PLUGIN_ROOT}/scripts/render-report.mjs research/opportunity-brief.md research/opportunity-brief.html "Note d'opportunité"
+```
+→ produit `research/opportunity-brief.html` (stylé, prêt à **Imprimer → Enregistrer en PDF**). **Présente ce document à l'utilisateur** (ouvre-le / preview dans le navigateur ; à défaut, pointe-lui le chemin du fichier) — c'est SA note d'opportunité, lisible.
+
+Puis présente le **bloc §Décision — le POURQUOI** (en tête du brief, non-technique, auto-suffisant) + ton **verdict**, et demande explicitement l'issue via `AskUserQuestion`. **N'écris jamais la suite sans sa réponse.** → Machine à états, recette forcing de la porte (réponses à refuser) + routage détaillé : `references/gate-and-routing.md`.
 
 > 🚨 **Nombre d'issues = fonction de la route.** **`public`** → **4 issues** (dont **Go-test**). **Routes allégées (`interne`/`perso`) ET archétype `automation`** → **3 issues** (**Go / Ajuster / No-Go**), **SANS Go-test** : le Go-test sonde une **demande marché** (landing + waitlist), sans objet quand il n'y a pas de marché (`go-test-playbook.md` : « un outil interne/perso ne se waitlist pas » ; cf. `references/lite-mode.md`). Ne propose Go-test que sur la route publique.
 

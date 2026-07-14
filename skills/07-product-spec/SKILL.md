@@ -71,4 +71,10 @@ Aux points de décision (workflow cœur, feature orpheline, périmètre MVP, bou
 - **Amorce pricing.** La liste des Must (§ Périmètre livré) est la **référence** du gate « pricing = features livrées » : le pricing (06) ne vend que ce que les Must couvrent ; 12/15 vérifient le livré.
 
 ## Porte (fin d'étape 7)
-Présente à l'utilisateur : le résumé du PRD (les features **Must** avec profondeur, l'**aha moment**, l'adaptation du **socle « produit complet »**, les **boucles fermées** des actions de valeur, le périmètre **MVP** + **Périmètre livré (référence pricing)**, les **non-goals**), et demande validation (`AskUserQuestion`) avant de passer au design (étape 8). Ajustable — s'il veut retirer/ajouter, reboucle. Puis mets à jour `.saas-factory/state.md`.
+**D'abord, rends le PRD en DOCUMENT accessible** (exigence fondateur : la liste des fonctionnalités métier se lit comme un document, pas du markdown brut) :
+```bash
+node {PLUGIN_ROOT}/scripts/render-report.mjs product/product-spec.md product/product-spec.html "Fonctionnalités du produit"
+```
+→ `product/product-spec.html` (stylé, Imprimer → PDF). **Présente ce document à l'utilisateur** (ouvre-le / preview ; à défaut pointe le chemin).
+
+Puis présente le résumé du PRD (les features **Must** avec profondeur, l'**aha moment**, l'adaptation du **socle « produit complet »**, les **boucles fermées** des actions de valeur, le périmètre **MVP** + **Périmètre livré (référence pricing)**, les **non-goals**), et demande validation (`AskUserQuestion`) avant de passer au design (étape 8). **Ajustable — s'il veut retirer/ajouter/modifier une fonctionnalité, reboucle** (re-rends le document). Puis mets à jour `.saas-factory/state.md`.
