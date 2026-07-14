@@ -20,7 +20,7 @@ port = 54323
 
 [auth]
 enabled = true
-# URL de base du site, utilisée pour les redirections OAuth / magic link.
+# URL de base du site, utilisée pour les redirections OAuth (PKCE callback).
 # Défaut LOCAL ci-dessous. En prod, `provisioner-db` pose en autonomie (API
 # Management Supabase) site_url = "https://<slug>.<config.domain>".
 site_url = "http://localhost:3000"
@@ -29,6 +29,16 @@ site_url = "http://localhost:3000"
 # ("https://<slug>.<config.domain>/auth/callback").
 additional_redirect_urls = ["http://localhost:3000/**", "http://localhost:3000/auth/callback"]
 jwt_expiry = 3600
+# --- Politique de mot de passe (flux OTP → mot de passe) ----------------------
+# Alignée sur la validation zod de `lib/auth/actions.ts` (8–72 caractères, au
+# moins une lettre + un chiffre). GoTrue applique la même règle CÔTÉ SERVEUR :
+# `updateUser({password})` / `signInWithPassword` refusent un mot de passe hors
+# politique, même si un appel contourne la validation client. En prod,
+# `provisioner-db` pose les mêmes valeurs via l'API Management.
+minimum_password_length = 8
+# Options GoTrue : "" | "letters_digits" | "lower_upper_letters_digits" |
+# "lower_upper_letters_digits_symbols".
+password_requirements = "letters_digits"
 # ENROLLMENT PAR TYPE (déploiement privé). En LOCAL, signup ouvert (dev). En PROD,
 # `provisioner-db` (11-project-setup) pose l'enrollment selon le `type` via l'API
 # Management : `interne`/`perso` ⇒ `disable_signup = true` (autorité du refus des
@@ -39,33 +49,45 @@ enable_signup = true
 
 [auth.email]
 enable_signup = true
-# --- PASSWORDLESS (OTP + magic link) = LE flux d'auth du châssis -------------
-# Pas de mot de passe : connexion ET création de compte passent par un code à
-# 6 chiffres + magic link envoyés dans le même e-mail (`signInWithOtp`).
-# Saisir le code ou cliquer le lien prouve la possession de la boîte mail :
-# l'e-mail est vérifié PAR CONSTRUCTION.
+# --- OTP → MOT DE PASSE = LE flux d'auth du châssis --------------------------
+# L'authentification par MOT DE PASSE est active (fournie par le provider e-mail
+# quand il est activé) : la connexion se fait par `signInWithPassword`.
+# L'INSCRIPTION vérifie d'abord l'e-mail par un CODE OTP à 6 chiffres
+# (`signInWithOtp` → `verifyOtp`), puis pose le mot de passe (`updateUser`).
+# ⚠️ PLUS DE MAGIC LINK : l'e-mail d'OTP ne doit contenir QUE le code.
 #
-# `enable_confirmations` est donc SANS OBJET pour ce flux (il ne gouverne que
-# la confirmation des inscriptions par mot de passe) — laissé à false.
-enable_confirmations = false
-# Longueur du code (6-10 chiffres). 6 = défaut GoTrue, attendu par l'écran de
-# vérification du châssis.
+# `enable_confirmations = true` : une adresse doit être vérifiée avant d'être
+# utilisable. Dans notre flux, cette vérification est faite PAR L'OTP d'inscription
+# (`verifyOtp` confirme l'e-mail et ouvre la session) — on n'emprunte jamais le
+# chemin `signUp({email,password})` qui, lui, enverrait un lien de confirmation.
+enable_confirmations = true
+# Sécurise le changement de mot de passe (re-vérification requise). Sans objet
+# pour notre flux (la session vient d'un OTP frais), laissé au défaut sûr.
+secure_password_change = false
+# Longueur du code OTP (6-10 chiffres). 6 = défaut GoTrue, attendu par l'écran
+# de vérification à 6 cases du châssis (components/auth/otp-input.tsx).
 otp_length = 6
-# Validité du code ET du magic link, en SECONDES. 600 = 10 min : assez pour
-# ouvrir sa boîte mail, trop court pour un brute force confortable. En prod,
-# `provisioner-db` pose la même valeur via l'API Management (`mailer_otp_exp`).
+# Validité du code OTP, en SECONDES. 600 = 10 min : assez pour ouvrir sa boîte
+# mail, trop court pour un brute force confortable. En prod, `provisioner-db`
+# pose la même valeur via l'API Management (`mailer_otp_exp`).
 otp_expiry = 600
 # Intervalle minimal entre deux e-mails d'auth pour une même adresse. Aligné
-# sur le cooldown de 60 s du bouton « Renvoyer le code » de l'écran de
-# vérification (components/auth/auth-form.tsx).
+# sur le cooldown de 60 s du bouton « Renvoyer le code » des écrans d'auth
+# (components/auth/signup-form.tsx, reset-form.tsx).
 max_frequency = "1m"
+
+# --- TEMPLATE OTP EN PROD : CODE SEUL, PAS DE MAGIC LINK ---------------------
+# En prod, `provisioner-db` pose EN AUTONOMIE (API Management Supabase) le
+# template d'e-mail d'OTP de sorte qu'il ne contienne QUE le code `{{ .Token }}`
+# — RETIRER `{{ .ConfirmationURL }}` / tout lien de connexion. C'est la garantie
+# « 0 magic link » côté e-mail (le flux UI n'en propose déjà aucun).
 
 # --- SMTP custom (Resend) — LOCAL / SELF-HOST uniquement ---------------------
 # En CLOUD, c'est `provisioner-db` qui pose ce SMTP EN AUTONOMIE via l'API
 # Management Supabase (le SMTP custom retire la limite de débit du SMTP intégré
-# ⇒ e-mails OTP/magic link sans upgrade payant). Ce bloc ne sert QUE pour un
-# Supabase local/self-host : décommenter pour tester l'envoi des codes/liens
-# de connexion en local.
+# ⇒ e-mails d'OTP sans upgrade payant). Ce bloc ne sert QUE pour un Supabase
+# local/self-host : décommenter pour tester l'envoi des codes de connexion en
+# local.
 # Même domaine d'envoi générique que le transactionnel (From noreply@<domain>).
 # Le secret RESEND_API_KEY est lu depuis .env — jamais en clair ici.
 # [auth.email.smtp]

@@ -29,7 +29,7 @@ Le SKILL.md reste l'aperçu chef-d'orchestre. Le **détail actionnable** est dan
 ## Principe — exécuter, pas refaire
 `startup-competitors` est un pipeline éprouvé (3 vagues → synthèse → vérification adversariale). Le refaire à la main serait plus lent, moins répétable, et réintroduirait de l'impro. **Ta valeur = l'exécuter fidèlement, le calibrer, brancher ses sorties sur nos artefacts.**
 
-## À lire (le moteur et ses references) — `vendor/startup-skill/startup-competitors/`
+## À lire (le moteur et ses references) — `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/`
 - `SKILL.md` — le pipeline complet (Intake → 3 waves → Synthèse → Vérification).
 - `references/research-wave-1-profiles-pricing.md` — profils + intelligence prix.
 - `references/research-wave-2-sentiment-mining.md` — **review-mining** (avis clients). **Réutilisé à l'étape 4** — on ne jette pas ses sorties brutes.
@@ -37,7 +37,7 @@ Le SKILL.md reste l'aperçu chef-d'orchestre. Le **détail actionnable** est dan
 - `references/verification-agent.md` — vérif adversariale → `market.md` §Fiabilité & confiance.
 - `references/honesty-protocol.md` + `references/research-principles.md` (tiers de sources).
 
-> **Comment un sous-agent (`Task`) exécute ce moteur** (passer le CHEMIN vs distiller la procédure + quand choisir) : `_shared/vendored-engine-protocol.md`.
+> **Comment un sous-agent (`Task`) exécute ce moteur** (résoudre `{PLUGIN_ROOT}` en chemin ABSOLU **d'abord** — §0 —, puis passer le CHEMIN vs distiller la procédure + quand choisir) : `_shared/vendored-engine-protocol.md`. Un `Read vendor/…` relatif depuis le projet échoue : résous, vérifie (Read), puis dispatche.
 
 ## Entrée — brancher l'idea-brief sur l'Intake du moteur (ne ré-interroge pas)
 Le moteur démarre par un Intake (interview). **On le court-circuite** : l'utilisateur a déjà été interviewé à l'étape 1. Extrais de `research/idea-brief.md` : produit ← Idée reformulée · problème/cible ← Problème & Cible · concurrents connus ← Alternative actuelle + Signal · géo/langue ← Écosystème · langue de sortie = celle de l'utilisateur (français par défaut). Le moteur ne repose ses questions que si un point manque vraiment.

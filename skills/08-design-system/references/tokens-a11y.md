@@ -27,7 +27,8 @@ Un token décoratif (« ombres douces », « vibe premium », « coins arrondis 
 | **Spacing** | base 4px, échelle | échelle Tailwind par défaut (`p-1`=4px…) — **ne pas** inventer une échelle parallèle |
 | **Radius** | `--radius` unique (personnalité de la recette) | `borderRadius.lg/md/sm` dérivés de `--radius` (convention shadcn) |
 | **Élévation / ombres** | **bordures 1px par défaut** + UNE ombre tokenisée | `border` (`var(--border)`) pour délimiter ; `--shadow-elevated` réservée aux éléments flottants (popover, dialog) — pas de `shadow-lg` saupoudré (doctrine) |
-| **Motion** | durée + easing | `duration-150/200/300` + `ease-in-out/out` ; transitions déclarées |
+| **Motion (état)** | durée + easing | `duration-150/200/300` + `ease-in-out/out` ; transitions déclarées ; **Motion** (MIT) par défaut |
+| **Direction motion (assets)** | runtime + fallback reduced-motion | `<MotionAsset>` (patron châssis, lazy, theming-aware) route Motion/**dotLottie**/**Rive**/GSAP (M7) ; `useReducedMotion` (matchMedia `prefers-reduced-motion: reduce`) → 3 niveaux de fallback ; asset re-thémé aux tokens |
 | **Composants** | shadcn/ui + Lucide | nommés par leur composant shadcn (`Button`, `Card`, `Dialog`…) + variantes/états |
 
 **Règle de rôle sémantique :** définir les couleurs en **rôles** (`primary`, `background`, `foreground`, `muted`, `destructive`, `border`, `ring`), **pas** en teintes brutes (`blue-500`). C'est ce qui rend le **dark mode** quasi gratuit (M6) et les mockups cohérents. Rappel doctrine : **1 seule couleur de marque** (jamais indigo/violet), **jamais d'hex en dur** dans les composants.
@@ -76,6 +77,7 @@ destructive-fg    sur  destructive       (alerte)           ≥ 4.5:1
 - [ ] **Paire** de polices (display + corps) via **Google Fonts** avec plan de chargement, exposée en `--font-display`/`--font-sans`/`--font-mono`.
 - [ ] **Toutes** les paires texte/fond vérifiées AA, **en light ET dark**.
 - [ ] Cibles tactiles ≥ 44px.
+- [ ] **Direction motion buildable** : runtime déclaré (M7), `<MotionAsset>` lazy/theming-aware, **`prefers-reduced-motion`** géré via `useReducedMotion` (3 niveaux de fallback) — aucune animation sans fallback.
 - [ ] Ratios AA consignés dans `DESIGN.md`.
 
 ## Modes d'échec (et correction)

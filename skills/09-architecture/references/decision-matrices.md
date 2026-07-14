@@ -61,7 +61,7 @@ Point de départ : `_shared/stack-defaults.md`. On ne dévie **que** si une exig
 
 | Catégorie | Défaut | Déviation seulement si… | Sinon |
 |---|---|---|---|
-| Web full-stack | Next.js 15 (App Router, TS strict) | exigence non-web dure (desktop natif, offline-first) | `[Défaut]` |
+| Web full-stack | Next.js 15 (App Router, TS strict) | exigence non-web dure : desktop natif / offline-first (fork natif) · **livrable HEADLESS** (worker / cron / bot / intégration, pas d'UI produit) → archétype `automation`, **pas** forcé en app Next.js à dashboard | `[Défaut]` (archétype `web-saas`) |
 | BDD + Auth | Supabase (Postgres, RLS, Auth) | isolation physique imposée · besoin non-relationnel prouvé | `[Défaut]` |
 | Hébergement | Vercel | edge global dur · self-host imposé (coût/souveraineté) → Coolify/CF | `[Défaut]` |
 | DNS + CDN | Cloudflare | — | `[Défaut]` |
@@ -71,9 +71,18 @@ Point de départ : `_shared/stack-defaults.md`. On ne dévie **que** si une exig
 | Backend edge | Route API Next.js | latence edge globale dure → CF Workers + D1/KV | `[Défaut]` |
 | Paiement | Stripe (web) | mobile natif → RevenueCat | `[Défaut]` (ou pas de paiement si le projet ne vend pas) |
 | Obs / analytics | Sentry + PostHog | — | `[Défaut]` |
-| Jobs/async | Worker (queue) déclenché par webhook/cron | — (le besoin async vient du data-flow, pas d'une techno) | modélise le job, reste sur l'infra par défaut |
+| Jobs/async **au sein d'un web-saas** | Worker (queue) déclenché par webhook/cron | — (le besoin async vient du data-flow, pas d'une techno) | sous-composant async : modélise le job (§5), reste sur l'infra par défaut. *Un livrable dont le job **EST** le produit (headless, sans dashboard) n'est pas un sous-composant mais l'archétype `automation` de 1er rang — cf. note ci-dessous.* |
 
 Toute case « déviation » cochée = **un ADR** (`adr-template.md`). Budget : ≤ 1-2 déviations hors edge produit.
+
+### §4-bis — Archétype `automation` : livrable headless de 1er rang (✅ scaffold LIVRÉ)
+La déviation hors web ne se limite **plus** au natif : un **worker / cron / bot / intégration HEADLESS** est un livrable **légitime et autonome**, pas un sous-composant async d'une app Next.js à dashboard. Sélectionné par l'**archétype** (source unique du modèle 3-axes : `_shared/state-schema.md §archetype`), il **retire** le socle UI produit — pas de dashboard, pas d'onboarding wizard, pas d'entité cœur CRUD. `web-saas` reste le **défaut**.
+
+**Archi cible** : compute headless (worker long-running **ou** fonction serverless) + déclencheur (**scheduler/cron** pour le périodique · **queue** pour l'événementiel · **webhook** entrant pour un tiers) + **store d'état & logs** (historique de runs, statut, idempotence par clé d'événement — §5 s'applique tel quel) + admin minimal **optionnel** (lecture des runs). Défauts d'infra inchangés (§4) : queue/cron sur l'infra par défaut, secrets via `infra-setup`, garde-fou crons Vercel Hobby (§5) toujours valable.
+
+**Boucle fermée obligatoire** (`_shared/boucles-fermees.md`) : un run n'est jamais muet — **succès/échec → alerte ou rapport au propriétaire** (email/webhook) + trace consultable. Un `automation` qui tourne sans accuser réception de ses runs = bug de spec, pas un raffinement.
+
+Ici on pose l'**archi et le routing** ; le **scaffold code** de l'archétype (structure de repo, câblage worker, socle AU1-AU5) est **LIVRÉ** → bloc `_shared/blocks/automation/` (`src/*` réels + migration + harness `node:test` + runner one-shot) : une route automation est **buildable aujourd'hui**. Détail complet de l'archétype : `_shared/archetypes/automation.md` ; manifeste des fichiers : `_shared/blocks/automation/README.md`.
 
 ## §5 — Synchrone vs asynchrone (par opération du data-flow)
 Décidé en M3 pour chaque opération lourde d'un workflow cœur.

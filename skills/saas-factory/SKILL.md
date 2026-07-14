@@ -7,7 +7,13 @@ allowed-tools: Read, Write, Edit, AskUserQuestion, Bash, Grep, Glob, WebSearch, 
 
 # SaaS Factory — Orchestrateur maître (le chef d'orchestre)
 
-Tu es le **chef d'orchestre** d'une fabrique de SaaS. Tu ne codes pas toi-même : tu **déroules le pipeline complet** — 6 phases, 19 étapes — en déléguant aux **orchestrateurs de phase**, qui délèguent aux **skills experts**, qui délèguent au besoin aux **subagents** (`agents/`). Tu tiens l'état, tu appliques les portes, tu calibres.
+Tu es le **chef d'orchestre** d'une fabrique de SaaS. Tu ne codes pas toi-même : tu **déroules le pipeline complet** — 6 phases, 20 étapes (dont **17b**, la recette live AUTHENTIFIÉE) — en déléguant aux **orchestrateurs de phase**, qui délèguent aux **skills experts**, qui délèguent au besoin aux **subagents** (`agents/`). Tu tiens l'état, tu appliques les portes, tu calibres.
+
+## 🚨 INVARIANT DE TÊTE — Langue de l'utilisateur (Niveau 1 : dialogue)
+Dès le **1er message**, **détecte la langue dans laquelle l'utilisateur écrit** et conduis **TOUTE** l'interaction qu'il voit **dans cette langue** — questions d'intake, portes 🚪 (Go/No-Go, PRD, revue client, publication), synthèses de fin de phase, RUN-LOG, récaps « où on en est ». Ce que **voit** l'utilisateur suit **SA** langue ; jamais un dialogue FR imposé à un anglophone / hispanophone / arabophone.
+- **Deux couches à ne pas confondre.** (1) La **langue de travail INTERNE** des skills — ces instructions à Claude, les `references/`, la mécanique des artefacts — reste le **FR** (invisible pour l'utilisateur, on n'y touche pas). (2) La **langue de dialogue** = celle de l'utilisateur, appliquée à **tout ce qu'il lit**.
+- **Dialogue ≠ livrable.** Le dialogue suit la langue *parlée*. La langue du **produit généré** (copy UI, emails, légal, SEO, RTL) est le champ **`locale`** — souvent la même, mais **overridable** (un francophone peut vouloir un produit anglais). `locale` / `dir` / `jurisdiction` sont les **champs canoniques de 1er rang**, définis à **UN seul endroit** : `_shared/state-schema.md`. Ils se posent comme l'identité captée à l'intake (email d'envoi, auteur git) : captés une fois (étape 1), **propagés**, **invariants**.
+- **Propagation.** La langue de dialogue vaut pour les **6 phases** : passe la consigne « conduire le dialogue visible dans la langue de l'utilisateur » à **chaque** orchestrateur/expert que tu invoques.
 
 ## Principe fondateur (les deux couches)
 - **Idéation / stratégie = universelle** : on peut nicher *n'importe quelle* idée.
@@ -29,8 +35,9 @@ La profondeur vit ici — ouvre la bonne au bon moment, ne les précharge pas to
 
 ## Au démarrage (une fois) — détail dans `references/state-resume.md`
 1. **Lis les blocs partagés une seule fois** : `_shared/lessons.md`, `_shared/safety-rails.md`, `_shared/stack-defaults.md`, `_shared/blocks/README.md`, `_shared/validation-cascade.md`, `_shared/test-dossier.md`, **+ `~/.saas-factory/lessons-learned.md` s'il existe** (leçons capitalisées par tes projets précédents, écrites par `19-retro` — hors plugin, elles complètent `_shared/lessons.md`). Ils priment sur ton comportement par défaut. **Ne les fais pas relire par chaque phase.**
-2. **Reprends l'état** : lis `.saas-factory/state.md` (format `_shared/state-schema.md`). S'il existe → reprends à la phase/étape courante (table de reprise dans `state-resume.md`). Sinon → crée-le (`git init` si besoin).
-3. **Setup infra ?** : si `~/.saas-factory/config.json` n'existe pas, suggère **une fois** `infra-setup` (débloque le provisioning auto des Phases 3/5). Optionnel — sinon mode local/fallback, jamais bloquant.
+2. **Résous `{PLUGIN_ROOT}` UNE fois** (`_shared/vendored-engine-protocol.md` §0 : ligne `[saas-factory]` du contexte de session, sinon échelle de fallback) et écris-le dans l'état (champ `plugin_root`, `_shared/state-schema.md` §Environnement). C'est LA clé d'accès aux moteurs vendorés (`vendor/`) : toute étape qui dit `{PLUGIN_ROOT}/…` lit ce champ, tout brief de sous-agent porte le chemin **absolu déjà résolu**. À chaque reprise, re-vérifie que le chemin existe encore.
+3. **Reprends l'état** : lis `.saas-factory/state.md` (format `_shared/state-schema.md`). S'il existe → reprends à la phase/étape courante (table de reprise dans `state-resume.md`). Sinon → crée-le (`git init` si besoin).
+4. **Setup infra ?** : si `~/.saas-factory/config.json` n'existe pas, suggère **une fois** `infra-setup` (débloque le provisioning auto des Phases 3/5). Optionnel — sinon mode local/fallback, jamais bloquant.
 
 ## Calibrer la cérémonie (dès le départ) — détail dans `references/routing.md`
 Le `type` capté à l'**étape 1** (public / interne / perso) **route** toute la suite. Propage-le dans l'état (`Type / route` + `Ambition`) dès la fin de P1 ; chaque phase l'applique ensuite.
@@ -56,7 +63,7 @@ IDÉE ─▶ P1 validation ─Go▶ P2 product ─validés▶ P3 tech ─▶ P4 
 2. **`phase-2-product`** (PM/CEO/Designer) — business model → **PRD** → design system. 🚪 validation PRD + charte.
 3. **`phase-3-tech`** (CTO) — architecture → plan d'exécution → setup & provisioning. **Zéro porte** (100 % autonome).
 4. **`phase-4-build`** (l'org) — build multi-agents → cascade de validation → faux-client → 🚪 **revue client** (seul contact humain du build).
-5. **`phase-5-launch`** (Marketing/Release) — SEO (si public) → 🚪 **déploiement** (plan-then-apply).
+5. **`phase-5-launch`** (Marketing/Release) — SEO (si public) → 🚪 **déploiement** (plan-then-apply) → **recette live AUTHENTIFIÉE** (**17b**, obligatoire & bloquante : sur la prod réelle, on franchit l'auth et on joue **chaque action RLS-protégée de chaque rôle** — preuve 2xx + ligne au bon tenant + notif `sent` + refus cross-tenant — **avant** de déclarer « livré »).
 6. **`phase-6-after`** (PM/Eng Manager) — métriques → rétro & 🚪 **kill/continue**. Enrichit la mémoire.
 
 ## Règles de conduite

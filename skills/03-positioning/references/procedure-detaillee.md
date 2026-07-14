@@ -43,7 +43,7 @@ Règle de lecture : **flèche vers la droite = calibration maison** (brancher + 
 **Objectif.** Charger le cadre Dunford *séquentiel* en mémoire avant de toucher aux données. Exécuter la synthèse sans le cadre produit un positionnement générique — pire que rien.
 
 **Sous-étapes (ordre imposé) :**
-1. Lis `vendor/startup-skill/startup-positioning/SKILL.md` — la mécanique Intake → 2 waves → Synthèse 5+1.
+1. Lis `{PLUGIN_ROOT}/vendor/startup-skill/startup-positioning/SKILL.md` — la mécanique Intake → 2 waves → Synthèse 5+1.
 2. Lis `references/frameworks.md` — définitions canoniques Dunford / Moore / Neumeier / JTBD / Ries.
 3. Lis `references/research-synthesis.md` — le protocole de synthèse détaillé + les 3 tests de validation.
 4. Lis `references/honesty-protocol.md` — les 4 règles positioning-spécifiques + la table d'anti-patterns.

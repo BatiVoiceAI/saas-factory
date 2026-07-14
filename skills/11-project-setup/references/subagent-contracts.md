@@ -86,6 +86,37 @@ STATUT       : écrire status/provision-<resource>.md (format ci-dessous).
 
 ---
 
+## Contrats AUTOMATION (archétype `automation` — headless) — surcharge conditionnelle
+> **Actifs UNIQUEMENT si `archetype = automation`** (`.saas-factory/state.md`). En `web-saas` (défaut), on dispatche les 4 provisioners ci-dessus **inchangés** ; en automation, on dispatche **à la place** les 2 contrats ci-dessous et on **ne dispatche PAS** `provisioner-email`, `provisioner-hosting`, ni billing (retraits tracés — `provisioning-plan.md` §« Chemin de provisioning AUTOMATION »).
+
+### `provisioner-repo-scheduler` (GitHub repo + workflow `schedule:` = CI **et** host) — cœur
+- **OBJECTIF** : repo `org/<slug>` privé + `.github/workflows/<slug>.yml` qui est **à la fois la CI (build) et l'ordonnanceur** de l'automation. L'**ordonnanceur EST le host** (pas de Vercel).
+- **CONTEXTE** : cadence(s) et modes du modèle (étape 9/10) — au minimum un cron **`sync`** + un cron **`digest`** + `workflow_dispatch` (rejeu manuel / smoke-test).
+- **IDEMPOTENCE** : `get repo org/<slug>` → réutilise ; workflow **par nom de fichier** (ne ré-écrit que si le contenu diffère).
+- **DoD** :
+  - [ ] repo existe, privé, arbre (bloc automation) poussé.
+  - [ ] `.github/workflows/<slug>.yml` présent, avec **`on: schedule:` (≥ 2 crons, sync + digest) + `workflow_dispatch`**, `concurrency` mono-groupe (`cancel-in-progress: false`), `permissions: contents: read`, un step `node dist/index.js` (one-shot) dont `RUN_MODE` est **dérivé du cron** (jamais un secret).
+  - [ ] **caveats de la cible documentés** dans le header du workflow **et** `tech/provisioning-log.md` : cron **UTC only** (aligner `DIGEST_HOUR`/`SYNC_INTERVAL_HOURS` sur UTC, décaler pour l'heure locale), `schedule` **best-effort** (tick décalé/sauté, absorbé par l'idempotence run), **auto-désactivation après 60 j sans activité du repo** (prévoir keepalive ou basculer cron système), granularité ~5 min.
+  - [ ] `status/provision-repo-scheduler.md` = `DONE` + URL repo + chemin workflow.
+- **ROLLBACK** : repo créé, workflow non poussé → garder le repo, retry le push.
+- **RED-FLAGS** : workflow **sans `schedule:`** (worker qui ne tournera jamais → **refuser `DONE`**) ; un seul cron là où le modèle exige sync + digest ; `RUN_MODE` mis en secret ; `git_author` traité comme porte de déploiement (**moot hors Vercel** — host = GitHub Actions).
+
+### `provisioner-db-migrations` (Supabase : migrations SEULES, service-role, **sans Auth**) — cœur
+- **OBJECTIF** : projet Supabase pour `<slug>`, **migrations du modèle de données appliquées** (store de runs + entités métier + RPC d'idempotence). **PAS de config Auth/SMTP.**
+- **COMPÉTENCE** : `supabase` + `supabase-postgres-best-practices` **avant** toute migration — fonctions **lesson #15 42702-safe**, contraintes/RPC **RETURNING-safe**.
+- **IDEMPOTENCE** : `list projects` match `<slug>` → réutilise `ref` ; migrations **par nom** (saute les passées). `confirm_cost` auto avant `create_project`.
+- **DoD** :
+  - [ ] projet créé/réutilisé, `ref` + URL logués ; `SUPABASE_SERVICE_ROLE_KEY` transmis au câblage (pas dans le statut).
+  - [ ] toutes les migrations (ordre étape 9) appliquées : tables + **RPC upsert idempotence** (unique partielle sur clé d'identité **hors attributs mutables** ; lesson #15).
+  - [ ] **accès service-role only : 0 policy tenant attendue** — pas de `PATCH .../config/auth`, pas d'enrollment, pas de `mailer_*`. RLS **activée sans policy** (deny-all, service_role bypass) OU tables service-role documentées ; **aucune** table `anon`/JWT-utilisateur.
+  - [ ] `status/provision-db-migrations.md` = `DONE` + ref.
+- **ROLLBACK** : migration à mi-parcours → ne pas supprimer le projet, re-jouer les migrations restantes (par nom).
+- **RED-FLAGS** : **runner éphémère (GitHub Actions) sans cette BDD durable** → I1 cassé, **refuser** un solde « fallback fichier suffit » (`provisioning-plan.md` §RÈGLE DURE) ; toute config Auth/SMTP posée (hors périmètre automation) ; clé d'identité d'idempotence incluant une **quantité mutable** (re-crée un doublon dès qu'elle change).
+
+> **Secrets d'INTÉGRATION source/cible** : le câblage des secrets (`secrets-wiring.md`) doit poser, en plus des secrets châssis, le(s) **token(s) des systèmes intégrés** (source lue + cible écrite, ex. `SHOP_API_TOKEN`). Ce n'est **pas** un provisioner (rien à créer côté provider tiers) mais un **slot de secret obligatoire** en automation : une automation intègre toujours ≥ 1 système externe.
+
+---
+
 ## Comment l'orchestrateur dispatche (rappel)
 - **repo + db + email** en **un seul message** (zones indépendantes → 3 `Task` en parallèle).
 - **hosting** ensuite, seul, une fois repo+db `DONE`.

@@ -79,3 +79,55 @@
     @apply bg-background text-foreground;
   }
 }
+
+/*
+ * Couche MOTION — accessibilité mouvement + primitives d'animation.
+ * Ajout ADDITIF de la couche `components/motion/*` (cf. CONVENTIONS §14).
+ *
+ * Backstop a11y (défense en profondeur, en plus du hook `useReducedMotion`) :
+ * si l'utilisateur demande un mouvement réduit, on quasi-annule animations,
+ * transitions et scroll fluide sur TOUT l'arbre. Couvre aussi `animate-pulse`
+ * (skeleton du bloc ui-shell) et le shimmer ci-dessous. Approche recommandée
+ * (Josh Comeau) : on garde l'opacité finale, on supprime le mouvement.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Skeleton « shimmer » (`components/motion/skeleton-shimmer.tsx`) : une
+ * surbrillance balaie le placeholder. Surbrillance dérivée du token
+ * `--foreground` (jamais de couleur en dur). En mouvement réduit, le backstop
+ * ci-dessus fige le balayage (durée ~0, une itération).
+ */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-shimmer::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--foreground) / 0.06),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Secrets — jamais commités (AU1 : la config vit dans l'environnement).
+.env
+.env.local
+
+# État fallback de l'idempotence (mode sans Supabase).
+.automation/

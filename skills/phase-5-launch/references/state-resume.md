@@ -30,10 +30,14 @@ Comment l'orchestrateur de phase tient `.saas-factory/state.md`, reprend une pha
 | `17` porte publication | ajoute (porte publication, décision, date) — franchie ou en attente |
 | `17` apply | version/SHA promue, cutover DNS fait, tracking activé |
 | `17` canary | résultat (sain / rollback N-1) |
-| `17` fait | `étape 17 fait` · **déployé** · URL live · version · Statut `fait` |
+| `17` fait | `étape 17 fait` · **déployé** · URL live · version (canary vert **≠ « livré »** — 17b reste à faire dès qu'il y a auth + RLS) |
+| entrée en `17b` | `étape 17b` · Statut `en cours` (recette live authentifiée — active dès auth + RLS ; sinon note « 17b sans objet (landing/automation) ») |
+| `17b` en cours | rôles/actions déjà recettés, cycles fix→redeploy→re-test consommés (budget) |
+| `17b` fait | `étape 17b fait` · `recette_live: PASS \| PASS_WITH_CONCERNS` · chemin `deploy/live-qa-report.md` · Statut `fait` (**= « livré »**) |
+| `17b` rouge | bug nommé (RLS/scoping/junction, invitation injoignable, notif absente) + passe de correction en cours — **jamais** `fait` au rouge |
 | porte **en attente** | Statut `porte en attente` (à la reprise : re-présenter, ne pas rejouer) |
 
-**Écrivain unique** : seul **l'orchestrateur de phase** écrit `state.md` — jamais 16/17 ni un sous-agent. Ils produisent leur artefact (`seo/*`, `deploy/*`) et te le rapportent ; toi seul consignes, à chaque transition. Règle canonique (+ l'unique exception `01-discover`) : `skills/saas-factory/references/state-resume.md` §Écrivain unique.
+**Écrivain unique** : seul **l'orchestrateur de phase** écrit `state.md` — jamais 16/17/17b ni un sous-agent (l'agent `live-qa` de 17b produit `deploy/live-qa-report.md` et te **rapporte** son verdict, il n'écrit pas l'état). Ils produisent leur artefact (`seo/*`, `deploy/log.md`, `deploy/live-qa-report.md`) et te le rapportent ; toi seul consignes, à chaque transition. Règle canonique (+ l'unique exception `01-discover`) : `skills/saas-factory/references/state-resume.md` §Écrivain unique.
 
 **Interdits d'état (sécurité)** : jamais de secret/clé/token dans `state.md` ni dans `deploy/log.md` ni collé en conversation (safety §4). Les accès infra vivent dans `~/.saas-factory/` (config + `.env` chmod 600) ou côté connecteur MCP/OAuth.
 
@@ -44,11 +48,14 @@ Comment l'orchestrateur de phase tient `.saas-factory/state.md`, reprend une pha
 | `Statut = en cours` sur étape 16 | reprends 16 là où le pipeline SEO s'est arrêté (mécanismes 1→4) |
 | `Statut = en cours` sur étape 17 | reprends 17 à sa sous-étape : pré-vol / plan / porte / apply / canary. **Si un apply a déjà eu lieu**, vérifie l'état réel (prod up ? DNS coupé ?) avant de continuer — ne rejoue pas un apply idempotent aveuglément |
 | `16` marqué `fait` | enchaîne 17 |
-| `17` marqué `fait` (déployé) | Phase 5 terminée → enchaîne **`phase-6-after`** |
+| `17` marqué `fait` (déployé) **mais** `17b` pas `fait` et archétype à auth + RLS | **Phase 5 PAS terminée** → lance/reprends `17b` (recette live authentifiée) — canary vert ne suffit pas |
+| `Statut = en cours` sur étape `17b` | reprends la recette live : rejoue les rôles/actions non encore recettés en connecté (ne re-recette pas ce qui est déjà vert), poursuis le cycle fix→redeploy→re-test dans le budget |
+| `17b` marqué `fait` (`recette_live: PASS`), ou 17 `fait` sans auth/RLS (17b sans objet) | Phase 5 terminée → enchaîne **`phase-6-after`** |
+| `17b` inscrit **rouge** (bug non résolu) | reprends au **correctif** (fix → redeploy → re-test) — pas de sortie de phase, pas de « livré » |
 | gate contenu / porte publication déjà inscrit(e) | **ne redemande pas** — c'est acquis, route selon la décision |
 | rollback inscrit sans nouvelle passe | reprends au **re-plan** (diagnostic → nouveau plan → re-porte) |
 
 La reprenabilité est un contrat : deux sessions successives sur le même projet produisent le **même** enchaînement déterministe à partir de l'état — surtout ici, où un apply mal repris peut publier deux fois ou couper la prod.
 
 ## Sortie de phase
-`17` `fait` ⇒ résume en 2 lignes (URL live + santé), mets l'état à `Phase 5 fait`, et annonce **Phase 6** (mesure & rétro).
+`17` `fait` **ET** `17b` `fait` (`recette_live: PASS` — ou 17b sans objet en landing/automation) ⇒ résume en 2 lignes (URL live + santé + verdict recette), mets l'état à `Phase 5 fait`, et annonce **Phase 6** (mesure & rétro). Tant que `17b` n'est pas vert (archétype à auth + RLS), l'état **ne passe pas** à `Phase 5 fait` et on **ne déclare pas « livré »**.

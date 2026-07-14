@@ -25,6 +25,21 @@ Source des secrets : `~/.saas-factory/` (config + `.env`) et les **sorties des p
 
 **Règle client/serveur** : `service_role` et `stripe_secret` ne vont **jamais** dans une variable exposée au navigateur (pas de préfixe public type `NEXT_PUBLIC_`). Une erreur ici = fuite totale de la BDD → `[SÉCU]` bloquant.
 
+## Câblage AUTOMATION — split Secrets / Variables + slot d'intégration
+> **Actif UNIQUEMENT si `archetype = automation`.** En `web-saas` (défaut), la matrice ci-dessus s'applique telle quelle (secrets GitHub Actions + env host Vercel/CF/Coolify). En automation, **il n'y a pas d'env host** : le **runtime EST GitHub Actions** (l'ordonnanceur = le host, `provisioning-plan.md` §« Chemin de provisioning AUTOMATION »). Les deux destinations deviennent **GitHub Actions Secrets** et **GitHub Actions Variables** du **même repo**.
+
+**« GitHub Actions = env runtime » → split en deux natures** (le workflow lit `${{ secrets.X }}` pour le sensible, `${{ vars.X }}` pour le reste) :
+
+| Nature | Destination | Contenu (exemples) | Exposé dans les logs ? |
+|---|---|---|---|
+| **Sensible** | **GitHub Actions *Secrets*** (`set secret`, masqué) | `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY` (notif boucle fermée), `WEBHOOK_URL` / `CRON_SECRET`, **secrets d'INTÉGRATION source/cible** | **non** (masqué) |
+| **Config non-sensible** | **GitHub Actions *Variables*** (`set variable`, lisible) | `SUPABASE_URL`, `OWNER_EMAIL`, `EMAIL_FROM`, `SYNC_INTERVAL_HOURS`, `DIGEST_HOUR`, seuils métier, `IDEMPOTENCY_WINDOW_SEC` | oui (assumé lisible — **jamais** y mettre un token) |
+
+- **Slot « secrets d'INTÉGRATION source/cible » (obligatoire en automation)** : les tokens des systèmes que l'automation **lit** (source) et **écrit** (cible) — ex. `SHOP_API_TOKEN` d'une boutique, clé d'un CRM, token d'un feed. **Toujours en *Secrets*** (jamais en *Variables*). Une automation intègre ≥ 1 système externe → **au moins un** de ces secrets existe toujours ; l'oublier = worker qui ne peut ni lire ni écrire. À collecter comme les secrets châssis (matrice + non-vide + scope), source = `~/.saas-factory/.env` ou connecteur du système intégré.
+- **`RUN_MODE` n'est ni Secret ni Variable** : il est **dérivé du cron déclencheur** dans le workflow (`github.event.schedule` → `sync`/`digest`) ou de l'input `workflow_dispatch`. Ne jamais le câbler comme secret/variable.
+- **`SUPABASE_SERVICE_ROLE_KEY` reste serveur-only** (ici « serveur » = le runner GitHub Actions) : aucun préfixe public, jamais côté client (il n'y a pas de client en automation, mais la règle de scope tient : `[SÉCU]` bloquant si exposé).
+- **État durable requis** : `SUPABASE_URL` en *Variables* n'est pas cosmétique — sur runner éphémère c'est la **condition de l'idempotence** (règle dure `provisioning-plan.md`). Un `SUPABASE_URL` vide/absent en automation-GitHub-Actions = **bloquant**, pas un simple manque.
+
 ## Recette forcing — injecter ou refuser
 - **Ask exact** : « cette valeur est-elle présente, non-vide, non-placeholder, et à scope correct (client vs serveur) ? »
 - **Push-until** : valeur réelle confirmée + destination correcte (env host vs GitHub, preview vs prod).

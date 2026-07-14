@@ -1,13 +1,20 @@
-# Hooks — le backstop mécanique de safety-rails
+# Hooks — le backstop mécanique de safety-rails + l'ancrage du plugin
 
-Ce dossier rend **exécutable** une partie de `_shared/safety-rails.md`. La prose des skills
-reste la règle de conduite ; le hook est un **garde-fou de dernier recours**, appliqué par
-Claude Code lui-même (pas par le jugement de l'agent) sur chaque commande **Bash**.
+Ce dossier rend **exécutable** une partie de `_shared/safety-rails.md` (garde Bash) et fournit
+l'**ancrage runtime** du plugin (annonce de `{PLUGIN_ROOT}`). La prose des skills reste la règle
+de conduite ; les hooks sont appliqués par Claude Code lui-même (pas par le jugement de l'agent).
 
 ## Ce qu'il y a ici
 - **`hooks.json`** — déclaration auto-découverte par Claude Code (chemin standard
-  `hooks/hooks.json` du plugin). Un seul hook : `PreToolUse` avec `matcher: "Bash"` →
-  lance `safety-guard.sh`.
+  `hooks/hooks.json` du plugin). Deux hooks : `SessionStart` → `announce-plugin-root.sh` ;
+  `PreToolUse` avec `matcher: "Bash"` → `safety-guard.sh`.
+- **`announce-plugin-root.sh`** — au démarrage de session, écrit dans le contexte la ligne
+  `[saas-factory] {PLUGIN_ROOT} = /chemin/absolu` + la règle de résolution. C'est le **1er
+  barreau** de l'échelle du §0 de `_shared/vendored-engine-protocol.md` : sans lui, les
+  références `{PLUGIN_ROOT}/vendor/…` des skills dépendent du fallback (chemin du SKILL →
+  find de l'install). Fail-open : racine introuvable → n'annonce rien, ne casse jamais la
+  session. Si `CLAUDE_PLUGIN_ROOT` est absent/invalide (issues connues selon la version),
+  le script s'auto-localise.
 - **`safety-guard.sh`** — le garde. Lit le JSON de l'appel d'outil sur **stdin**, décide, répond
   en **JSON sur stdout** (`permissionDecision`) puis `exit 0`.
 - **`safety-guard.test.sh`** — la batterie de tests (80 cas : deny / ask / allow). À **relancer

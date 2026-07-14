@@ -96,7 +96,7 @@ Score de complexité du marché sur trois axes (matrice complète dans `decision
 2. **Concurrents connus** (1 = 0-2 connus → 3 = beaucoup)
 3. **Portée géo** (1 = 1 pays/langue → 3 = multi-régions)
 
-Somme 3-9 → **Light (3-4)** · **Standard (5-7)** · **Deep (8-9)**. Le tier fixe le nombre d'agents/rounds par vague (cf. `vendor/.../research-scaling.md`).
+Somme 3-9 → **Light (3-4)** · **Standard (5-7)** · **Deep (8-9)**. Le tier fixe le nombre d'agents/rounds par vague (cf. `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/research-scaling.md`).
 
 **Défaut : accepte la reco du moteur.** Ne propose un override que si un signal du brief le justifie (ex. marché manifestement énorme mais brief classé Light). Présente le tier retenu en une ligne, laisse l'utilisateur dire *light / deep / ok*.
 
@@ -106,7 +106,7 @@ Somme 3-9 → **Light (3-4)** · **Standard (5-7)** · **Deep (8-9)**. Le tier f
 
 ## P2 — Les 3 vagues (procédure par vague)
 
-Exécute les vagues **dans l'ordre** (chaque vague finie avant la suivante). Si l'outil `Task`/`Agent` est dispo, parallélise les agents *à l'intérieur* d'une vague ; sinon, séquentiel, même profondeur. Avant de lancer : lis `vendor/.../research-principles.md` (tiers de sources, cross-référencement, gestion des trous).
+Exécute les vagues **dans l'ordre** (chaque vague finie avant la suivante). Si l'outil `Task`/`Agent` est dispo, parallélise les agents *à l'intérieur* d'une vague ; sinon, séquentiel, même profondeur. Avant de lancer : lis `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/research-principles.md` (tiers de sources, cross-référencement, gestion des trous).
 
 ### Wave 1 — Profils DÉTAILLÉS + prix
 
@@ -167,7 +167,7 @@ La synthèse crée la valeur : ce n'est pas du formatage, c'est du **pattern-mat
 
 ## P3.5 — Vérification adversariale
 
-Exécute `vendor/.../verification-agent.md` sur `market.md`. Il classe les sources en **tiers 1/2/3**, note la **confiance** par affirmation, sépare **haute vs basse confiance**, traque : affirmations non labellisées, contradictions internes, incohérences de score, **data gaps manquants**, fausse corroboration (même source citée deux fois).
+Exécute `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/verification-agent.md` sur `market.md`. Il classe les sources en **tiers 1/2/3**, note la **confiance** par affirmation, sépare **haute vs basse confiance**, traque : affirmations non labellisées, contradictions internes, incohérences de score, **data gaps manquants**, fausse corroboration (même source citée deux fois).
 
 Écris le résultat dans la section **§Fiabilité & confiance de `market.md`** (ex-`confidence.md`, fusionné poids mort §5 — plus de fichier séparé). L'étape 5 lit cette section comme plafond de confiance du verdict.
 **Si issue critique** (une affirmation structurante repose sur du seul Tier 3, ou contradiction non résolue) → **pause**, présente à l'utilisateur : corriger d'abord ou continuer ?

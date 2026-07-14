@@ -1,6 +1,6 @@
 # Référence — Le moteur de verdict (procédure de l'étape 4)
 
-Le verdict est le produit de l'étape 5. Il croise **4 axes** — marché × edge × demande × risques — et sort **honnête ET humble**. Pré-vol obligatoire : `vendor/startup-skill/startup-competitors/references/honesty-protocol.md` prime (« if your idea should die, it will tell you »).
+Le verdict est le produit de l'étape 5. Il croise **4 axes** — marché × edge × demande × risques — et sort **honnête ET humble**. Pré-vol obligatoire : `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/honesty-protocol.md` prime (« if your idea should die, it will tell you »).
 
 ## Les 4 axes (comment coter chacun, sobrement)
 

@@ -7,14 +7,15 @@ L'organisation en agents, façon vraie startup. Chaque rôle = un agent-persona 
 - **Tech Lead** (`agents/tech-lead.md`) — manage une **équipe de dev-agents** : répartit les features en lanes/worktrees, coordonne, lance la passe d'intégration. *(En étape 13 : cran de revue Tech Lead.)*
 - **Dev** (`agents/feature-dev.md`) — implémente **une** feature en TDD + recette, dans son worktree.
 
-## Le moteur superpowers (à vendorer)
-À copier dans `vendor/superpowers/` depuis l'install officielle (MIT, auto-contenu — pas de binaire, pas de télémétrie) :
-- `subagent-driven-development` — le pattern dispatch → implement → self-review → review-loop (notre **moteur par-feature**).
-- `test-driven-development` — l'Iron Law (test rouge avant tout code).
-- `using-git-worktrees` — isolation par feature.
-- `requesting-code-review` (`code-reviewer.md`) — le **gabarit de gate**, à cloner pour les crans de l'étape 13.
-- `verification-before-completion`, `dispatching-parallel-agents`.
-> Discipline : conserver la **notice MIT** (Jesse Vincent). Préfixer `saas-factory-` pour éviter les collisions avec une install superpowers existante.
+## Le moteur superpowers (vendoré — `{PLUGIN_ROOT}/vendor/superpowers/skills/`)
+Vendoré (MIT, auto-contenu — LICENSE + PROVENANCE conservés). **Chaque moteur se LIT (Read, chemin absolu résolu via `_shared/vendored-engine-protocol.md` §0) et s'exécute tel quel** — dans les briefs des dev-agents, passer le chemin ABSOLU :
+- `subagent-driven-development/SKILL.md` (+ `implementer-prompt.md`, `task-reviewer-prompt.md`) — le pattern dispatch → implement → self-review → review-loop (notre **moteur par-feature** ; les deux prompts = gabarits de brief prêts à l'emploi).
+- `test-driven-development/SKILL.md` (+ `testing-anti-patterns.md`) — l'Iron Law (test rouge avant tout code) ; à donner à CHAQUE dev-agent.
+- `using-git-worktrees/SKILL.md` — isolation par feature.
+- `requesting-code-review/SKILL.md` (+ `code-reviewer.md`) — le **gabarit de gate**, à cloner pour les crans de l'étape 13.
+- `verification-before-completion/SKILL.md`, `dispatching-parallel-agents/SKILL.md` — clôture honnête + fan-out.
+- `writing-plans/SKILL.md` (+ `plan-document-reviewer-prompt.md`) — utilisé en amont (étape 10, plan d'exécution).
+> Discipline : la **notice MIT** (Jesse Vincent) reste dans `vendor/superpowers/`. Re-sync = décision explicite (jamais automatique).
 
 ## Sélection de modèle — Opus par défaut (mode qualité maximale)
 **Modèle de base du plugin = Opus 4.8** (directive fondateur : **qualité > coût/vitesse** — cf. `skills/saas-factory/SKILL.md` §Cap qualité). **Tout** dispatch de sous-agent tourne sur **Opus** : chaque `agents/*.md` porte `model: opus`. On ne descend **jamais** en gamme « pour le coût » ni « pour aller plus vite ». Un modèle inférieur ne s'envisage que sur un geste **purement mécanique** **ET** **explicitement décidé** au cas par cas — **jamais le défaut**. **Toujours nommer le modèle** en dispatchant un sous-agent : on veut Opus de façon **déterministe**, pas par héritage accidentel du modèle de session.

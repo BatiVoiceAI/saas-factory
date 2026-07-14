@@ -33,6 +33,17 @@ Budget d'itération      ─▶ plafond de boucles + critère de sortie (anti-bo
 
 > La DoD peut être **transverse** (une base commune, ci-dessus) + **spécifique** à la feature (ex. « le webhook paiement est idempotent »). Le composer note le spécifique par feature.
 
+### Variante AUTOMATION — cran Designer dégradé + DoD adaptée
+> **Conditionné par `archetype = automation`** (`.saas-factory/state.md`, source `_shared/state-schema.md`). En `web-saas` (défaut), la DoD ci-dessus s'applique **inchangée**. En automation (worker/cron/bot/intégration **headless**), deux lignes de la DoD transverse sont **sans objet** et se **dégradent** — la dégradation est **déclarée**, pas ignorée :
+
+- **Cran Designer dégradé (pas supprimé).** Il n'y a **pas de surface visuelle** à juger : « Conforme `DESIGN.md` » + « états UX vide/chargement/erreur/succès » + « WCAG 2.1 AA » sont **N/A par conception d'archétype**. À la place, **le cran CEO-persona (propriétaire de l'automatisation) porte l'edge** : il vérifie la **boucle fermée** (un run raté/réussi **notifie/rapporte** au propriétaire) et l'**idempotence** (re-run ne double ni les effets — grain run — ni les entités — grain entité). C'est l'exigence dure de l'archétype (`routing.md` §automation, `_shared/boucles-fermees.md`), et elle **remplace** le jugement Designer dans la cascade.
+- **DoD automation (remplace les 2 lignes visuelles)** :
+  - [ ] ~~Conforme `DESIGN.md` + états UX visuels~~ → **N/A (headless)**. À la place : **gabarit de sortie fr-FR conforme** (le rapport/alerte de la boucle fermée est rédigé dans la langue de l'utilisateur, format attendu) **+ états de RUN couverts** (succès silencieux journalisé · rapport périodique · **échec → alerte immédiate**) — l'équivalent « états » de l'archétype porte sur le **run**, pas sur l'écran.
+  - [ ] ~~Accessibilité WCAG 2.1 AA~~ → **N/A (pas de surface publique)**.
+  - [ ] (conservées) critères d'acceptation verts · cas limites (dont **idempotence run + entité**, **fenêtre de cadence**, échec source/cible) · frontières de module · `[SÉCU]` (secrets d'intégration, service-role) · doc à jour · commits TDD.
+
+> Le composer **écrit** cette dégradation dans la spec de validation de chaque feature automation (colonne DoD), pour que la cascade Phase 4 sache que le cran Designer est **déclaré N/A** et que l'edge passe au CEO-persona — jamais un cran « oublié en silence ».
+
 ## 3. Budget d'itération — plafonner les boucles
 Chaque feature reçoit un **plafond** de boucles de la cascade + un **critère de sortie** (rappel `_shared/safety-rails.md` §7 : pas d'itération infinie).
 
@@ -41,8 +52,11 @@ Chaque feature reçoit un **plafond** de boucles de la cascade + un **critère d
 |---|---|---|
 | Câblage de bloc | **2** | Bloc vert + config présente |
 | CRUD standard | **3** | Critères + cas limites verts |
+| **Logique / calcul métier pur** (transformation, dérivation, règle de décision — **pas d'UI ni de CRUD**) | **3** | Critères + cas limites (entrée vide/invalide, borne haute, arrondi) verts ; **table de vérité couverte** |
 | Verticale cœur (edge produit) | **4** | Critères + cas limites + cran CEO PASS |
 | Intégration tierce / paiement | **4** + `[SÉCU]` | Idempotence + sécu adressées |
+
+> **Ne pas ranger une feature `logique/calcul métier pur` en « CRUD » par défaut.** En automation (et pour tout module de calcul), le cœur de valeur est une **transformation déterministe** (ex. « besoin net = seuil − dispo », « quantité de réappro arrondie au pack »), pas une opération de persistance. Son budget suit la ligne dédiée ci-dessus : le critère de sortie porte sur la **table de vérité** (entrées → sorties attendues), pas sur un rendu.
 
 Budget épuisé → on **loge l'état**, on marque la feature `DONE_WITH_CONCERNS`, on continue (l'humain tranchera au client-review de l'étape 15). **Jamais** de blocage infini.
 

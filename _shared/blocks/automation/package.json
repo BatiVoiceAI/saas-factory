@@ -1,0 +1,26 @@
+{
+  "name": "automation-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Châssis d'archétype AUTOMATION (worker/cron/bot headless) — socle AU1-AU5, dependency-light (Node 20+ built-ins + zod).",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --import tsx \"test/**/*.test.ts\"",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "run:once": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0"
+  }
+}

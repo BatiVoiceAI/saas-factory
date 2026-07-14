@@ -32,7 +32,7 @@ export type ActivationMilestone =
 export interface AnalyticsEventMap {
   // --- Cycle de vie du compte -------------------------------------------
   user_signed_up: {
-    /** Méthode d'inscription (email magic link, oauth provider…). */
+    /** Méthode d'inscription (email OTP + mot de passe, oauth provider…). */
     method: "email" | "google" | "github";
   };
   user_logged_in: {

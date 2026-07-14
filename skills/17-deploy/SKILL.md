@@ -19,6 +19,7 @@ Profondeur par étape (progressive disclosure) :
 - `references/publication-gate.md` — recette forcing-question de la porte + routage par réponse + cadrage coût.
 - `references/canary-rollback.md` — seuils chiffrés, machine à états sain/dégradé/échec, runbook de rollback, modes d'échec.
 - `references/live-qa.md` — recette live post-cutover : dispatch de l'agent `live-qa`, boucle de correction fix→redeploy→re-test (budget 3 cycles), matrice par type, DoD.
+- `references/automation-deploy.md` — **si `archetype = automation`** : déploiement scheduler « GitHub Actions `schedule:` » (cible + split Secret/Variable), caveats opérationnels (cron UTC only · best-effort/retardé · auto-désactivation 60 j · granularité 5 min), règle « runner éphémère ⇒ Supabase obligatoire », et **vérif de boucle fermée headless** (run→logs→boucle→idempotence) qui **remplace** la recette live authentifiée (17b sans objet en headless).
 
 ## Le moteur (on dépend, on ne réinvente pas)
 Le déploiement s'appuie sur les **MCP infra** déjà connectés (`infra-setup`) : **Vercel/Cloudflare** (hébergement + promotion), **Cloudflare** (DNS), + activation **PostHog + Sentry**. On s'inspire des patterns **gstack `land-and-deploy`** (merge→CI→deploy→vérif) + **`canary`** (santé post-deploy) — sans les vendorer (couplés binaires).

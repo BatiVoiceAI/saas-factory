@@ -35,7 +35,8 @@ Le moteur vendoré `startup-positioning` (Dunford + Moore + Neumeier/Onliness + 
 ## Procédure normée
 > Vue d'ensemble ci-dessous ; sous-procédures exhaustives (ordre, critères de passage, micro-exemples, modes d'échec) dans `references/procedure-detaillee.md`.
 
-### 1. Charge le moteur (lis, dans l'ordre) — `vendor/startup-skill/startup-positioning/`
+### 1. Charge le moteur (lis, dans l'ordre) — `{PLUGIN_ROOT}/vendor/startup-skill/startup-positioning/`
+> **Résolution du chemin** : `{PLUGIN_ROOT}` se résout en chemin ABSOLU avant tout accès (hook SessionStart ou échelle de fallback), Read de vérification avant dispatch, jamais de `vendor/…` relatif dans un brief de sous-agent — `_shared/vendored-engine-protocol.md` **§0**.
 - `SKILL.md` (Intake → 2 waves → Synthèse Dunford 5+1) · `references/frameworks.md` (Dunford, Moore, Neumeier, JTBD, Ries & Trout) · `references/research-synthesis.md` (synthèse + tests) · `references/honesty-protocol.md`.
 
 Pourquoi lire d'abord : la synthèse Dunford est **séquentielle**. L'exécuter sans le cadre produit un positionnement générique — pire que rien.

@@ -14,7 +14,8 @@ Tu ne fais que **synthétiser + faire décider** : aucune recherche neuve, aucun
 
 ## À lire d'abord (une fois)
 `_shared/lessons.md`, `_shared/safety-rails.md` ; si présent, `skills/phase-1-validation/references/conventions.md`.
-**Pré-vol** : relis `vendor/startup-skill/startup-competitors/references/honesty-protocol.md`. Il prime : pas de langage positif vague, on sépare **[Data]/[Estimate]/[Assumption]/[Opinion]**, on remonte les flags, on ne fabrique rien. Un résumé qui rassure à tort fait perdre à l'utilisateur temps, argent et énergie — c'est un échec.
+**Pré-vol** : relis `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/honesty-protocol.md`. Il prime : pas de langage positif vague, on sépare **[Data]/[Estimate]/[Assumption]/[Opinion]**, on remonte les flags, on ne fabrique rien. Un résumé qui rassure à tort fait perdre à l'utilisateur temps, argent et énergie — c'est un échec.
+> **Résolution du chemin** : `{PLUGIN_ROOT}` se résout en chemin ABSOLU avant tout accès (hook SessionStart ou échelle de fallback), Read de vérification avant dispatch, jamais de `vendor/…` relatif dans un brief de sous-agent — `_shared/vendored-engine-protocol.md` **§0**.
 
 ## Références (la profondeur — charge à l'usage)
 Le SKILL reste l'aperçu ; chaque étape a sa procédure exhaustive en `references/` :
@@ -57,14 +58,16 @@ C'est ce que **l'humain lit à la porte** : **zéro jargon**, **auto-suffisant**
 Croise **marché × edge × demande × risques**. **On hérite, on ne re-cote pas** : Demande & Edge héritent des verdicts de l'étape 4 (table d'héritage, plafonnée par `market.md` §Fiabilité) ; Marché hérite de `market.md` § « Taille servable & dynamique » ; Risques s'énumèrent via la mini-taxonomie (5 familles). Deux garde-fous : **anti-flagornerie** (prends position, bannis « intéressant » / « ça peut marcher » ; si l'idée doit mourir, dis-le + dis ce qui changerait ton avis) ; **humilité** (demande inférée des avis → « plausible », « à valider par toi », jamais une certitude). → Table d'héritage + cotation des axes + matrice de décision + clause « ce qui le ferait basculer » : `references/verdict-engine.md`.
 
 ### 5. LA PORTE — décision explicite via `AskUserQuestion`
-Présente le **bloc §Décision — le POURQUOI** (en tête du brief, non-technique, auto-suffisant) + ton **verdict**, puis demande explicitement l'une des **quatre** issues. **N'écris jamais la suite sans sa réponse.** → Machine à états, recette forcing de la porte (réponses à refuser) + routage détaillé : `references/gate-and-routing.md`.
+Présente le **bloc §Décision — le POURQUOI** (en tête du brief, non-technique, auto-suffisant) + ton **verdict**, puis demande explicitement l'issue. **N'écris jamais la suite sans sa réponse.** → Machine à états, recette forcing de la porte (réponses à refuser) + routage détaillé : `references/gate-and-routing.md`.
 
-| Choix | Ce que ça déclenche |
-|---|---|
-| **Go** | Phase 1 **terminée** → cadrage produit (Phase 2). Marque la porte franchie dans `state.md`. |
-| **Ajuster** | **Reboucle** sur l'étape faible, met à jour les inputs, **repasse** par l'étape 5. |
-| **Go-test** | **Convertit « à valider par toi » en test réel** : landing + waitlist shippée en **1 jour**, **seuil pré-enregistré avant publication** (`research/go-test.md`) ; au terme de la fenêtre, **retour à la porte** avec la donnée réelle. → `references/go-test-playbook.md` |
-| **No-Go** | **Arrête proprement** : écris le **post-mortem** (ci-dessous), acte la fin dans `state.md`. |
+> 🚨 **Nombre d'issues = fonction de la route.** **`public`** → **4 issues** (dont **Go-test**). **Routes allégées (`interne`/`perso`) ET archétype `automation`** → **3 issues** (**Go / Ajuster / No-Go**), **SANS Go-test** : le Go-test sonde une **demande marché** (landing + waitlist), sans objet quand il n'y a pas de marché (`go-test-playbook.md` : « un outil interne/perso ne se waitlist pas » ; cf. `references/lite-mode.md`). Ne propose Go-test que sur la route publique.
+
+| Choix | Ce que ça déclenche | Route |
+|---|---|---|
+| **Go** | Phase 1 **terminée** → cadrage produit (Phase 2). Marque la porte franchie dans `state.md`. | toutes |
+| **Ajuster** | **Reboucle** sur l'étape faible, met à jour les inputs, **repasse** par l'étape 5. | toutes |
+| **Go-test** | **Convertit « à valider par toi » en test réel** : landing + waitlist shippée en **1 jour**, **seuil pré-enregistré avant publication** (`research/go-test.md`) ; au terme de la fenêtre, **retour à la porte** avec la donnée réelle. → `references/go-test-playbook.md` | **`public` uniquement** |
+| **No-Go** | **Arrête proprement** : écris le **post-mortem** (ci-dessous), acte la fin dans `state.md`. | toutes |
 
 **Routage du « Ajuster »** — vers *l'étape qui a produit le maillon faible* : cible/problème → `01-discover` · marché → `02-market` · positionnement → `03-positioning` · demande/edge → `04-demand-edge`.
 

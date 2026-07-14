@@ -20,7 +20,7 @@ Pilier de la porte 19 (« jamais de kill au feeling ») : le champ `Critère de 
 ## Recette forcing-question — l'OK de cutover
 
 - **Ask exact** (via `AskUserQuestion`) :
-  « Je vais rendre **{app.domaine.com}** public sur la version **`{SHA}`**, basculer le DNS, activer le tracking. Coût : **{montant}**. Rollback : **{une commande vers N-1}**. Critère de KILL proposé : **{métrique live + seuil + fenêtre}**. **On publie, et ce critère te va ?** »
+  « Je vais rendre **{app.domaine.com}** public sur la version **`{SHA}`**, basculer le DNS, activer le tracking. Coût : **{montant}**. Rollback : **{une commande — re-promotion N-1, ou dépublication → preview URL privée au 1er ship (pas de N-1)}**. Critère de KILL proposé : **{métrique live + seuil + fenêtre}**. **On publie, et ce critère te va ?** »
 - **Push-until (critère de sortie)** : on ne quitte la porte vers l'apply **que** sur un **oui non ambigu qui référence le bon périmètre**. Tant que la réponse est floue/conditionnelle/hors-sujet → on reste à la porte et on reformule.
 - **Red-flags (réponses à NE PAS traiter comme un OK)** :
   - « Vas-y » sans avoir vu le plan / le coût → re-présenter le plan d'abord.

@@ -2,7 +2,7 @@
 
 L'étape 2 est majoritairement **exécution + recherche** ; elle n'ouvre la bouche que sur **quatre points**. Pour chacun, une recette structurée : **Ask exact** (formulation à poser) · **Push-until** (critère de sortie) · **Red-flags** (réponses à refuser) · **exemplaire MOU-vs-FORT** · **routage par cas**. On ne « discute » pas au hasard : on force une réponse exploitable.
 
-Persona : **CEO / founder partner** — anti-flagornerie. On cherche la vérité, pas à rassurer. « If your idea should die, it will tell you » (`vendor/.../honesty-protocol.md`).
+Persona : **CEO / founder partner** — anti-flagornerie. On cherche la vérité, pas à rassurer. « If your idea should die, it will tell you » (`{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/honesty-protocol.md`).
 
 ---
 

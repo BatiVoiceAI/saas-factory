@@ -3,191 +3,337 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { env } from "@/lib/env";
+import type { AuthError } from "@supabase/supabase-js";
+import { ui } from "@/lib/i18n";
 import { resolveEnrollment } from "@/lib/auth/enrollment";
 import { createClient } from "@/lib/supabase/server";
+import type {
+  LoginFormState,
+  OtpRequestState,
+  OtpVerifyState,
+  PasswordFormState,
+  ResetFormState,
+} from "@/lib/auth/form-state";
 
 /**
- * Server Actions d'authentification (bloc `auth`) — flux PASSWORDLESS.
+ * Server Actions d'authentification (bloc `auth`) — flux OTP → MOT DE PASSE.
  *
- * Un seul parcours pour la connexion ET la création de compte : l'utilisateur
- * saisit son e-mail, reçoit un code à 6 chiffres + un magic link dans le même
- * e-mail, et valide l'un ou l'autre. Pas de mot de passe : pas de flux
- * « mot de passe oublié », et l'e-mail est vérifié par construction (saisir le
- * code ou cliquer le lien prouve la possession de la boîte mail).
+ * Décision produit (Felix) : plus de magic link. Deux parcours distincts.
  *
- * Contrat côté client : chaque action est consommée via `useActionState`
- * (React 19 / Next 15). Elle reçoit l'état précédent + le `FormData` du
- * formulaire et retourne un `AuthState`. En cas de succès, `verifyOtp`
- * `redirect()` — le composant n'a donc pas de branche « succès » à gérer ;
- * le magic link, lui, aboutit via `app/auth/callback/route.ts` (PKCE).
+ *  INSCRIPTION (3 étapes) : e-mail → `requestSignupOtp` envoie un code à 6
+ *  chiffres → `verifyOtp` vérifie le code et OUVRE la session (l'e-mail est
+ *  vérifié par cet acte) → `setPassword` pose le mot de passe (`updateUser`) et
+ *  redirige. Mécanique Supabase : `signInWithOtp` (crée le compte à la volée
+ *  selon l'enrollment) → `verifyOtp({type:'email'})` → `updateUser({password})`.
+ *
+ *  CONNEXION (1 étape) : `signInWithPassword` (e-mail + mot de passe) → redirect.
+ *
+ *  MOT DE PASSE OUBLIÉ (2 étapes) : e-mail → `requestPasswordReset` envoie un
+ *  code (au compte EXISTANT ; jamais de création) → `resetPassword` vérifie le
+ *  code (ouvre la session) puis pose le nouveau mot de passe et redirige.
+ *
+ * L'e-mail d'OTP ne contient QUE le code (pas de lien de connexion) — le
+ * template prod est posé code-seul par `provisioner-db` (cf. supabase/config.toml).
+ *
+ * Contrat client : chaque action est consommée via `useActionState`. Sécurité :
+ * le mot de passe n'est JAMAIS journalisé ni renvoyé au client — il ne transite
+ * que du `FormData` vers Supabase.
  */
-
-const emailSchema = z.object({
-  email: z.string().email("Adresse e-mail invalide."),
-});
-
-const otpSchema = z.object({
-  email: z.string().email("Adresse e-mail invalide."),
-  token: z
-    .string()
-    // Paste-friendly : on ignore espaces et séparateurs collés avec le code.
-    .transform((value) => value.replace(/\D/g, ""))
-    .pipe(z.string().length(6, "Le code contient 6 chiffres.")),
-});
-
-export type AuthState = {
-  /** Étape du parcours : saisie de l'e-mail, ou vérification du code envoyé. */
-  step: "email" | "verify";
-  /** E-mail auquel le code a été envoyé (étape « verify »). */
-  email?: string;
-  /** Erreur transverse en langage humain (rate limit, code expiré…). */
-  error?: string;
-  /** Erreurs de validation par champ (zod). */
-  fieldErrors?: Partial<Record<"email" | "token", string[]>>;
-};
 
 /** Cible post-login : la surface authentifiée (route group `(app)`). */
 const AFTER_LOGIN = "/dashboard";
 
-/**
- * Refus d'enrollment (déploiement `interne`/`perso`) : adresse non invitée ou
- * hors allowlist de domaine. Message unique pour le refus applicatif ET le refus
- * Supabase (`disable_signup`) — l'utilisateur ne peut pas distinguer les deux.
- */
-const ACCESS_DENIED_MESSAGE =
-  "Cette adresse n'est pas autorisée à accéder à cet outil. Demandez une invitation à l'administrateur.";
+// ─── Schémas de validation ───────────────────────────────────────────────────
+
+const emailSchema = z.string().trim().email(ui.auth.errors.emailInvalid);
+
+/** Code OTP : paste-friendly (on retire tout non-chiffre), exactement 6 chiffres. */
+const codeSchema = z
+  .string()
+  .transform((value) => value.replace(/\D/g, ""))
+  .pipe(z.string().length(6, ui.auth.errors.code));
 
 /**
- * Étape 1 — Envoie le code + magic link. Sert aussi au « Renvoyer le code »
- * (l'état précédent est alors conservé pour rester sur l'écran de vérification).
+ * Force du mot de passe (règles raisonnables, alignées sur
+ * `supabase/config.toml` [auth]) : 8–72 caractères, au moins une lettre et un
+ * chiffre. La borne 72 = limite bcrypt de GoTrue (au-delà, tronqué côté serveur).
  */
-export async function requestOtp(
-  prevState: AuthState,
+const passwordSchema = z
+  .string()
+  .min(8, ui.auth.errors.passwordShort)
+  .max(72, ui.auth.errors.passwordLong)
+  .regex(/[A-Za-z]/, ui.auth.errors.passwordLetter)
+  .regex(/\d/, ui.auth.errors.passwordNumber);
+
+// ─── Mapping d'erreurs Supabase → messages humains (sans fuite d'info) ────────
+
+/** Erreur d'envoi de code (`signInWithOtp`). */
+function sendErrorMessage(error: AuthError): string {
+  if (error.code === "signup_disabled" || error.code === "otp_disabled") {
+    return ui.auth.errors.accessDenied;
+  }
+  if (error.code === "over_email_send_rate_limit" || error.status === 429) {
+    return ui.auth.errors.rateLimit;
+  }
+  return ui.auth.errors.sendFailed;
+}
+
+/** Erreur de vérification de code (`verifyOtp`) — code faux ET expiré = même message. */
+function verifyErrorMessage(error: AuthError): string {
+  if (error.status === 429) return ui.auth.errors.rateLimit;
+  return ui.auth.errors.codeIncorrect;
+}
+
+/** Erreur de pose de mot de passe (`updateUser`). */
+function passwordErrorMessage(error: AuthError): string {
+  if (error.status === 429) return ui.auth.errors.rateLimit;
+  if (error.code === "weak_password") return ui.auth.errors.passwordWeak;
+  return ui.auth.errors.generic;
+}
+
+// ─── INSCRIPTION ──────────────────────────────────────────────────────────────
+
+/**
+ * Étape 1 — Envoie le code d'inscription. Sert aussi au « Renvoyer le code ».
+ * L'enrollment (type de déploiement) décide si le compte peut être créé à la
+ * volée (`public`/allowlist) ou doit préexister (invitations/`perso`).
+ */
+export async function requestSignupOtp(
+  _prevState: OtpRequestState,
   formData: FormData,
-): Promise<AuthState> {
-  const parsed = emailSchema.safeParse({ email: formData.get("email") });
-
+): Promise<OtpRequestState> {
+  const rawEmail = String(formData.get("email") ?? "");
+  const parsed = emailSchema.safeParse(rawEmail);
   if (!parsed.success) {
     return {
-      step: prevState.step,
-      email: prevState.email,
-      fieldErrors: parsed.error.flatten().fieldErrors,
+      sent: false,
+      email: rawEmail,
+      fieldErrors: { email: parsed.error.issues.map((i) => i.message) },
     };
   }
 
-  // Politique d'enrollment selon le type de déploiement (bloc `auth`). En mode
-  // `public` : signup ouvert (compte créé à la volée). En `interne`/`perso` :
-  // création anonyme interdite — l'entrée passe par une invitation ou un compte
-  // seedé (autorité = `disable_signup` Supabase, cf. lib/auth/enrollment.ts).
-  const enrollment = resolveEnrollment(parsed.data.email);
+  const enrollment = resolveEnrollment(parsed.data);
   if (!enrollment.allowed) {
-    // Refus applicatif immédiat (domaine hors allowlist `interne`) — aucun code
-    // n'est envoyé. Message honnête sans révéler qui est enrôlé.
-    return {
-      step: prevState.step,
-      email: prevState.email,
-      error: ACCESS_DENIED_MESSAGE,
-    };
+    // Refus applicatif immédiat (domaine hors allowlist) — aucun code envoyé.
+    return { sent: false, email: parsed.data, error: ui.auth.errors.accessDenied };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
-    email: parsed.data.email,
+    email: parsed.data,
     options: {
-      // `public` : login = signup, un seul écran, compte créé à la volée (le
-      // trigger 0001_auth crée le profil). `interne`/`perso` : jamais de
-      // création anonyme — seuls les comptes invités/seedés obtiennent un code.
+      // `public`/allowlist : compte créé à la volée ; sinon (invitations/perso) :
+      // seul un compte préexistant reçoit un code — l'écran sert alors à
+      // l'ACTIVATION (poser le mot de passe d'un compte invité/seedé).
       shouldCreateUser: enrollment.shouldCreateUser,
-      // Le magic link contenu dans l'e-mail passe par le callback qui échange
-      // le code PKCE contre une session. `NEXT_PUBLIC_SITE_URL` = origine publique.
-      emailRedirectTo: `${env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=${encodeURIComponent(
-        AFTER_LOGIN,
-      )}`,
+      // Pas d'`emailRedirectTo` : le flux n'a plus de lien de connexion, l'e-mail
+      // ne porte QUE le code à 6 chiffres.
     },
   });
 
   if (error) {
-    // Signup désactivé (interne/perso) + adresse non enrôlée : GoTrue refuse la
-    // création (`shouldCreateUser: false` sur e-mail inconnu, ou
-    // `disable_signup=true`). On renvoie le même message de refus que le gate
-    // applicatif — pas de code parti, pas de compte créé.
-    if (error.code === "signup_disabled" || error.code === "otp_disabled") {
-      return {
-        step: prevState.step,
-        email: prevState.email,
-        error: ACCESS_DENIED_MESSAGE,
-      };
-    }
-    // Messages humains, sans fuite d'info. (Pas d'énumération possible de
-    // toute façon : compte existant ou pas, le même e-mail part.)
-    if (error.code === "over_email_send_rate_limit" || error.status === 429) {
-      return {
-        step: prevState.step,
-        email: prevState.email,
-        error:
-          "Trop de demandes rapprochées. Patientez une minute avant de redemander un code.",
-      };
-    }
-    return {
-      step: prevState.step,
-      email: prevState.email,
-      error: "L'envoi du code a échoué. Vérifiez l'adresse et réessayez.",
-    };
+    return { sent: false, email: parsed.data, error: sendErrorMessage(error) };
   }
-
-  return { step: "verify", email: parsed.data.email };
+  return { sent: true, email: parsed.data };
 }
 
-/** Étape 2 — Vérifie le code à 6 chiffres et ouvre la session. */
+/**
+ * Étape 2 — Vérifie le code à 6 chiffres et OUVRE la session (l'e-mail est
+ * vérifié). Ne redirige pas : l'UI enchaîne sur l'écran « créer un mot de passe ».
+ */
 export async function verifyOtp(
-  prevState: AuthState,
+  _prevState: OtpVerifyState,
   formData: FormData,
-): Promise<AuthState> {
-  const parsed = otpSchema.safeParse({
-    email: formData.get("email"),
-    token: formData.get("token"),
-  });
+): Promise<OtpVerifyState> {
+  const parsedEmail = emailSchema.safeParse(String(formData.get("email") ?? ""));
+  const parsedCode = codeSchema.safeParse(String(formData.get("code") ?? ""));
 
-  if (!parsed.success) {
+  if (!parsedEmail.success || !parsedCode.success) {
     return {
-      step: "verify",
-      email: prevState.email ?? String(formData.get("email") ?? ""),
-      fieldErrors: parsed.error.flatten().fieldErrors,
+      verified: false,
+      fieldErrors: parsedCode.success
+        ? undefined
+        : { code: parsedCode.error.issues.map((i) => i.message) },
+      error: parsedEmail.success ? undefined : ui.auth.errors.sessionExpired,
     };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.verifyOtp({
-    email: parsed.data.email,
-    token: parsed.data.token,
-    // `email` couvre les codes de connexion ET de création de compte.
+    email: parsedEmail.data,
+    token: parsedCode.data,
     type: "email",
   });
 
   if (error) {
-    if (error.status === 429) {
-      return {
-        step: "verify",
-        email: parsed.data.email,
-        error: "Trop de tentatives. Patientez une minute puis réessayez.",
-      };
-    }
-    // GoTrue renvoie la même erreur pour un code faux et un code expiré :
-    // un seul message honnête, zéro fuite d'info.
-    return {
-      step: "verify",
-      email: parsed.data.email,
-      error:
-        "Code incorrect ou expiré. Vérifiez la saisie ou demandez un nouveau code.",
-    };
+    return { verified: false, error: verifyErrorMessage(error) };
+  }
+  // Session posée (cookies écrits par le client serveur) ; le mot de passe reste
+  // à poser à l'étape suivante.
+  return { verified: true };
+}
+
+/**
+ * Étape 3 — Pose le mot de passe sur la session ouverte à l'étape 2, puis
+ * redirige vers la surface authentifiée. Action TERMINALE.
+ */
+export async function setPassword(
+  _prevState: PasswordFormState,
+  formData: FormData,
+): Promise<PasswordFormState> {
+  const parsed = passwordSchema.safeParse(String(formData.get("password") ?? ""));
+  const confirm = String(formData.get("confirm") ?? "");
+
+  if (!parsed.success) {
+    return { fieldErrors: { password: parsed.error.issues.map((i) => i.message) } };
+  }
+  if (parsed.data !== confirm) {
+    return { fieldErrors: { confirm: [ui.auth.errors.passwordMismatch] } };
   }
 
-  // Session posée (cookies écrits par le client serveur). Invalide le cache
-  // serveur : le layout dépend désormais d'une session.
+  const supabase = await createClient();
+  // Garde : `updateUser` exige une session (posée par `verifyOtp`). Si elle a
+  // expiré entre-temps, on renvoie l'utilisateur reprendre la vérification.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: ui.auth.errors.sessionExpired };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: parsed.data });
+  if (error) {
+    return { error: passwordErrorMessage(error) };
+  }
+
   revalidatePath("/", "layout");
   redirect(AFTER_LOGIN);
 }
+
+// ─── CONNEXION ────────────────────────────────────────────────────────────────
+
+/** Connexion e-mail + mot de passe. Action TERMINALE (redirect au succès). */
+export async function signInWithPassword(
+  _prevState: LoginFormState,
+  formData: FormData,
+): Promise<LoginFormState> {
+  const parsedEmail = emailSchema.safeParse(String(formData.get("email") ?? ""));
+  const password = String(formData.get("password") ?? "");
+
+  const fieldErrors: LoginFormState["fieldErrors"] = {};
+  if (!parsedEmail.success) {
+    fieldErrors.email = parsedEmail.error.issues.map((i) => i.message);
+  }
+  if (password.length === 0) {
+    fieldErrors.password = [ui.auth.errors.passwordRequired];
+  }
+  if (fieldErrors.email || fieldErrors.password) {
+    return { fieldErrors };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email: parsedEmail.success ? parsedEmail.data : "",
+    password,
+  });
+
+  if (error) {
+    if (error.status === 429) return { error: ui.auth.errors.rateLimit };
+    // Identifiants faux OU e-mail non confirmé → même message, zéro énumération.
+    return { error: ui.auth.errors.invalidCredentials };
+  }
+
+  revalidatePath("/", "layout");
+  redirect(AFTER_LOGIN);
+}
+
+// ─── MOT DE PASSE OUBLIÉ ──────────────────────────────────────────────────────
+
+/**
+ * Étape 1 — Envoie un code au compte EXISTANT (jamais de création). Réponse
+ * anti-énumération : on renvoie « envoyé » même si l'adresse est inconnue ou le
+ * signup désactivé — seul un rate limit est signalé.
+ */
+export async function requestPasswordReset(
+  _prevState: OtpRequestState,
+  formData: FormData,
+): Promise<OtpRequestState> {
+  const parsed = emailSchema.safeParse(String(formData.get("email") ?? ""));
+  if (!parsed.success) {
+    return {
+      sent: false,
+      email: String(formData.get("email") ?? ""),
+      fieldErrors: { email: parsed.error.issues.map((i) => i.message) },
+    };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithOtp({
+    email: parsed.data,
+    options: { shouldCreateUser: false },
+  });
+
+  if (error && error.status === 429) {
+    return { sent: false, email: parsed.data, error: ui.auth.errors.rateLimit };
+  }
+  // Toute autre erreur (adresse inconnue, signup désactivé) est avalée : on ne
+  // révèle pas si un compte existe pour cette adresse.
+  return { sent: true, email: parsed.data };
+}
+
+/**
+ * Étape 2 — Vérifie le code (ouvre la session) puis pose le nouveau mot de passe
+ * en un seul envoi. Action TERMINALE (redirect au succès).
+ */
+export async function resetPassword(
+  _prevState: ResetFormState,
+  formData: FormData,
+): Promise<ResetFormState> {
+  const parsedEmail = emailSchema.safeParse(String(formData.get("email") ?? ""));
+  const parsedCode = codeSchema.safeParse(String(formData.get("code") ?? ""));
+  const parsedPassword = passwordSchema.safeParse(
+    String(formData.get("password") ?? ""),
+  );
+  const confirm = String(formData.get("confirm") ?? "");
+
+  const fieldErrors: ResetFormState["fieldErrors"] = {};
+  if (!parsedCode.success) {
+    fieldErrors.code = parsedCode.error.issues.map((i) => i.message);
+  }
+  if (!parsedPassword.success) {
+    fieldErrors.password = parsedPassword.error.issues.map((i) => i.message);
+  } else if (parsedPassword.data !== confirm) {
+    fieldErrors.confirm = [ui.auth.errors.passwordMismatch];
+  }
+  if (fieldErrors.code || fieldErrors.password || fieldErrors.confirm) {
+    return { fieldErrors };
+  }
+  if (!parsedEmail.success) {
+    return { error: ui.auth.errors.sessionExpired };
+  }
+
+  const supabase = await createClient();
+  const { error: verifyError } = await supabase.auth.verifyOtp({
+    email: parsedEmail.data,
+    token: parsedCode.success ? parsedCode.data : "",
+    type: "email",
+  });
+  if (verifyError) {
+    return { fieldErrors: { code: [ui.auth.errors.codeIncorrect] } };
+  }
+
+  const { error: updateError } = await supabase.auth.updateUser({
+    password: parsedPassword.success ? parsedPassword.data : "",
+  });
+  if (updateError) {
+    return { error: passwordErrorMessage(updateError) };
+  }
+
+  revalidatePath("/", "layout");
+  redirect(AFTER_LOGIN);
+}
+
+// ─── DÉCONNEXION ──────────────────────────────────────────────────────────────
 
 export async function signout(): Promise<never> {
   const supabase = await createClient();

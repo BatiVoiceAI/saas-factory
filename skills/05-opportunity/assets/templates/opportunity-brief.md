@@ -80,7 +80,8 @@
 ---
 
 ## Annexe — kit interviews : 5 questions à poser toi-même (Mom Test)
-<!-- Hors pagination (ne compte pas dans le POURQUOI). Rend « à valider par toi » actionnable dès la sortie de la porte (et pendant la fenêtre d'un éventuel Go-test). Dérivées des pain themes de demand-signals.md : une question par douleur majeure (au passé), la dernière sur le comportement. Règles Mom Test : parler de LEUR passé (« la dernière fois que… »), jamais pitcher l'idée, chercher des faits et des comportements — pas des opinions ni des compliments. -->
+<!-- Hors pagination (ne compte pas dans le POURQUOI). Rend « à valider par toi » actionnable dès la sortie de la porte (et pendant la fenêtre d'un éventuel Go-test). Dérivées des pain themes de demand-signals.md : une question par douleur majeure (au passé), la dernière sur le comportement. Règles Mom Test : parler de LEUR passé (« la dernière fois que… »), jamais pitcher l'idée, chercher des faits et des comportements — pas des opinions ni des compliments.
+     🚨 ROUTE `public` UNIQUEMENT. En route allégée (`perso`/`interne`) ou archétype `automation`, il n'y a pas de prospects marché à interviewer : REMPLACER cette annexe par la **checklist « hypothèses propriétaire »** (accès source/outils, format & cadence, seuils, canal+propriétaire de boucle, grain d'idempotence…) — cf. `references/lite-mode.md` §Variante d'annexe. -->
 1. <question dérivée du pain theme n°1 — ex. « Raconte-moi la dernière fois que {douleur}. Qu'est-ce que ça t'a coûté ? »>
 2. <question dérivée du pain theme n°2>
 3. <question dérivée du pain theme n°3>

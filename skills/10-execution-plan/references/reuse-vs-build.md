@@ -49,7 +49,7 @@ Le scaffold de l'étape 11 **pose le code** des blocs « réutiliser » avant la
   - Re-builder auth / notifications / observability / CRUD « pour maîtriser » → **DRY violé** (P4) → câbler le bloc.
   - Classer « custom » un module qui est un bloc à 90 % → **réutiliser + étendre**.
   - Étendre un bloc au point de le réécrire → alors c'est **vraiment custom**, assume-le et note-le comme candidat-bloc.
-- **MOU** : « on fera l'auth nous-mêmes ». **FORT** : « module auth = bloc `auth` (passwordless OTP/magic link+sessions+rôles+RLS) → 1 tâche câblage ; la seule extension custom est le rôle `reviewer` → 1 petite tâche d'extension ».
+- **MOU** : « on fera l'auth nous-mêmes ». **FORT** : « module auth = bloc `auth` (OTP → mot de passe + sessions + rôles + RLS) → 1 tâche câblage ; la seule extension custom est le rôle `reviewer` → 1 petite tâche d'extension ».
 - **Routage par cas** : bloc exact → câblage. Bloc + variante → câblage + extension. Edge produit → build. Intégration domaine → build adaptateur. Ni bloc ni edge mais absent du catalogue → build + note moat.
 
 ## Modes d'échec

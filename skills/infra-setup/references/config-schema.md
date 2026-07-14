@@ -13,6 +13,10 @@
   "profile": "managed",              // managed | open-source  — POSTURE PAR DÉFAUT, overridable par service ci-dessous
   "domain": "tondomaine.com",
   "email_from": "no_reply@tondomaine.com", // adresse d'expéditeur CHOISIE à l'onboarding (apex OU sous-domaine mail.<domain>) ; son domaine = le domaine vérifié dans Resend. NON-secret.
+  "git_author": {                    // identité git-author CHOISIE à l'onboarding (auteur des commits du repo projet). NON-secret.
+    "name": "Nom du compte",         // nom d'auteur des commits (ex. "Speech to Flow")
+    "email": "no_reply@tondomaine.com" // email d'auteur des commits — DOIT être membre de la team hébergeur (Vercel), sinon deploy BLOCKED
+  },
   "hosting": "vercel",               // vercel | cloudflare | coolify (self-host)
   "providers": {
     "repo": "github",                // github | gitea | forgejo (self-host)
@@ -22,18 +26,22 @@
     "billing": "none",               // stripe | none  (none si l'utilisateur ne vend pas)
     "observability": "sentry+posthog", // | posthog-self-host+glitchtip | none
     "llm": "gemini",                 // gemini | gpt-4o | ollama (self-host)
-    "visuals": "nano-banana"         // nano-banana (Google/Gemini) | none
+    "visuals": "nano-banana"         // nano-banana (Nano Banana Pro = modèle gemini-3-pro-image, Google) | none
   },
   "setup_complete": true
 }
 ```
 
 > **`profile` = posture, pas verrou** : `"managed"` pose les défauts managés (repo=github, db=supabase cloud, hosting=vercel, obs cloud), `"open-source"` pose les défauts self-host (repo=gitea/forgejo, db=supabase-self-host, hosting=coolify, obs posthog-self-host+glitchtip, llm=ollama). Chaque clé de `providers`/`hosting` **override** le profil au cas par cas (`decision-matrices.md §Profil`).
-> **`llm` ≠ `visuals`** : Nano Banana est un modèle image **Google**. `llm="gemini"` → même clé Google pour les deux. `llm="gpt-4o"`/`"ollama"` → `visuals="nano-banana"` **seulement** si une clé Google dédiée est déposée, sinon `"none"`.
+> **`llm` ≠ `visuals`** : Nano Banana Pro est un modèle image **Google**. `llm="gemini"` → même clé Google pour les deux. `llm="gpt-4o"`/`"ollama"` → `visuals="nano-banana"` **seulement** si une clé Google dédiée est déposée, sinon `"none"`.
+> **`visuals="nano-banana"` → modèle `gemini-3-pro-image`** (Nano Banana Pro), clé **`GEMINI_API_KEY`** (`.env`), helper `_shared/blocks/web-saas/scripts/generate-visual.mjs` (dans le châssis : `scripts/generate-visual.mjs`). C'est le **moteur de visuels** du plugin : le build génère les visuels produit (hero, OG, empty-states, favicon/wordmark) **dérivés de `DESIGN.md`** → `public/generated/`, référencés via `next/image`. **Porte design « distinctiveness »** : imagerie **générée on-brand**, **jamais du stock/placeholder** (levier anti-convergence — cf. `_shared/design-doctrine.md` §Génération de visuels + `skills/12-build/references/walking-skeleton.md`).
 > **Provider-only** (pas de branche self-host) : `cloudflare` (DNS), `email` (délivrabilité), `billing` (Stripe). Le profil `open-source` ne les bascule pas.
 > **`email_from` (NON-secret) — adresse CHOISIE par l'utilisateur à l'onboarding.** C'est une **question de `infra-setup`** (étape Email/Resend, `connection-procedure.md §5`), **pas** un défaut apex imposé. Un défaut est **proposé** (`no_reply@<domain>` sur l'apex, ou `no_reply@mail.<domain>` si l'apex sert déjà de l'email) mais reste **overridable** : l'utilisateur donne l'adresse qu'il veut (`no_reply@<domain>` apex **ou** `contact@mail.<domain>` sous-domaine).
 > **🚨 INVARIANT — le domaine de `email_from` = le domaine d'envoi vérifié dans Resend** (l'apex `<domain>` **ou** le sous-domaine `mail.<domain>`, **selon l'adresse choisie**). Resend **refuse d'envoyer depuis un domaine non vérifié** (→ HTTP 500 « Error sending confirmation email ») : le domaine de l'adresse From **doit** être celui que l'étape 11 crée + vérifie dans Resend, pas un autre. **Resend gratuit = 1 seul domaine** (403 « plan includes 1 domain » au-delà) → le domaine d'envoi est un **choix unique** (apex **ou** `mail.`, jamais les deux) ; changer d'adresse plus tard = **remplacer** le domaine (delete + add + re-DNS), pas empiler.
 > Injectée telle quelle comme `EMAIL_FROM` dans l'env du projet (non-secret aussi). `email_from`/`EMAIL_FROM` et le domaine d'envoi **restent dans `config.json` / env projet, jamais dans `.env` secrets** ; le seul secret email est `RESEND_API_KEY` (`.env`, tableau ci-dessous). Sert les **deux flux** : confirmation de compte (Supabase Auth, **SMTP = `smtp.resend.com`**) **et** transactionnel (API Resend).
+> **`git_author` (NON-secret) — identité d'auteur des commits CHOISIE par l'utilisateur à l'onboarding**, exactement comme `email_from`. C'est une **question de `infra-setup`** (`connection-procedure.md §1/§4`), **pas** un défaut deviné en cours de run (ne jamais reprendre l'email par défaut de la config git locale de la machine). Un défaut est **proposé** — l'email du compte Vercel connecté, lisible via l'API Vercel `GET /v2/user` après connexion (souvent le même email que le compte GitHub) — mais reste **overridable**. Objet `{name, email}`, toujours référencé `git_author.name` / `git_author.email`.
+> **🚨 INVARIANT — `git_author.email` DOIT être un membre de la team de l'hébergeur (Vercel) du compte de déploiement.** Sinon Vercel renvoie **readyState = `BLOCKED`**, raison exacte « Git author <email> must have access to the team <team> on Vercel to create deployments ». C'est un **blocage silencieux, pas une erreur de build** (`tsc`/`next build` sont verts, le déploiement est juste refusé) — d'où l'intérêt de **capturer l'identité en amont**. Le domaine/l'adresse importe peu ; ce qui est **dur** = l'appartenance à la team. En pratique c'est **l'email du compte GitHub qui est aussi membre de la team Vercel** (souvent identique GitHub/Vercel).
+> Injectée au **scaffold (étape 11)** comme `git config user.email` / `user.name` du repo projet ; utilisée par l'**étape 17** (promotion/deploy) pour que le commit promu ne soit **pas** bloqué. `git_author` **reste dans `config.json`, jamais dans `.env`**, jamais commité (aucun secret : c'est une identité publique d'auteur de commit).
 
 ## Secrets & URLs self-host — dans `.env` (jamais `config.json`)
 | Variante | Variables `.env` |
@@ -47,6 +55,7 @@
 | Email | `RESEND_API_KEY` (ou Postmark) |
 | Obs self-host | `POSTHOG_HOST` + DSN GlitchTip/Sentry |
 | LLM `ollama` (self-host) | `OLLAMA_URL` (**pas de clé**) |
+| **Visuels (Nano Banana Pro) + LLM Gemini** | `GEMINI_API_KEY` (clé Google — **une seule** couvre `llm="gemini"` texte **et** `visuals="nano-banana"` images) |
 
 L'**URL d'une instance self-host n'est pas un secret** mais vit avec son token en `.env` (un seul endroit) ; `config.json` ne dit **que** *quelle variante* (`repo:"gitea"`), pas *où*.
 
@@ -63,4 +72,4 @@ Lit `profile` + `providers.*` + `hosting` → **route** chaque provisioner sur l
 `infra-setup` relancé sur un `config.json` présent → **ne pas écraser en aveugle** : proposer « changer de profil / ajouter un outil / basculer un service managé↔self-host / corriger / annuler ». Mise à jour ciblée, pas régénération complète.
 
 ## Ce qui ne va JAMAIS dans `config.json`
-Aucune valeur secrète (clés, tokens, `service_role`, DSN). `config.json` = **non-secret** : profil, variantes `providers`, domaine, `email_from`, hébergeur, `setup_complete`. Secrets + URLs self-host → `.env` (chmod 600) ; sessions OAuth → côté connecteur.
+Aucune valeur secrète (clés, tokens, `service_role`, DSN). `config.json` = **non-secret** : profil, variantes `providers`, domaine, `email_from`, `git_author` (identité d'auteur des commits), hébergeur, `setup_complete`. Secrets + URLs self-host → `.env` (chmod 600) ; sessions OAuth → côté connecteur.

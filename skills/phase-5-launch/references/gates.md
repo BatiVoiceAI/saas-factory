@@ -1,6 +1,6 @@
 # Gates — Phase 5 : gestion des portes
 
-La Phase 5 est la phase la plus sensible du pipeline : **elle publie et elle dépense**. Deux portes (une interne à 16, une majeure à 17) plus le canary. Ce fichier dit ce que chaque 🚪 **décide**, comment la présenter, et où renvoient les refus.
+La Phase 5 est la phase la plus sensible du pipeline : **elle publie et elle dépense**. Deux portes utilisateur (une interne à 16, une majeure à 17), plus le canary, plus le **contrôle BLOQUANT de fin de phase 17b** (recette live authentifiée). Ce fichier dit ce que chaque 🚪 **décide**, comment la présenter, et où renvoient les refus.
 
 ## Principe : une porte = une décision utilisateur, en clair + preuve
 On ne fait **jamais** lire un artefact technique pour décider. On présente **quoi / où / coût / réversibilité** en langage business + une preuve (URL de preview, coût chiffré, checklist verte), puis on demande un **OK explicite** (`AskUserQuestion`). L'OK est **tracé** dans `state.md`. Aucune généralisation d'un OK à une action ultérieure.
@@ -21,8 +21,21 @@ On ne fait **jamais** lire un artefact technique pour décider. On présente **q
 
 ## Contrôle 3 — Canary (`17-deploy`, post-apply, pas une porte utilisateur)
 - **Vérifie** : pages clés à 200, parcours cœur OK en prod, pas de pic d'erreurs Sentry, Core Web Vitals OK.
-- **Sain** → la mise en ligne est confirmée : URL live + tracking actif → fin de phase.
+- **Sain** → la mise en ligne est confirmée : URL live + tracking actif → **on enchaîne 17b** (le canary vert **ne suffit pas** à déclarer « livré »).
 - **Dégradé / échec** → **rollback** vers version N-1 + log honnête, diagnostic, re-plan. **Pas de faux succès** (safety §6). On ne laisse jamais la prod dégradée.
+
+## Contrôle 4 — Recette live AUTHENTIFIÉE (`17b`, post-canary, BLOQUANT — pas une porte utilisateur)
+- **Active** : **dès qu'il y a auth + RLS** (route selon `skills/saas-factory/references/routing.md` — complète et multi-rôles avec matrice cross-tenant en web-saas `public`/`interne`, **au maximum** en `multi-org` ; preuve d'action seule en `perso` ; sans objet en `landing` ; réduite à la boucle fermée en `automation`).
+- **Vérifie** : sur la **PROD réelle**, on **franchit vraiment l'auth** (OTP **complété** via boîte sandbox de test **ou** session **forgée par l'Admin API** : `createUser` `email_confirm` + `signIn`) et on **exécute CHAQUE action de valeur RLS-protégée de CHAQUE rôle** — au **JWT user-scopé**, jamais service_role. **Preuve par action** : **2xx** + **ligne écrite au bon tenant** (vérif hors-bande) + **notification `sent` immédiate** + **refus cross-tenant prouvé**.
+- **Vert (`recette_live: PASS`, 0 bloquant)** → produit **« livré »** → fin de phase.
+- **Rouge** (bug RLS/scoping/junction, parcours d'invitation injoignable, notif absente, refus cross-tenant non prouvé) → **fix → redeploy → re-test** (budget cycles). **Jamais** de « livré » au rouge. « Ship plus vite » ne la supprime pas : les bugs RLS ne surgissent **qu'en connecté**.
+- **Moteur déjà en place** — on ne réinvente pas : dispatch `agents/live-qa.md`, détail exécutable + DoD + modes d'échec dans `skills/17-deploy/references/live-qa.md`. Cadre : `skills/phase-5-launch/SKILL.md` + règle d'or 19 (`_shared/lessons.md`).
+
+## Archétype `automation` — déploiement scheduler + boucle fermée headless
+Quand `archetype = automation`, la Phase 5 **ne déploie pas une app web** : la cible du cutover est un **ordonnanceur** (GitHub Actions `schedule:` par défaut) et le contrôle 4 (recette live authentifiée `17b`) est **sans objet** (pas d'auth/RLS produit) → **remplacé** par une **vérif de boucle fermée headless** (run → logs → boucle → idempotence). La porte de publication reste **conditionnelle** (elle revient dès qu'on provisionne un scheduler distant, dépense, ou migre une BDD d'état). Caveats opérationnels de `schedule:` (cron UTC only · best-effort/retardé · **auto-désactivation après 60 j = mort silencieuse** · granularité 5 min) et règle « runner éphémère ⇒ Supabase obligatoire » : `skills/17-deploy/references/automation-deploy.md` (source unique — ne pas dupliquer ici).
+
+## Mode autonome / test (pas d'humain à la porte)
+En run non-interactif, les portes de cette phase ne se suppriment **pas** : `AskUserQuestion` est remplacé par une **décision AUTO-ACTÉE + tracée** (raisonnement + verdict dans `state.md`), et le HARD GATE devient « rien de la suite écrit en douce ». **Exception dure spécifique à la Phase 5** : la **porte de publication** (elle **dépense et publie**) **ne s'auto-franchit jamais** — en autonome, on **s'arrête au plan** et on consigne « porte de publication requérant un humain, non franchie en autonome » (repli honnête, safety-rails §1). Règle canonique : `skills/saas-factory/references/gates.md §Portes en mode AUTONOME / test`.
 
 ## Graphe des décisions & retours arrière
 
@@ -45,10 +58,15 @@ On ne fait **jamais** lire un artefact technique pour décider. On présente **q
    Refus/Ajuster ─────▶ ajuster plan (sandbox) ─▶ re-présenter porte
 
  17-deploy · canary
-   sain ──────────────▶ Fin Phase 5 ▶ Phase 6
+   sain ──────────────▶ 17b (recette live authentifiée)   [canary vert ≠ « livré »]
    échec ─────────────▶ rollback N-1 + log ─▶ re-plan ─▶ re-apply
    accès manquant ────▶ repli honnête (guide pas-à-pas), pas de faux succès
+
+ 17b · recette live authentifiée   (BLOQUANT, dès auth + RLS)
+   vert (PASS) ───────▶ « LIVRÉ » ─▶ Fin Phase 5 ▶ Phase 6
+   rouge ─────────────▶ fix ─▶ redeploy ─▶ re-test   (jamais « livré » au rouge)
+   sans objet (landing / automation) ─▶ Fin Phase 5 ▶ Phase 6
 ```
 
 ## Traçabilité (obligatoire)
-À chaque porte franchie, inscris dans `.saas-factory/state.md` : (porte, décision, date). Un OK de porte déjà inscrit **ne se redemande pas** à la reprise (state-resume.md). Jamais de secret/clé dans l'état ni dans les logs (safety §4).
+À chaque porte franchie, inscris dans `.saas-factory/state.md` : (porte, décision, date). Le **contrôle 17b** n'est pas une porte utilisateur mais son verdict s'inscrit aussi : `recette_live: PASS | PASS_WITH_CONCERNS` (+ chemin `deploy/live-qa-report.md`). Un OK de porte déjà inscrit **ne se redemande pas** à la reprise (state-resume.md). Jamais de secret/clé dans l'état ni dans les logs (safety §4).

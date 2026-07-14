@@ -15,7 +15,7 @@ Choix techniques éprouvés, réutilisés d'un projet à l'autre. Le CTO-agent s
 | DNS + CDN | **Provider-only** — Cloudflare (autres providers DNS possibles ; auto-héberger l'autoritatif = hors sujet, pas d'« OSS ») | — |
 | Email transactionnel + confirmation compte | **Provider-only** — Resend (alt Postmark) ; la délivrabilité = un provider · **domaine d'envoi générique unique**, **adresse `email_from` choisie à `infra-setup`** ; domaine vérifié = celui de l'adresse (apex/sous-domaine) ; Resend gratuit = **1 domaine** (voir note ↓) | SMTP self-host possible mais **délivrabilité fragile → non recommandé** |
 | Paiement (optionnel) | **Provider-only** — Stripe (web) / RevenueCat (mobile) ; pas d'auto-hébergement du paiement carte | — |
-| Génération d'images / visuels | Nano Banana (Gemini 2.5 Flash Image — modèle **Google**) ; clé Google requise même si le LLM texte est non-Google (ex. GPT-4o) | — · `visuals = "none"` coupe la génération |
+| Génération d'images / visuels | **Nano Banana Pro** (`gemini-3-pro-image` — modèle **Google**) via `scripts/generate-visual.mjs` ; clé `GEMINI_API_KEY` requise même si le LLM texte est non-Google (ex. GPT-4o) ; visuels **dérivés de `DESIGN.md`** → `public/generated/` (`next/image`), jamais du stock | — · `visuals = "none"` coupe la génération |
 | Transcription | Whisper / gpt-4o-transcribe (alt Groq rapide, Azure realtime) | Whisper local (self-host) |
 | Backend edge | Cloudflare Workers + D1 + KV | route API Next.js (self-host avec l'hébergement) |
 | Desktop / mobile | Swift Core-first (macOS) · .NET/WPF (Windows) · SwiftUI (iOS) | *(natif — pas de fork)* |

@@ -93,4 +93,4 @@ Ordre imposé : **Type → Problème → Cible → Alternative → Écosystème 
 ---
 
 ## Garde-fou transverse (anti-flagornerie)
-Ne dis jamais « intéressant » ou « ça peut marcher » pour meubler. Prends position, dis **ce qui changerait ton avis**. Protocole vendoré : `vendor/startup-skill/startup-competitors/references/honesty-protocol.md`. La **spécificité est la seule monnaie** — une réponse-catégorie se re-questionne, toujours.
+Ne dis jamais « intéressant » ou « ça peut marcher » pour meubler. Prends position, dis **ce qui changerait ton avis**. Protocole vendoré : `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/honesty-protocol.md`. La **spécificité est la seule monnaie** — une réponse-catégorie se re-questionne, toujours.

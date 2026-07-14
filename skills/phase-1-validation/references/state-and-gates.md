@@ -50,6 +50,7 @@ La porte est **portée par `05-opportunity`** (`skills/05-opportunity/references
 - **La décision** = `AskUserQuestion` à quatre issues : **Go / Ajuster / Go-test / No-Go**. Pas de franchissement implicite, pas de « je suppose que c'est go ».
 - **Le verdict reste humble** : demande *plausible*, jamais *prouvée* (signal par proxy, cf. `conventions.md` principe n°3). Un résumé qui rassure à tort est un échec.
 - **En sortie de porte**, écrire la ligne dans « Portes franchies » de `state.md` (décision + date), puis router selon l'issue (§4).
+- **Mode autonome / test** (pas d'humain joignable) : la porte ne se **supprime pas** — l'`AskUserQuestion` est remplacé par une **décision AUTO-ACTÉE + tracée** (décision `AUTO` + **raisonnement** + verdict honnête dans « Portes franchies »), le HARD GATE devient « rien de la suite écrit en douce », et **aucune** porte qui dépenserait/publierait/provisionnerait réellement ne s'auto-franchit (elle s'arrête et se consigne). Règle canonique : `skills/saas-factory/references/gates.md §Portes en mode AUTONOME / test` — ne pas la redéfinir ici.
 
 ## 4. Matrice de retour arrière (« Ajuster »)
 

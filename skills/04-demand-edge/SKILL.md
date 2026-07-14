@@ -54,7 +54,8 @@ Trois verdicts possibles : **Fort / Moyen / Faible**. La rubrique déterministe 
 Formule **humble** : « demande **plausiblement** {forte/moyenne/faible} », preuves à l'appui (quote + source + date).
 
 ### Vérif adversariale (obligatoire)
-Applique `vendor/startup-skill/startup-competitors/references/verification-agent.md` + `honesty-protocol.md` : **tag chaque source par tier** (avis = **Tier 3** ; un verdict « Fort » ne peut pas reposer sur une seule source Tier 3) ; **vérifie l'authenticité des quotes** (verbatim dont la page n'a pas été ouverte à l'étape 2 = `[snippet — non vérifié]`, il ne soutient ni « demande Forte » ni « Edge réel ») ; **écris ce qui confirmerait** (inscriptions, willingness-to-pay, liste d'attente) **et ce qui infirmerait** (avis >18 mois, un seul concurrent, plaintes « nice-to-have ») ; **déclare les trous**.
+Applique `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/verification-agent.md` + `honesty-protocol.md` : **tag chaque source par tier** (avis = **Tier 3** ; un verdict « Fort » ne peut pas reposer sur une seule source Tier 3) ; **vérifie l'authenticité des quotes** (verbatim dont la page n'a pas été ouverte à l'étape 2 = `[snippet — non vérifié]`, il ne soutient ni « demande Forte » ni « Edge réel ») ; **écris ce qui confirmerait** (inscriptions, willingness-to-pay, liste d'attente) **et ce qui infirmerait** (avis >18 mois, un seul concurrent, plaintes « nice-to-have ») ; **déclare les trous**.
+> **Résolution du chemin** : `{PLUGIN_ROOT}` se résout en chemin ABSOLU avant tout accès (hook SessionStart ou échelle de fallback), Read de vérification avant dispatch, jamais de `vendor/…` relatif dans un brief de sous-agent — `_shared/vendored-engine-protocol.md` **§0**.
 > Recette détaillée (matrice tier × verdict, triptyque, passe honnêteté, exemple rempli) → `references/adversarial-verification.md`.
 
 ## BLOC 2 — Edge

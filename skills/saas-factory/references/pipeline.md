@@ -1,7 +1,7 @@
 # Pipeline — les 6 phases enchaînées (carte du chef d'orchestre)
 
 Règles transverses du **master**, lues une fois. Elles priment sur le comportement par défaut.
-Tu **n'exécutes pas** les étapes ici : tu **invoques l'orchestrateur de phase**, qui déroule ses étapes expertes. Ta valeur = enchaîner dans l'ordre, router, tenir l'état, poser les portes.
+Tu **n'exécutes pas** les étapes ici : tu **invoques l'orchestrateur de phase**, qui déroule ses étapes expertes. Ta valeur = enchaîner dans l'ordre, router, tenir l'état, poser les portes. Le pipeline compte **20 étapes** réparties sur les 6 phases — dont **17b**, la recette live AUTHENTIFIÉE, contrôle **bloquant** de fin de Phase 5 (source : `skills/phase-5-launch/SKILL.md`).
 
 ## Le flux — diagramme
 
@@ -34,8 +34,9 @@ Tu **n'exécutes pas** les étapes ici : tu **invoques l'orchestrateur de phase*
        ┌──────────────────┐  kill  ◀─────────────┐        ┌──────────────────┐
        │ P6 phase-6-after │                      │        │ P5 phase-5-launch│
        │  (PM/EngMgr)     │  continue → itère    │        │  (Mkt/Release)   │
-       │  18→19  🚪19     │──────────────────────┘        │  16→17  🚪17     │
+       │  18→19  🚪19     │──────────────────────┘        │ 16→17→17b 🚪17   │
        └──────────────────┘   (retour Phase 4/5)          └──────────────────┘
+                                              17b = recette live AUTH. (bloquante)
               │ kill                                              │ publié
               ▼                                                   ▼
          archive + mémoire ◀────────────────────────────── (produit en ligne)
@@ -51,7 +52,7 @@ Les 🚪 = portes utilisateur. Les flèches `◀` remontantes = **retours arriè
 | 2 | `phase-2-product` | PM/CEO/Designer | 06→08 | `product/*` (PRD), `DESIGN.md` | 🚪 **PRD + charte validés** |
 | 3 | `phase-3-tech` | CTO | 09→11 | `tech/architecture.md`, `tech/execution-plan.md`, repo + `tech/provisioning-log.md` | **aucune** (100% autonome) |
 | 4 | `phase-4-build` | l'org | 12→15 | code validé (cascade + faux-client), `qa/*` | 🚪 **Ship / Itérer / Stop** (étape 15) |
-| 5 | `phase-5-launch` | Marketing/Release | 16→17 | `seo/plan.md`, prod déployée | 🚪 **publication** (plan-then-apply, étape 17) |
+| 5 | `phase-5-launch` | Marketing/Release | 16→17→**17b** | `seo/plan.md`, prod déployée, `deploy/live-qa-report.md` | 🚪 **publication** (plan-then-apply, étape 17) + **17b** recette live authentifiée (contrôle **bloquant** de fin de phase, dès auth + RLS — pas une porte utilisateur ; détail : `skills/17-deploy/references/live-qa.md`) |
 | 6 | `phase-6-after` | PM/Eng Manager | 18→19 | `metrics/review.md`, `retro/retro.md`, mémoire | 🚪 **kill / continue** (étape 19) |
 
 Chaque phase **lit** les artefacts de la précédente et **écrit** les siens (le bus de données). Le détail des chemins lit/écrit par étape vit dans les `references/conventions.md` de chaque phase — ne le duplique pas ici, ouvre-le au moment d'invoquer la phase.

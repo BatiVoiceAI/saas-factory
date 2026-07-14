@@ -49,7 +49,7 @@ Sépare les tâches de **câblage de bloc** (réutilisation `_shared/blocks/`, r
   - « Ajouter un champ `title` » isolé → **trop fine** (bruit ; fusionne dans la tâche CRUD de l'entité).
   - Une tâche qui touche **3+ modules** → elle cache des dépendances → éclate-la par module.
   - Une tâche sans test rouge formulable → ce n'est pas une tâche TDD, c'est un vœu.
-- **MOU** : « T3 · faire l'auth ». **FORT** : « T3 · câbler bloc `auth` (passwordless OTP/magic link, sessions, rôles) · zone `app/(auth)/` + `lib/auth/` · réutilise `_shared/blocks/auth` · test rouge : un code OTP invalide est refusé ».
+- **MOU** : « T3 · faire l'auth ». **FORT** : « T3 · câbler bloc `auth` (OTP → mot de passe, sessions, rôles) · zone `app/(auth)/` + `lib/auth/` · réutilise `_shared/blocks/auth` · test rouge : un code OTP invalide est refusé ».
 - **Routage par cas** : bloc réutilisable → tâche de **câblage** (1 tâche/bloc, rapide) ; verticale métier → **1..n tâches de build** par couture ; glue transverse (nav, layout) → tâche `ui-shell` unique en amont.
 
 ### Repère de granularité (heuristique, pas une loi)

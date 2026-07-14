@@ -1,6 +1,6 @@
 # Référence — Cartes de sécurité (cran CTO)
 
-Référentiels à consulter pour la lentille sécurité du CTO, **en complément du `security-review` vendoré** (diff-aware). À disclosure progressive : ouvre la carte pertinente selon la nature de la feature.
+Référentiels à consulter pour la lentille sécurité du CTO, **en complément du moteur `security-review` vendoré** (`{PLUGIN_ROOT}/vendor/security-review/.claude/commands/security-review.md`, diff-aware — exécution : playbook CTO). À disclosure progressive : ouvre la carte pertinente selon la nature de la feature.
 
 ## OWASP Top 10 (web classique)
 Injection (SQL/NoSQL/commande) · auth/session cassée · exposition de données sensibles · XXE · contrôle d'accès défaillant · mauvaise config sécurité · XSS · désérialisation non sûre · composants vulnérables connus · logging/monitoring insuffisant.
@@ -25,7 +25,7 @@ Ouvre **seulement** ce qui s'applique (disclosure progressive). Une feature peut
 | Upload / fichier / import | OWASP (désérialisation, XXE, injection) | idem |
 | Appel à un LLM (prompt, RAG, résumé) | **OWASP LLM Top 10** + OWASP web | STRIDE |
 | Agent / outils / actions autonomes | **OWASP Agentic Top 10** + LLM | STRIDE + revue des permissions d'outils |
-| Paiement / données sensibles / PII | OWASP (exposition de données) + STRIDE (Information disclosure) | `security-review` vendoré prioritaire |
+| Paiement / données sensibles / PII | OWASP (exposition de données) + STRIDE (Information disclosure) | moteur `security-review` vendoré prioritaire (chemin : voir l'en-tête) |
 | Purement front / statique, 0 entrée non fiable | souvent aucune (exclusions dures) | vérifie quand même le trust-boundary d'une sortie LLM |
 
 ## Micro-exemples d'exploit concret (niche-agnostiques)

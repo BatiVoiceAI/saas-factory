@@ -14,6 +14,12 @@ import { createClient } from "@/lib/supabase/server";
  * helpers ne « re-vérifient » pas les droits côté app, ils s'appuient sur la base.
  * `create` injecte automatiquement `owner = auth.uid()` (l'utilisateur courant).
  *
+ * NB — `items` = ENTITÉ D'EXEMPLE. L'entité `items` livrée avec ce bloc est le
+ * patron de référence « clone-me » côté DÉVELOPPEUR ; elle est **RETIRÉE du
+ * produit livré au build** (walking skeleton, étape 12) et n'est jamais montrée
+ * à l'utilisateur final. Seul CE factory (`lib/crud/factory.ts`) est réutilisable
+ * et reste. Marquage + règle de suppression au build : `CONVENTIONS.md` §10.
+ *
  * ── COMMENT CLONER POUR UNE NOUVELLE ENTITÉ ─────────────────────────────────
  *
  *  1. MIGRATION : `supabase/migrations/000X_<entité>.sql`
@@ -41,8 +47,13 @@ import { createClient } from "@/lib/supabase/server";
  *         inputSchema: <entité>InputSchema,
  *       });
  *
- *  4. UI : copier `app/(app)/items/*` et `components/items/*` en remplaçant
- *     le nom de l'entité. C'est tout.
+ *  4. UI : `app/(app)/items/*` et `components/items/*` sont l'EXEMPLE de
+ *     référence (côté dev) — **retiré du produit livré au build** (étape 12),
+ *     jamais sous les yeux de l'utilisateur final. Copiez leur STRUCTURE en
+ *     remplaçant le nom de l'entité : la vraie entité est générée dans le vrai
+ *     espace produit (route group dédié, ex. `app/(manager)/`), pas sous
+ *     `app/(app)/`. Sa nav est dérivée des features (jamais un lien hardcodé),
+ *     cf. `CONVENTIONS.md` §11. C'est tout.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 

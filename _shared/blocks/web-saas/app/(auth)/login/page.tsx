@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { AuthForm } from "@/components/auth/auth-form";
+
+import { LoginForm } from "@/components/auth/login-form";
 import { getUser } from "@/lib/auth/get-user";
+import { ui } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "Connexion",
+  title: ui.auth.login.title,
 };
 
 /**
- * L'ÉCRAN d'auth du châssis (flux passwordless) : connexion ET création de
- * compte partagent ce parcours e-mail → code/lien. /signup y redirige.
- * Bannières contextuelles pilotées par `?status=` (callback magic link).
+ * Écran de CONNEXION (flux OTP → mot de passe) : e-mail + mot de passe. Distinct
+ * de /signup (inscription) et /reset (mot de passe oublié). Une bannière
+ * contextuelle `?status=` couvre un éventuel échec de retour OAuth
+ * (app/auth/callback) — il n'y a plus de magic link.
  */
 const STATUS_MESSAGES: Record<string, string> = {
-  "auth-error":
-    "Le lien de connexion est invalide ou a expiré. Saisissez votre e-mail pour en recevoir un nouveau.",
+  "auth-error": ui.auth.errors.oauthFailed,
 };
 
 export default async function LoginPage({
@@ -22,7 +24,7 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  // Déjà authentifié -> pas de raison de rester sur /login.
+  // Déjà authentifié → pas de raison de rester sur /login.
   if (await getUser()) redirect("/dashboard");
 
   const { status } = await searchParams;
@@ -35,7 +37,7 @@ export default async function LoginPage({
           {message}
         </p>
       ) : null}
-      <AuthForm />
+      <LoginForm />
     </>
   );
 }

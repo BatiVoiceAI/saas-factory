@@ -50,7 +50,7 @@ Le `type` (public / interne / perso) capté par `01-discover` **route toute la s
 
 ## Calibration des moteurs vendorés (rappel opérationnel)
 
-Les moteurs (`vendor/startup-skill/*`) sont exécutés **tels quels** par les étapes, pas par l'orchestrateur. Deux points d'attention côté flux :
+Les moteurs (`{PLUGIN_ROOT}/vendor/startup-skill/*`) sont exécutés **tels quels** par les étapes, pas par l'orchestrateur. Deux points d'attention côté flux :
 
 - **Périmètre Phase 1 uniquement.** Certains moteurs débordent sur le produit/brand/financials (= Phase 2). L'orchestrateur ne garde que la **tranche marché / validation / positionnement** ; le reste est ignoré ici et routé vers la phase suivante (détail dans `conventions.md`).
 - **Réutilisation review-mining.** Le review-mining produit à l'étape 2 (`startup-competitors` wave 2) est **consommé** à l'étape 4 — ne le relance pas. Si l'étape 4 tourne sans `market.md` disponible, c'est un défaut de séquence (reprise), pas une invitation à re-miner.

@@ -3,13 +3,15 @@ import { env } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Callback magic link / OAuth (bloc `auth`).
+ * Callback OAuth / PKCE (bloc `auth`).
  *
- * Supabase redirige ici avec un `?code=...` (PKCE) après un clic sur le magic
- * link du flux passwordless (l'alternative au code à 6 chiffres, cf.
- * `lib/auth/actions.ts`) ou une connexion OAuth. On échange ce code contre
- * une session (les cookies sont posés par le client serveur) puis on redirige
- * vers `next` (surface authentifiée par défaut).
+ * Le flux d'auth du châssis est OTP → mot de passe (cf. `lib/auth/actions.ts`),
+ * SANS magic link : les codes à 6 chiffres se vérifient côté serveur, ils ne
+ * repassent jamais par ici. Cette route ne subsiste QUE pour un futur provider
+ * OAuth (Supabase y redirige avec `?code=...` PKCE) : on échange le code contre
+ * une session (cookies posés par le client serveur) puis on redirige vers `next`
+ * (surface authentifiée par défaut). Sans provider OAuth configuré, elle n'est
+ * jamais atteinte.
  */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

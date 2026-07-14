@@ -1,7 +1,7 @@
 ---
 name: 01-discover
 description: >-
-  Étape 1 (Phase 1 · validation) de SaaS Factory — Découverte de l'idée & du problème (rôle CEO). Point d'entrée : recueille l'idée brute, le problème et la douleur, la cible précise, l'écosystème (destination public / interne / perso, intégrations, contraintes), détecte l'archétype, et produit l'idea-brief qui alimente toute la suite. Se déclenche quand l'utilisateur veut clarifier, cadrer ou « poser » une idée de SaaS, d'app ou d'outil.
+  Étape 1 (Phase 1 · validation) de SaaS Factory — Découverte de l'idée & du problème (rôle CEO). Point d'entrée : recueille l'idée brute, le problème et la douleur, la cible précise, l'écosystème (destination public / interne / perso, intégrations, contraintes), détecte l'archétype (web-saas / landing / automation) et la tenancy (single / multi-org), et produit l'idea-brief qui alimente toute la suite. Se déclenche quand l'utilisateur veut clarifier, cadrer ou « poser » une idée de SaaS, d'app ou d'outil.
 allowed-tools: Read, Write, Edit, AskUserQuestion, Bash
 ---
 
@@ -16,7 +16,7 @@ Procédure déterministe de la **Découverte** : on part de l'idée brute de l'u
 Le SKILL reste l'aperçu ; la procédure exhaustive vit dans `references/` :
 - **`references/interview-procedure.md`** — la machine à états de l'entretien (S0→S12), sous-procédure et critère de passage par cran, data-flow vers l'aval.
 - **`references/forcing-questions.md`** — recette par question (*Ask / Push-until / Red-flags / MOU-vs-FORT / routage*), le cœur du déterminisme.
-- **`references/decision-matrices.md`** — tables *condition → action* : type→route, stade, archétype, sauter une question, quand arrêter de pousser, force du signal.
+- **`references/decision-matrices.md`** — tables *condition → action* : type→route, stade, archétype & tenancy, sauter une question, quand arrêter de pousser, force du signal.
 - **`references/edge-cases.md`** — cas limites (E1–E10) + modes d'échec + anti-patterns à s'auto-interdire.
 - **`references/definition-of-done.md`** — checklist qualité du brief + auto-vérif + script de la porte de sortie.
 
@@ -27,7 +27,7 @@ Tant que le brief n'est pas écrit, tu ne proposes **aucune solution**, tu n'éc
 
 ## Entrée / sortie (contrat)
 - **Lit** : l'idée de l'utilisateur, en langage libre.
-- **Écrit** : `research/idea-brief.md` (selon `assets/templates/idea-brief.md`) + `.saas-factory/state.md` (étape courante, type/route, archétype). Jamais de secret ni de clé.
+- **Écrit** : `research/idea-brief.md` (selon `assets/templates/idea-brief.md`) + `.saas-factory/state.md` (étape courante, type/route, **archétype** {web-saas|landing|automation} + **tenancy** {single|multi-org}, **`locale`/`dir`/`jurisdiction`**). Jamais de secret ni de clé.
 - **Amorce l'aval** : le brief capte **de quoi lancer les 3 vagues de l'étape 2** sans ré-interroger — surtout les **concurrents connus** (Q4 Alternative actuelle, dont le statu quo Excel/papier/rien) et une **catégorie/marché assez précise pour cadrer une recherche** (déduite de Problème + Écosystème). L'étape 2 branche ces champs sur l'Intake du moteur `startup-competitors` (cf. `02-market/references/intake-mapping.md`) ; un champ flou ici = une recherche floue là-bas.
 
 ## Principe des questions (le cœur du déterminisme ici)
@@ -53,7 +53,7 @@ Pourquoi si strict : l'étape 2 (marché) et l'étape 4 (demande) s'ancrent sur 
 2. **Reformule** l'idée en 2 lignes et **fais valider**. Tant que ce n'est pas confirmé, tout ce qui suit repose sur du sable.
 3. **Pose les questions manquantes** (ci-dessous), une par une, pédagogiques — en sautant celles déjà couvertes.
 4. Déduis le **stade** (pré-produit / a des utilisateurs / a des clients payants) — sert au routage aval et aux forcing questions réutilisées ensuite.
-5. **Détecte l'archétype** de build.
+5. **Détecte l'archétype** de build ({web-saas|landing|automation}, défaut web-saas) **et la tenancy** ({single|multi-org}, défaut single) — déduits par défaut, 1 question **seulement si ambigu** ; puis **capte la langue du livrable** (`locale` — défaut = langue parlée, 1 question optionnelle).
 6. **Écris l'`idea-brief`** selon le template, puis **confirme le cadrage** (porte légère).
 
 > Le déroulé détaillé (machine à états S0→S12, critère de passage de chaque cran, data-flow) : `references/interview-procedure.md`.
@@ -77,7 +77,7 @@ Patron de spécificité (colonne Cible). Une réponse-catégorie se re-questionn
 « Comment font-ils **aujourd'hui**, sans ton outil — Excel, papier, un concurrent, rien ? » C'est ce que le produit devra battre, et l'ancre de l'étape 3. **Note tout concurrent/outil nommé** : ce sont les « concurrents nommés » que l'étape 2 branchera sur sa recherche.
 
 ### 5. Écosystème métier
-« Dans quel environnement ça s'insère ? » Secteur, pays/langue, règles (RGPD, données sensibles), et surtout les **outils à connecter** (WhatsApp, email, logiciel métier, ERP). Les intégrations cadrent la faisabilité avant le build.
+« Dans quel environnement ça s'insère ? » Secteur, pays/langue, règles (RGPD, données sensibles), et surtout les **outils à connecter** (WhatsApp, email, logiciel métier, ERP). Les intégrations cadrent la faisabilité avant le build. Le **pays/secteur** capté ici alimente `jurisdiction` et sert d'indice pour `locale` (cf. « Langue du livrable » ci-dessous).
 
 ### 6. Signal préliminaire de demande (léger ici)
 « As-tu déjà des **signes** que des gens en veulent — qui s'en plaignent, cherchent, paient déjà pour un truc proche ? » Rappel : **interest ≠ demand**. On note, on ne sur-interprète pas ; on creuse à l'étape 4.
@@ -88,13 +88,28 @@ Patron de spécificité (colonne Cible). Une réponse-catégorie se re-questionn
 ### 8. Ce que ça n'est PAS (optionnel)
 « Qu'est-ce que ton produit **ne fera pas**, au moins en v1 ? » Déductible si l'utilisateur ne sait pas — cadre le scope dès le départ.
 
-## Détection de l'archétype
-Déduis l'**archétype de build** (par défaut **web-saas** — `_shared/archetypes/`). Il pré-charge les defaults de stack réutilisés en aval : le nommer ici évite de reposer la question. En cas de doute, retiens `web-saas` et note l'incertitude.
+## Détection de l'archétype & de la tenancy (2 des 3 axes du cadrage)
+Le cadrage tient sur **3 axes orthogonaux** : **`type`** (accès public|interne|perso, déjà capté en Q1), **`archetype`** (forme **technique** du livrable) et **`tenancy`** (mono- vs multi-organisation). **Modèle 3-axes + conditionnement du socle de complétude par archétype : SOURCE UNIQUE `_shared/state-schema.md`** — ici on ne fait que **détecter et écrire** les deux axes techniques, sans les redéfinir. Le nommer à l'intake pré-charge les defaults réutilisés en aval et évite de reposer la question.
 
-> Détection du **stade** et de l'**archétype** (tables *condition → action*) : `references/decision-matrices.md`. Cas limites & modes d'échec (idée-solution, cible « tout le monde », type mouvant…) : `references/edge-cases.md`.
+**⚠️ Périmètre : on DÉTECTE et on NOMME l'archétype/tenancy AU MODÈLE — le scaffold code réel (châssis des archétypes `landing` & `automation`, bloc org-tenancy) est DÉFÉRÉ au Thème C.** Le nommer ici ne prétend pas que c'est buildable aujourd'hui ; ça cadre l'aval.
+
+- **Archétype** (défaut `web-saas`) : `web-saas` = auth + BDD + dashboard (l'app actuelle) · `landing` = page marketing seule (+ waitlist/CTA optionnelle), **PAS d'auth / BDD produit / dashboard** · `automation` = worker/cron/bot/intégration **headless**, **PAS de socle UI produit** (admin minimal optionnel).
+- **Tenancy** (défaut `single`, pertinente pour `web-saas`) : `single` = mono-compte/mono-org · `multi-org` = B2B **vendu à N entreprises**, chacune son espace → active en aval le **substrat org-tenancy** (Org + membres + invitations + switch d'org + rôles ; SSO & billing par org en options — cf. state-schema).
+
+**Règle (ne gonfle PAS l'intake)** : déduis **`web-saas` + `single`** en silence. **Une seule question, et seulement si** l'entretien porte un signal `landing`/`automation`/`multi-org` **non tranché** ; sinon écris le défaut sans rien demander. Doute résiduel → défaut + note « à confirmer en Phase 3 ». Les 6 livrables de la vision se dérivent de ces 3 axes (landing-only = `landing` ; automatisation = `automation` ; SaaS B2B = web-saas+public+multi-org — **table de dérivation complète dans state-schema**).
+
+> Détection du **stade**, de l'**archétype** et de la **tenancy** (tables *condition → action* + cas ambigus) : `references/decision-matrices.md`. Cas limites & modes d'échec (idée-solution, cible « tout le monde », type mouvant…) : `references/edge-cases.md`.
+
+## Langue du livrable (`locale`) — déduite par défaut, 1 seule question optionnelle
+La langue du **produit généré** (copy UI, onboarding, emails OTP/notifs, légal, landing, SEO) est un **champ canonique de 1er rang**, **distinct** de la langue de dialogue : `locale` (code BCP-47), avec `dir` (ltr/rtl) et `jurisdiction` dérivés. Définition unique + propagation downstream : **`_shared/state-schema.md`** — ici on ne fait que le **capter** (comme `type`/`route`), sans le redéfinir.
+- **Défaut = la langue dans laquelle l'utilisateur t'écrit** (il parle FR → `locale = fr-FR` ; il parle anglais → `en-US`). **Zéro question ajoutée** si le défaut lui convient — on ne gonfle pas l'intake.
+- **Une seule question, optionnelle et overridable** : « Dans quelle langue le produit doit-il être ? » — à poser **uniquement** pour confirmer/changer le défaut (un francophone peut vouloir un produit **anglais**). C'est le défaut **+ 1 override**, pas une question de plus imposée à chaque projet.
+- **`dir`** dérivé de `locale` : `rtl` pour ar/he/fa/ur, sinon `ltr`. **`jurisdiction`** déduite de l'Écosystème (pays/secteur — Q5) : `FR`, `US`, `EU`, `intl`… ; elle pilotera en aval les **pages légales adaptées à la juridiction** (jamais « légal FR » en dur).
+- **Écris `locale`/`dir`/`jurisdiction`** dans `research/idea-brief.md` **et** `.saas-factory/state.md`. Posés à l'intake comme l'identité du projet, ils restent **invariants** ensuite (propagés design/build/emails/légal/SEO/QA sans re-demander).
 
 ## Écriture de l'artefact — `research/idea-brief.md`
-Selon `assets/templates/idea-brief.md`. Structuré pour servir d'**input direct à l'étape 2 ET aux moteurs réutilisés en aval** (dont `office-hours`), donc respecte les champs : Idée reformulée · Problème & douleur (qui/quand/conséquence) · Cible (persona précis) · Alternative actuelle (dont concurrents nommés) · Type + route · Stade · Écosystème (secteur, géo/langue, réglementaire, intégrations) · Signal préliminaire · Contraintes · Non-goals préliminaires · Critère de KILL (pré-rempli à la porte S12) · Archétype détecté. Jamais de secret ni de clé dans le brief.
+Selon `assets/templates/idea-brief.md`. Structuré pour servir d'**input direct à l'étape 2 ET aux moteurs réutilisés en aval** (dont `office-hours`), donc respecte les champs : Idée reformulée · Problème & douleur (qui/quand/conséquence) · Cible (persona précis) · Alternative actuelle (dont concurrents nommés) · Type + route · **`locale`/`dir`/`jurisdiction`** (langue du livrable) · Stade · Écosystème (secteur, géo/langue, réglementaire, intégrations) · Signal préliminaire · Contraintes · Non-goals préliminaires · Critère de KILL (pré-rempli à la porte S12 ; **sans objet en perso**) · **Archétype détecté** ({web-saas|landing|automation}) + **tenancy** ({single|multi-org}) — cf. `_shared/state-schema.md`. Jamais de secret ni de clé dans le brief.
+> 🚨 **Si `archetype = automation`** : le template porte en fin un bloc **§Intake spécifique — archétype `automation`** (déclencheur & cadence · systèmes source→cible · **boucle fermée : canal + propriétaire** · seuils & règles · **unité d'idempotence** pressentie). **Le remplir est obligatoire** — ce sont des entrées de 1er rang de 05 lite (boucle à nommer + idempotence risque n°1), du socle AU1-AU5 (07), de l'architecture (09) et du provisioning scheduler (11) ; sans elles, l'aval doit tout inventer. Pour les **autres archétypes**, **retirer** ce bloc du brief (pas de case vide parasite).
 
 ## Routage par type (à inscrire dans le brief et `state.md`)
 - **public** → étapes 2 · 3 · 4 · 5 complètes.
@@ -102,7 +117,7 @@ Selon `assets/templates/idea-brief.md`. Structuré pour servir d'**input direct 
 - **perso** → **saute** 2 · 3 · 4 ; étape 5 **allégée** (« cet outil te sert à toi — on build ? »).
 
 ## Porte de sortie (légère)
-**Avant le récap, pré-enregistre le Critère de KILL** : demande « qu'est-ce qui te ferait abandonner ce projet ? » (un signal concret) et note la réponse avec ses mots dans le brief — posé avant tout chiffre, il ne pourra pas être déplacé après coup (17-deploy le rendra mesurable, 19-retro le confrontera aux faits). Puis récapitule : reformulation + type/route + cible + problème, et **demande confirmation** avant la suite (« On part sur un SaaS *public*, cible *X*, problème *Y* — c'est bien ça ? »). Ne franchis pas sans réponse. Mets à jour `.saas-factory/state.md` (étape courante, type/route, archétype).
+**Avant le récap, pré-enregistre le Critère de KILL** *(public/interne ; **sauté en perso** — pas de marché à abandonner)* : demande « qu'est-ce qui te ferait abandonner ce projet ? » (un signal concret) et note la réponse avec ses mots dans le brief — posé avant tout chiffre, il ne pourra pas être déplacé après coup (17-deploy le rendra mesurable, 19-retro le confrontera aux faits). Puis récapitule : reformulation + type/route + cible + problème, et **demande confirmation** avant la suite (« On part sur un SaaS *public*, cible *X*, problème *Y* — c'est bien ça ? »). Ne franchis pas sans réponse. Mets à jour `.saas-factory/state.md` (étape courante, type/route, **archétype + tenancy**, `locale`/`dir`/`jurisdiction`).
 
 > Checklist qualité du brief (Definition-of-Done), auto-vérif avant la porte, et routage de la décision : `references/definition-of-done.md`.
 

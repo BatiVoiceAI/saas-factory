@@ -5,6 +5,7 @@ Le pré-vol est **bloquant**. Aucune ligne de l'apply ne démarre tant que cette
 ## Definition-of-done (tous les items → vert)
 
 ### A. Code & tests
+- [ ] **Porte MACHINE VERTE — pré-requis à toute recette d'agent.** `npm run verify:machine` VERT (le **plancher exécutable** ; liste + point d'entrée définis **une seule fois** à la porte `12-build` `integration-pass.md` DoD, `_shared/blocks/web-saas/scripts/`) sur le **SHA figé** à promouvoir. La recette live (`live-qa.md`) et cette DoD ne jugent **que ce que la machine ne sait pas juger** ; rouge machine = **STOP** avant tout jugement d'agent (`_shared/lessons.md` §18).
 - [ ] Build prod réussit localement / en CI (même config que la prod, pas `dev`).
 - [ ] Suite de tests **verte** (unit + intégration + e2e du parcours cœur).
 - [ ] Le **livret** `qa/test-booklet.md` n'a **aucun `FAIL` bloquant**.
@@ -42,6 +43,7 @@ Leçon de run : un produit peut passer A-D et sortir avec un worker jamais décl
 - [ ] **Redirect URLs prod posées** côté auth (Supabase) : le domaine prod est dans la liste des URLs de redirection autorisées — sinon les liens de connexion renvoient vers localhost/staging.
 - [ ] **Events du funnel émettent en staging** (bloquant) : `user_signed_up` + `activation_completed` (le moment magique du PRD) sont **visibles dans PostHog live-events** après un parcours de test — un funnel muet au ship rend la Phase 6 aveugle dès le premier tour.
 - [ ] **`*.vercel.app` noindex/redirigé** : la neutralisation du domaine technique est **préparée** au pré-vol et **appliquée après le cutover** (noindex ou redirect 308 vers le domaine prod) — il ne doit pas concurrencer le domaine prod dans l'index.
+- [ ] **Auteur du commit à promouvoir = identité de déploiement** : `git log -1 --format=%ae` du SHA promu **==** `config.git_author.email`, **ET** (hébergeur Vercel) cet email est un **membre de la team Vercel** du compte de déploiement. Sinon **STOP** — Vercel renverra **`readyState = BLOCKED`** (raison « Git author `<email>` must have access to the team `<team>` on Vercel to create deployments »), un **blocage silencieux** : pas une erreur de build (`tsc`/`next build` verts), le déploiement est juste **refusé** — d'où l'intérêt de l'attraper **avant** de promouvoir, pas après. Correctif : ré-authorer le commit promu (`git commit --amend --reset-author` avec l'identité `git_author`) **ou** ajouter l'email à la team hébergeur, puis re-promouvoir. Le CHAMP + l'invariant complet : `infra-setup/references/config-schema.md §git_author`.
 
 ### F. Accès & déploiement privé — `interne`/`perso` uniquement (le « privé » doit être PROUVÉ)
 Un outil « interne » dont un inconnu qui a l'URL peut créer un compte **n'est pas privé** (P0.5). Ces items ne s'appliquent **que si `type ≠ public`** ; pour un SaaS public, ils sont **non applicables** (signup ouvert par conception, à marquer N/A explicitement).
@@ -84,6 +86,7 @@ Quand un item est ambigu, on ne suppose pas. On tranche par question.
 | PostHog reçoit des pageviews mais aucun event du funnel | `capture()` jamais câblé : retour Phase 4 (12-build) pour instrumenter, re-vérifier en staging — pas de ship avec un funnel muet. |
 | (interne/perso) signup anonyme **réussit** (compte créé pour un e-mail aléatoire) | `disable_signup` pas posé : retour 11-project-setup, poser le refus (API Management) + re-preuve. Jamais ship un « privé » resté ouvert (P0.5). |
 | (interne/perso) `APP_ACCESS_MODE` resté `public` en env host | Incohérence app↔Supabase : `access-gate` inerte (pas de noindex, pas de redirection de bord). Poser `APP_ACCESS_MODE=interne`/`perso` en env host + redéployer avant cutover. |
+| Auteur du commit promu (`git log -1 --format=%ae`) ≠ `config.git_author.email`, ou email non membre de la team Vercel | Deploy **BLOCKED** par Vercel (« Git author must have access to the team ») — **blocage silencieux**, build vert. Avant de re-promouvoir : ré-authorer le commit (`git commit --amend --reset-author` avec l'identité `git_author`) **ou** ajouter l'email à la team hébergeur. Jamais promouvoir un commit dont l'auteur n'est pas l'identité de déploiement (`config-schema.md §git_author`). |
 
 ## Mode d'échec le plus courant
 « Le pré-vol paraissait vert mais le build promu n'était pas le build testé. » → Prévention : **figer le SHA** en tête de pré-vol et promouvoir *cet* artefact à l'étape 4, jamais un rebuild de dernière minute.

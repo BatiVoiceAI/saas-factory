@@ -27,7 +27,7 @@ import { accessMode } from "@/lib/auth/enrollment";
  * Chemins toujours accessibles sans session, même en mode privé : l'écran d'auth
  * et ses routes techniques. Sinon on ne pourrait jamais se connecter.
  */
-const PUBLIC_PREFIXES = ["/login", "/signup", "/auth"] as const;
+const PUBLIC_PREFIXES = ["/login", "/signup", "/reset", "/auth"] as const;
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PREFIXES.some(

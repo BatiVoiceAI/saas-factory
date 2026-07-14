@@ -11,7 +11,7 @@ La fiche feature **absorbe la user story et ses critères d'acceptation** (déci
 | **Should** | Fiche **allégée** : Objectif, Persona, Story, Comportement + **états clés**, critères **nominaux**, volet technique en 2-3 lignes, N'inclut pas. Approfondie si/quand elle remonte en Must. |
 | **Could / Won't** | **Pas de fiche** — une ligne dans la liste du PRD suffit. |
 
-Le **socle « produit complet »** (`completeness-baseline.md`) : fiche complète pour **S1 (onboarding)** et **S2 (profil/settings)** ; les éléments mécaniques (S3-S8) peuvent être groupés dans **une** fiche « socle produit complet » traitée avec le même sérieux.
+Le **socle « produit complet »** (`completeness-baseline.md`) est **CONDITIONNÉ PAR L'ARCHÉTYPE** (🚨 `_shared/state-schema.md` §socle-par-archétype), donc **ce qu'on approfondit dépend de l'archétype du run** : **web-saas** (S1-S8) → fiche complète pour **S1 (onboarding)** et **S2 (profil/settings)**, les éléments mécaniques (S3-S8) groupés dans **une** fiche « socle produit complet » traitée avec le même sérieux ; **landing** (LP1-LP4) → fiche pour la landing (sections du playbook) + waitlist/CTA, le reste (légal, métadonnées/OG) en une fiche socle — **pas** d'onboarding/profil à spécifier ; **automation** (AU1-AU5) → fiche pour la **boucle fermée** + l'historique de runs/logs, le reste (config/secrets, healthcheck, idempotence) en une fiche socle — **pas** d'UI produit. Ne jamais approfondir un « S1 onboarding » sur un `landing`/`automation` : il n'existe pas.
 
 ## Les 11 sections d'une fiche Must
 

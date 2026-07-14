@@ -1,6 +1,6 @@
 # Référence — Skills de compétence à consulter / vendorer
 
-Ces skills officiels **ne provisionnent pas** (pas de « create project ») mais rendent les sous-agents **compétents** (RLS correcte, Wrangler correct) — ils évitent l'hallucination. À **vendorer** dans `vendor/` (MIT/Apache) et à consulter avant d'écrire migrations / DNS.
+Ces skills officiels **ne provisionnent pas** (pas de « create project ») mais rendent les sous-agents **compétents** (RLS correcte, Wrangler correct) — ils évitent l'hallucination. À **vendorer** dans `vendor/` (MIT/Apache — batch réseau : `{PLUGIN_ROOT}/vendor/VENDORING-TODO.md`) et à consulter avant d'écrire migrations / DNS.
 
 | Skill | Source | Licence | Ce qu'il apporte |
 |---|---|---|---|
@@ -32,4 +32,4 @@ Le sous-agent consulte le skill de compétence **avant** de produire l'artefact 
 - **Routage** : compétence trouvée dans le skill → applique ; absente → repli honnête (loguer « bonne pratique non confirmée », ne pas deviner sur du sécurité-sensible).
 
 ## Statut & discipline
-> **Vendoring** : à ajouter au `vendor/` dans un batch dédié (comme `startup-skill`). En attendant, les sous-agents appliquent les bonnes pratiques décrites ici. **Discipline licence** : ne vendorer que **MIT/Apache**, conserver les notices (LICENSE + PROVENANCE), comme pour les vendors existants.
+> **Vendoring** : à ajouter au `vendor/` dans un batch dédié (procédure exacte : `{PLUGIN_ROOT}/vendor/VENDORING-TODO.md`). En attendant, les sous-agents appliquent les bonnes pratiques décrites ici. **Discipline licence** : ne vendorer que **MIT/Apache**, conserver les notices (LICENSE + PROVENANCE), comme pour les vendors existants.

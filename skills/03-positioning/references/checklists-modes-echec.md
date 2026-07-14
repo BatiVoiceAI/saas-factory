@@ -47,7 +47,7 @@ Definition-of-done, catalogue de cas limites, modes d'échec + parade, et hand-o
 | Aucun manque partagé dans market.md | Angle candidat = « aucun angle net » ; produit viable à features égales sur niche (dis-le), l'étape 4 tranchera. |
 | WebSearch refusé / indisponible | Knowledge-Based Mode : tags + confiance −1 ; note le mode. |
 | Founder pousse un edge « génial » non observé | Refuse d'inventer ; note « hypothèse founder à valider », ne bâtis pas l'angle dessus. |
-| Type = **interne entreprise** (routage étape 1) | Positionnement marché **sans objet** ; concentre sur fit outils/process, allège cette étape. |
+| Type = **interne entreprise** (routage étape 1) | **Étape 03 SAUTÉE** (pas « allégée ») — `skills/saas-factory/references/routing.md` tranche : interne → 03 sautée, le fit outils/process passe par le lite-mode de 05. Ne pas exécuter. |
 | Type = **perso** | Étape sautée (voir routage conventions) — ne pas exécuter. |
 | Chiffres de market.md > 12-18 mois | Confiance **Basse** + Yellow flag « données datées ». |
 | Deux catégories à égalité stricte | Règle « preuves les plus fortes aujourd'hui » ; à défaut, la plus **cherchable**. |

@@ -21,7 +21,7 @@ La porte est **FERMÉE** (→ `NON CONFORME`, retour build) si **une seule** de 
 
 1. **Aucun `[SÉCU]` perdu.** Chaque item `[SÉCU]` du plan a **une ligne** dans le registre. `fait` **exige** une référence fichier (et, pour un `[SÉCU]` testable, un test qui le prouve — pas une simple relecture du diff). `repoussé` **exige** une raison tracée **et une décision humaine** consignée (`state.md` + `CONCERNS`). Un `[SÉCU]` **sans ligne**, ou `fait` **sans fichier**, ou `repoussé` **sans trace** = porte **FERMÉE**. *(Rappel : un `[SÉCU]` ne se `WAIVE` jamais sur épuisement de budget sans décision humaine explicite — `verdict-and-routing.md`.)*
 2. **Tests du plan committés (fichiers, pas prose).** Les tests que le plan nomme (rouges du TDD à l'étape 10/12, recettes) existent comme **fichiers versionnés** — vérifié par `git ls-files`, pas par « c'est décrit ». Un plan qui exigeait des tests et n'en a **aucun** committé = porte FERMÉE.
-3. **≥1 E2E du parcours cœur réellement exécuté.** Au moins **un** test E2E (Playwright) qui joue le **parcours cœur** de bout en bout est **exécuté et vert** sur `main` à jour **avant** la porte — trace jointe. La preuve est l'**exécution**, jamais la lecture du code.
+3. **≥1 E2E du parcours cœur réellement exécuté.** Au moins **un** test E2E (Playwright) qui joue le **parcours cœur** — c.-à-d. le **Parcours #0 de l'archétype** (cf. §« Conditionnement par archétype ET par type ») — de bout en bout est **exécuté et vert** sur `main` à jour **avant** la porte — trace jointe. La preuve est l'**exécution**, jamais la lecture du code.
 
 ## La règle d'or — preuve par exécution, pas par relecture
 « Fait » n'est **jamais** coché sur lecture d'un diff. On coche `fait` quand : (a) le fichier existe (référencé), **et** (b) pour tout ce qui est exécutable, un test/parcours le **prouve en tournant**. C'est la parade directe au péché du booking coiffeur (« la logique semble correcte » → produit inerte en prod).
@@ -32,8 +32,13 @@ git ls-files tests/ e2e/ supabase/migrations/   # les tests/migrations du plan s
 npx playwright test e2e/parcours-coeur.spec.ts   # l'E2E du parcours cœur tourne-t-il VERT ?
 ```
 
-## Conditionnement par type (renvoi, pas de copie)
-Le **parcours cœur** existe pour **tous** les types — un outil interne/perso a lui aussi un job cœur à prouver par E2E. Ce qui **varie** (E2E « upgrade/billing » exigé seulement si public + billing ; pas de landing marketing en interne/perso) suit la **matrice canonique** : **route selon `skills/saas-factory/references/routing.md`** (lignes `12-build` et `14-qa`). Ne recopie pas la matrice ici — seul le calibrage de profondeur est local.
+## Conditionnement par archétype ET par type (renvoi, pas de copie)
+Le **parcours cœur** (= le **Parcours #0 de l'archétype**) existe pour **tous** les archétypes et **tous** les types — chacun a un job cœur à prouver par E2E — mais **sa FORME est conditionnée par l'`archetype`** (🚨 SOURCE : `_shared/state-schema.md` §socle-par-archétype) :
+- **`web-saas`** → E2E *landing → signup → onboarding (entité cœur) → dashboard non-vide → job cœur* ;
+- **`landing`** → E2E *landing conforme (5-second test) → CTA/waitlist → confirmation* — **pas de signup/dashboard** (`_shared/archetypes/landing.md`) ;
+- **`automation`** → E2E *déclencheur → run → effet/idempotence → boucle fermée au propriétaire* — **headless** (`_shared/archetypes/automation.md`).
+
+**N'exige JAMAIS un E2E signup/onboarding/dashboard d'un `landing`/`automation`** (faux-négatif — ces éléments n'existent pas dans leur archétype). Le **type** module **par-dessus** ce qui varie (E2E « upgrade/billing » exigé seulement si public + billing ; pas de landing marketing en interne/perso). Le tout suit la **matrice canonique** : **route selon `skills/saas-factory/references/routing.md`** (lignes `12-build` et `14-qa`, **portes par archétype**). Ne recopie pas la matrice ici — seul le calibrage de profondeur est local.
 
 ## Forcing-question — « le plan est-il vraiment soldé ? »
 - **Ask exact** : « Chaque `[SÉCU]` du plan a-t-il une ligne *fait (fichier) / repoussé (raison tracée)* ? Les tests du plan sont-ils des **fichiers committés** ? Le parcours cœur a-t-il **tourné vert** (trace), pas seulement été relu ? »
@@ -62,4 +67,4 @@ Le **parcours cœur** existe pour **tous** les types — un outil interne/perso 
 - [ ] Chaque `[SÉCU]` : `fait (fichier)` **ou** `repoussé (raison tracée + décision humaine)` — zéro `[SÉCU]` sans ligne, zéro `fait` sans fichier.
 - [ ] Tests du plan **committés** (`git ls-files` non vide là où le plan en exigeait).
 - [ ] ≥1 **E2E du parcours cœur exécuté vert** sur `main` (trace jointe) — preuve par exécution.
-- [ ] Calibrage par type respecté (E2E upgrade/billing si public+billing) — **selon `skills/saas-factory/references/routing.md`**.
+- [ ] Calibrage par **archétype** (forme de l'E2E cœur : web-saas signup/dashboard · landing CTA/waitlist · automation run/boucle) **et** par **type** (E2E upgrade/billing si public+billing) respecté — **selon `skills/saas-factory/references/routing.md`** (portes par archétype). Jamais d'E2E signup/dashboard exigé d'un landing/automation.

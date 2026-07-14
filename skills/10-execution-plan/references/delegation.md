@@ -58,6 +58,14 @@ Ne sur-parallélise pas : plus de lanes = plus de bugs de jonction. Regroupe les
 - **MOU** : « on parallélise tout ce qui peut l'être ». **FORT** : « 3 lanes = 3 modules disjoints (`app/a`, `app/b`, `app/reports`) ; export dépend des deux premiers donc lane séquentielle ; pas de 4ᵉ lane car ça éclaterait le module reports ».
 - **Routage** : module disjoint sans dép → lane //. Module couplé/dépendant → même lane séq. Glue transverse → tâche socle amont (pas une lane //).
 
+## Variante AUTOMATION — pas de lane Designer, l'edge passe au CEO-persona
+> **Conditionné par `archetype = automation`.** En `web-saas` (défaut), tout ce qui précède est **inchangé**. En automation (headless), la délégation se **simplifie et se recentre** :
+
+- **Aucune lane « design / UI »** : sans surface visuelle, il n'y a pas de feature d'écran à déléguer, et le **cran Designer de la cascade est dégradé/N-A** (`validation-spec.md` §Variante AUTOMATION). Ne fabrique pas une lane pour des états visuels qui n'existent pas.
+- **Le walking skeleton = la tranche cron cœur** : déclenchement (one-shot) → lecture **source** → transformation métier → écriture **cible** → **boucle fermée** (notif/rapport au propriétaire) → **claim d'idempotence**. C'est cette verticale, pas un flux auth→UI, qui part **en premier** en séquentiel.
+- **Frontières de module typiques** (à mapper en lanes disjointes) : `config`/secrets · `store` (runs + entités, service-role) · `source`/ingestion · `logique métier pure` · `boucle fermée`/notify · `dispatch RUN_MODE` (sync vs digest). Une lane par frontière réelle, comme en web-saas.
+- **L'edge (boucle fermée + idempotence) est porté au cran CEO-persona** (propriétaire de l'automatisation), pas au Designer : le fichier de statut `status/NN-<feature>.md` doit donc remonter, pour les features cœur, le **niveau cascade atteint jusqu'au CEO-persona** (et non « en attente Designer »), avec la preuve boucle fermée + idempotence (run **et** entité).
+
 ## Modes d'échec (délégation)
 | Mode d'échec | Symptôme | Correctif |
 |---|---|---|

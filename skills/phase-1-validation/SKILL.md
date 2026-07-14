@@ -23,7 +23,8 @@ Le SKILL reste l'**aperçu scannable** ; la mécanique d'orchestration vit dans 
 - **`references/state-and-gates.md`** — tenue de `.saas-factory/state.md` étape par étape, **procédure de reprise**, protocole de porte (ce que la porte décide), **matrice de retour arrière** (« Ajuster » → quelle étape), arrêt propre No-Go, passation vers la Phase 2.
 
 ## Principe directeur
-Le process est **déterministe** : chaque étape est un **skill expert** qui suit une procédure normée. Là où un moteur vendoré existe (`vendor/startup-skill/`), l'expert **l'exécute tel quel** (ses *research-waves*) au lieu de refaire la recherche. Ta valeur d'orchestrateur = **enchaîner, router, tenir l'état, poser la porte** (détail : `references/orchestration-playbook.md`).
+Le process est **déterministe** : chaque étape est un **skill expert** qui suit une procédure normée. Là où un moteur vendoré existe (`{PLUGIN_ROOT}/vendor/startup-skill/`), l'expert **l'exécute tel quel** (ses *research-waves*) au lieu de refaire la recherche. Ta valeur d'orchestrateur = **enchaîner, router, tenir l'état, poser la porte** (détail : `references/orchestration-playbook.md`).
+> **Résolution du chemin** : `{PLUGIN_ROOT}` se résout en chemin ABSOLU avant tout accès (hook SessionStart ou échelle de fallback), Read de vérification avant dispatch, jamais de `vendor/…` relatif dans un brief de sous-agent — `_shared/vendored-engine-protocol.md` **§0**.
 
 ## Le pipeline — 5 étapes expertes, dans l'ordre
 Tiens l'état dans `.saas-factory/state.md`. Chaque expert lit l'artefact du précédent et écrit le sien (contrat complet dans `references/conventions.md`). Invoque les skills dans cet ordre :

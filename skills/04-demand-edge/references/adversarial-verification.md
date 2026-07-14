@@ -1,8 +1,8 @@
 # Vérification adversariale — recette appliquée à l'étape 4
 
 La vérif n'est pas une case à cocher en fin de course : c'est ce qui empêche un verdict de demande ou d'edge de reposer sur du vent. On applique les deux moteurs vendorés **tels quels**, calibrés pour cette étape :
-- `vendor/startup-skill/startup-competitors/references/verification-agent.md` (tiers de sources, ce qui confirme / infirme).
-- `vendor/startup-skill/startup-competitors/references/honesty-protocol.md` (« if your idea should die, it will tell you »).
+- `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/verification-agent.md` (tiers de sources, ce qui confirme / infirme).
+- `{PLUGIN_ROOT}/vendor/startup-skill/startup-competitors/references/honesty-protocol.md` (« if your idea should die, it will tell you »).
 
 Cette réf. dit **comment** les appliquer ici, sur les deux blocs (demande **et** edge).
 

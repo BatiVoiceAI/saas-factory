@@ -42,10 +42,22 @@
 |---|---|---|---|
 | … | {issus des user stories} | … | {plafond + critère de sortie} |
 
-## 8. Passe d'intégration
+> **Variante `automation`** (si `Archétype = automation`) : le cran **Designer est dégradé/N-A** (headless) et l'edge — **boucle fermée + idempotence (run ET entité)** — passe au **CEO-persona** ; la DoD visuelle (`DESIGN.md`/WCAG) est remplacée par « **gabarit fr-FR + états de run** », et une feature de transformation pure se range en **« logique/calcul métier pur »** (pas « CRUD »). Détail : `references/validation-spec.md` §Variante AUTOMATION + `references/delegation.md` §Variante AUTOMATION.
+
+## 8. Critères d'acceptation de l'archétype (porte 12 + parcours 14)
+> **Slot alimenté par `saas-factory/references/routing.md` §archétype** — recopié, jamais inventé. Acceptation **au niveau run** (le socle de l'archétype), distincte de la spec par feature (§7) : ce que la **porte 12 (build)** exige comme présent et ce que le **parcours 14 (QA)** déroule de bout en bout. Le composer prend la ligne de l'archétype du run (champ `Archétype` ci-dessus) et remplit le tableau depuis `routing.md`.
+
+| Portée | Critère (de `routing.md` §archétype) |
+|---|---|
+| **Porte 12 — socle présent** | {web-saas : socle UI + auth + action cœur + persistance, pas de tuyauterie exemple · **automation** : socle AUTOMATION présent — config/secrets, run history+logs, healthcheck, **boucle fermée**, idempotence — headless, pas de dashboard produit · landing : socle landing} |
+| **Parcours 14 — chemin QA bout-en-bout** | {web-saas : signup → action cœur → persistance → affichage · **automation** : déclencher un run → logs enregistrés → **boucle fermée déclenchée** (alerte/rapport au propriétaire) → **idempotence vérifiée** (re-run ne double ni les effets ni les entités) — **pas** de test signup · landing : CTA → conversion} |
+
+> **`automation` — non négociable** : la **boucle fermée** (`_shared/boucles-fermees.md`) et l'**idempotence** (grain run **et** grain entité) sont les critères **durs** de la porte 12 et du parcours 14 — un run qui échoue en silence n'est pas livrable (`routing.md` §automation). Le cran Designer étant N/A (headless), c'est le **CEO-persona** qui porte cet edge (§7 · `references/validation-spec.md`). Pour `web-saas` (défaut), remplir la colonne web-saas et retirer les mentions d'archétype non pertinentes.
+
+## 9. Passe d'intégration
 {Tâche(s) d'intégration après merge des lanes parallèles — adresse les bugs de jonction.}
 
-## 9. Audit trail des décisions autonomes
+## 10. Audit trail des décisions autonomes
 > Une ligne par décision non triviale. Chaque ligne cite UN principe P1-P6 (`references/decision-principles.md`). Tag `[SÉCU]` sur tout choix auth / PII / paiement / permissions → repris par la revue sécu de la Phase 4.
 
 | # | Décision | Principe | Alternative écartée | Réversibilité | [SÉCU] ? |

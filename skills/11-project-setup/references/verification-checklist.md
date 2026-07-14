@@ -19,6 +19,21 @@ La passe qui décide si l'étape 11 sort `DONE`, `DONE_WITH_CONCERNS`, ou reste 
 > **Niveau de `DONE_WITH_CONCERNS`.** Dans la colonne « Sinon » ci-dessus, `DONE_WITH_CONCERNS` désigne la **contribution au verdict de run**, jamais un état de ressource (la ressource reste `DONE` + `concerns` ou `FAILED`) — **définition canonique : `provisioning-plan.md` §machine à états**.
 > **Type ≠ public : sondes ajustées.** Les sondes suivent la matrice `provisioning-plan.md` §« Routage par type de produit » — `perso` : pas de sous-domaine, sonde sur l'**URL par défaut du provider** + compte unique seedé présent ; `interne` : signup désactivé + invitations opérationnelles attendus. Chaque allègement doit apparaître dans `tech/provisioning-log.md` : **un allègement non logué = échec de la vérif** (jamais silencieux).
 
+## Sondes AUTOMATION (archétype `automation` — remplace les sondes web-saas retirées)
+> **Actives UNIQUEMENT si `archetype = automation`.** En `web-saas`, la table de sondes ci-dessus s'applique telle quelle. En automation, les sondes **sous-domaine / host / email** sont **sans objet** (ressources retirées, `provisioning-plan.md` §« Chemin de provisioning AUTOMATION ») et sont **remplacées** par :
+
+| Ressource automation | Sonde | Vert si | Sinon |
+|---|---|---|---|
+| **Repo + scheduler** | `get repo` + présence de `.github/workflows/<slug>.yml` avec `on: schedule:` | workflow présent, **≥ 2 crons (sync + digest) + `workflow_dispatch`**, arbre poussé | `FAILED` (cœur — sans scheduler, l'automation ne tourne jamais) |
+| **Run one-shot journalisé + notifié** | déclencher `workflow_dispatch` (smoke-test) → observer un run | run terminé, **une ligne d'historique** (Actions rouge=échec via exit 1), **boucle fermée déclenchée** (alerte/rapport au propriétaire) | `FAILED` si le run n'écrit aucun log OU ne notifie pas (boucle fermée = non négociable, `routing.md` archétype automation) |
+| **BDD durable (service-role)** | `list tables` / requête légère | tables du store de runs + entités présentes, **RPC d'idempotence présent** | `FAILED` (cœur) |
+| **RLS 0 policy tenant** | inspecter les policies des tables métier | **aucune policy `anon`/JWT-utilisateur** (accès service-role only, RLS activée sans policy = deny-all) | `[SÉCU]` si une policy tenant traîne (surface d'accès inattendue) OU si une table est ouverte sans service-role |
+| **État durable sur runner éphémère** | ordonnanceur = GitHub Actions ? ET `SUPABASE_URL` (Variables) posé ? | base durable câblée (pas de fallback fichier sur éphémère) | **BLOQUANT** — I1 cassé (`provisioning-plan.md` §RÈGLE DURE) ; jamais `DONE` |
+| **Secrets d'intégration source/cible** | présence par **nom** des tokens des systèmes intégrés | tous les tokens source+cible présents (Secrets) | `[SÉCU]` + `DONE_WITH_CONCERNS` (worker ne pourra lire/écrire) |
+
+> **`git_author` en automation : PAS une sonde de déploiement.** Host = GitHub Actions, pas Vercel → aucun `readyState = BLOCKED` possible. On ne vérifie **pas** l'appartenance à une team Vercel (invariant scopé `hosting = vercel`, `provisioning-plan.md` §Ordre step 1).
+> **Retraits tracés = condition de vérif.** Comme pour les allègements de type, **chaque retrait automation** (hosting-web, DNS, email-domaine, Auth, billing) doit apparaître dans `tech/provisioning-log.md` : un retrait non logué = **échec de la vérif** (jamais silencieux).
+
 ## Definition of Done — étape 11 complète
 ### Bloquant (sinon l'étape ne peut pas sortir `DONE`)
 - [ ] Scaffold local complet (arbre + blocs câblés + `CLAUDE.md` rempli). Voir `scaffold-procedure.md`.

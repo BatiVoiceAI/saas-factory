@@ -12,21 +12,28 @@ Le master est le **tenant de l'état** : c'est lui qui garantit qu'on peut **rep
          de tes projets, hors plugin ; complètent lessons.md (écrites par 19-retro)
                     │
                     ▼
-2. REPRENDRE l'état : lire .saas-factory/state.md
+2. RÉSOUDRE {PLUGIN_ROOT} (vendored-engine-protocol.md §0)
+       ligne "[saas-factory] {PLUGIN_ROOT} = …" du contexte (hook SessionStart)
+       sinon ──▶ échelle de fallback du §0 (chemin du SKILL → find install)
+       écris-le dans l'état (champ plugin_root) ── LA clé des moteurs vendor/
+       reprise de session ──▶ re-vérifie que le chemin existe, sinon re-résous
+                    │
+                    ▼
+3. REPRENDRE l'état : lire .saas-factory/state.md
        existe ? ──oui──▶ reprends à { Phase, Étape, Statut } courants
               └──non──▶ crée-le (schéma _shared/state-schema.md) ; `git init` si besoin
                     │
                     ▼
-3. PRÉ-VOL INFRA : ~/.saas-factory/config.json existe ?
+4. PRÉ-VOL INFRA : ~/.saas-factory/config.json existe ?
        non ──▶ suggère infra-setup UNE FOIS (débloque provisioning P3/P5)
                refus/skip ──▶ mode local/fallback (jamais bloquant)
        oui ──▶ provisioning auto pré-autorisé (safety-rails §1 bis)
                     │
                     ▼
-4. CALIBRER : propage `type` → `Type / route` + `Ambition` (routing.md)
+5. CALIBRER : propage `type` → `Type / route` + `Ambition` (routing.md)
                     │
                     ▼
-5. DÉROULER les phases (pipeline.md)
+6. DÉROULER les phases (pipeline.md)
 ```
 
 ## Discipline « lire `_shared` une fois » (progressive disclosure)

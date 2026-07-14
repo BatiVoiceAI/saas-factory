@@ -2,6 +2,7 @@ import "server-only";
 
 import { sendEmail, type SendEmailResult } from "@/lib/email/send";
 import { WelcomeEmail } from "@/lib/email/templates/welcome";
+import { ui } from "@/lib/i18n";
 
 /**
  * Envoi de l'email de bienvenue (bloc `notifications`).
@@ -31,7 +32,8 @@ export async function sendWelcomeEmail({
 }: SendWelcomeEmailParams): Promise<SendEmailResult> {
   return sendEmail({
     to,
-    subject: "Welcome aboard 🎉",
+    // Objet dans la langue du produit (lib/i18n) — cohérent avec le corps du mail.
+    subject: ui.email.welcomeSubject,
     react: WelcomeEmail({ name, actionUrl, productName }),
   });
 }

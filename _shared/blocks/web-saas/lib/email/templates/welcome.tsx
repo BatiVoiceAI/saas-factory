@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
+import { brand } from "@/lib/brand";
 import { env } from "@/lib/env";
+import { locale, ui } from "@/lib/i18n";
 
 /**
  * Template email de bienvenue (bloc `notifications`).
@@ -7,6 +9,10 @@ import { env } from "@/lib/env";
  * Composant React "email-safe" : styles inline uniquement, layout en table,
  * aucune dépendance externe. Rendu en HTML par Resend via l'option `react`
  * (cf. lib/email/send.ts). Réutilisable/testable en isolation.
+ *
+ * i18n : la copy vient de `lib/i18n` (`ui.email.*`) et `<html lang>` suit la
+ * `locale` du produit — plus de FR/EN codé en dur, cohérent avec l'app
+ * (cf. CONVENTIONS.md §12 « Emails dans `locale` — les DEUX flux »).
  */
 
 export type WelcomeEmailProps = {
@@ -69,12 +75,12 @@ const footer: CSSProperties = {
 export function WelcomeEmail({
   name,
   actionUrl = env.NEXT_PUBLIC_SITE_URL,
-  productName = "the app",
+  productName = brand.name,
 }: WelcomeEmailProps) {
-  const greetingName = name?.trim() ? name.trim() : "there";
+  const greetingName = name?.trim() ? name.trim() : ui.email.greetingFallback;
 
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body style={main}>
         <table
           role="presentation"
@@ -95,22 +101,20 @@ export function WelcomeEmail({
                   <tbody>
                     <tr>
                       <td>
-                        <h1 style={heading}>Welcome, {greetingName} 👋</h1>
+                        <h1 style={heading}>
+                          {ui.email.welcomeHeading(greetingName)}
+                        </h1>
                         <p style={paragraph}>
-                          Thanks for signing up for {productName}. Your account
-                          is ready — jump in and start exploring.
+                          {ui.email.welcomeBody(productName)}
                         </p>
                         <p style={{ margin: "0 0 24px" }}>
                           <a href={actionUrl} style={button}>
-                            Open your dashboard
+                            {ui.email.welcomeCta}
                           </a>
                         </p>
-                        <p style={paragraph}>
-                          If you didn&apos;t create this account, you can safely
-                          ignore this email.
-                        </p>
+                        <p style={paragraph}>{ui.email.welcomeIgnore}</p>
                         <p style={footer}>
-                          — The {productName} team
+                          {ui.email.welcomeSignoff(productName)}
                           <br />
                           <a
                             href={env.NEXT_PUBLIC_SITE_URL}

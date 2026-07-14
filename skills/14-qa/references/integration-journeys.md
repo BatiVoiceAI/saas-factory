@@ -7,7 +7,7 @@ La **recette** (`qa/test-plan.md`) a été écrite par le QA Analyst à l'ouvert
 
 ### Sous-procédure (dans l'ordre)
 1. **Inventaire des features** : liste toutes les features Must/Should du PRD (`product/product-spec.md`). Chacune → une ligne en passe 1.
-2. **Extraire les parcours cœur** : depuis les user stories, identifie les **2 à 5 parcours de bout en bout** qui portent la valeur (le workflow cœur + l'edge). Ce sont les parcours de la passe 2. Le **premier est imposé** : l'**arrivée réelle** — landing → signup OTP/magic link → onboarding (création de l'entité cœur) → job cœur (protocole exact : `fake-client-protocol.md`, « Parcours #0 »).
+2. **Extraire les parcours cœur** : depuis les user stories, identifie les **2 à 5 parcours de bout en bout** qui portent la valeur (le workflow cœur + l'edge). Ce sont les parcours de la passe 2. Le **premier est imposé — mais SA FORME est CONDITIONNÉE PAR ARCHÉTYPE** (🚨 `_shared/state-schema.md` §socle-par-archétype ; portes 14 : `skills/saas-factory/references/routing.md`, ligne `14-qa`) : **`web-saas`** → l'**arrivée réelle** (landing → signup OTP → mot de passe → onboarding créant l'entité cœur → dashboard non-vide → job cœur) ; **`landing`** → le **visiteur** (landing conforme au 5-second test → CTA/waitlist fonctionne → confirmation ; **pas de signup/onboarding/dashboard** — `_shared/archetypes/landing.md`) ; **`automation`** → le **run** (déclencheur → run exécuté → effet + idempotence → boucle fermée au propriétaire ; **headless** — `_shared/archetypes/automation.md`). Protocole exact par archétype : `fake-client-protocol.md`, « Parcours #0 ». **Ne recale jamais un `landing`/`automation` faute d'onboarding/dashboard.**
 3. **Rattacher les critères** : chaque parcours ↔ les critères d'acceptation qu'il traverse (traçabilité — chaque test pointe un critère PRD).
 4. **Cataloguer les cas limites** : croise avec `references/edge-cases-catalog.md` → note ceux qui s'appliquent à ce produit.
 5. **Ordonner** : passe 1 (features seules) d'abord, passe 2 (A→Z) ensuite. Une feature Must cassée en passe 1 bloque son inclusion en passe 2.
@@ -19,6 +19,8 @@ La **recette** (`qa/test-plan.md`) a été écrite par le QA Analyst à l'ouvert
 
 ## 2. Anatomie d'un parcours A→Z
 Un parcours d'intégration = une **suite d'étapes utilisateur** qui traverse **plusieurs features**, où **un état doit transiter** de l'une à l'autre.
+
+> 🚨 **La forme ci-dessous (landing → signup → onboarding → paiement → résultat) est celle de l'archétype `web-saas`.** Un **`landing`** n'a qu'un mini-parcours *visiteur → CTA/waitlist → confirmation* (aucune jonction auth/billing) ; un **`automation`** a un parcours *déclencheur → run → effet/idempotence → boucle fermée* (jonctions = *run → persistance*, *run → notification propriétaire* ; **pas d'UI**). Renvoi : `fake-client-protocol.md` « Parcours #0 » + `_shared/archetypes/{landing,automation}.md`.
 
 ```
  ACQUISITION      ACTIVATION         VALEUR CŒUR        PAIEMENT         RÉSULTAT

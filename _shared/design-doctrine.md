@@ -3,7 +3,11 @@
 > Synthèse de recherche web 2026-07 — sources en bas de fichier.
 > Référence normative. Chargée par l'étape 08 (design system), les agents dev UI + la porte d'intégration (étape 12), le Designer-agent (étape 13) et la QA (étape 14). Chaque règle est binaire : elle passe ou elle échoue. Pas d'interprétation.
 
-**Cause racine du slop** : les LLM régressent vers la médiane de leur corpus (Tailwind UI et `bg-indigo-500`, tutoriels 2019-2024). Résultat reconnaissable en 3 secondes : gradient bleu→violet + Inter partout + hero centré + 3 cartes identiques. La parade n'est PAS « demander plus de créativité » : c'est imposer des contraintes explicites AVANT génération (interdits vérifiables + thème décidé en amont + structures non-médianes + zéro contenu inventé + checklist binaire avant merge).
+**Deux formes de slop, une seule parade.**
+- **(1) Régression vers le corpus** : les LLM régressent vers la médiane de leur corpus (Tailwind UI et `bg-indigo-500`, tutoriels 2019-2024). Résultat reconnaissable en 3 secondes : gradient bleu→violet + Inter partout + hero centré + 3 cartes identiques.
+- **(2) Convergence par template** : quand l'usine sort le **même look d'un projet à l'autre** (même paire de polices, même hue de marque, même layout, même motion) parce qu'elle a « choisi une recette » au lieu de **rechercher une direction**. AgencyDesk (agence B2B US) finit par ressembler au site coiffeur (booking FR) : deux secteurs, un seul design. **La convergence par template EST du slop** — au même titre que l'indigo-violet.
+
+La parade est la même pour les deux : imposer des contraintes explicites AVANT génération (interdits vérifiables + thème décidé en amont + structures non-médianes + zéro contenu inventé + checklist binaire avant merge) **ET** dériver une **direction recherchée par projet** (§Processus de recherche de direction) qui occupe le *white space* de CE secteur — pas la médiane des 5 recettes. « Demander plus de créativité » à un LLM produit de la médiane ; lui donner un **processus de recherche + un arsenal + des contraintes** produit du distinctif.
 
 ---
 
@@ -36,14 +40,55 @@ Liste binaire. Un agent qui produit un de ces marqueurs a échoué, quelle que s
 ### Icônes et images
 15. **INTERDIT** : emojis ou checkmarks unicode en guise d'icônes.
 16. **INTERDIT** : deux styles d'icônes qui coexistent (mélange outline/filled, tailles ou strokes hétérogènes).
-17. **INTERDIT** : illustrations stock (Undraw), images IA ou faux dashboards à la place de vrais screenshots produit.
+17. **INTERDIT** : illustrations stock (Undraw), image IA ou faux dashboard **se faisant passer pour un vrai screenshot produit** (fausse preuve produit). ⚠️ **Distinction** : l'**imagerie de marque générée on-brand** — hero éditorial/atmosphérique, OG image, illustration d'empty-state, spot art, favicon/wordmark — via le **pipeline Nano Banana Pro** (§Arsenal → Génération de visuels) est **permise et recommandée** (levier anti-convergence). Ce qui reste interdit, c'est le **stock générique/placeholder** et une image IA **maquillée en capture d'écran produit** ou en preuve. La preuve « voici l'app » demeure un **vrai screenshot**.
 
 ### Contenu
 18. **INTERDIT** : testimonials fictifs, avatars stock/IA, logos « as seen in » faux, métriques inventées (« 10 000+ users » au lancement), stats non sourcées. Règle : pas de preuve réelle = pas de section.
 19. **INTERDIT** : lexique buzz/hedge — seamless, empower, unlock, revolutionize, supercharge, best-in-class, effortless, next-gen, all-in-one, leverage, « may help you » — et tout lorem ipsum / placeholder / TODO.
 20. **INTERDIT** : thème shadcn par défaut (zinc) non personnalisé (`bg-slate-100` / `rounded-lg` bruts).
 
-**Garde-fou automatisable (lint CI)** : grep qui échoue sur classes `text-indigo-*` / `bg-violet-*` / `from-purple-*`, hex en dur dans `components/`, font-family hors variables, emoji unicode dans les TSX de pages marketing, chaînes du lexique buzz dans le copy. Peu coûteux, attrape ~80 % des régressions.
+### Convergence (par template) — le slop de l'usine
+21. **INTERDIT** : réutiliser une **direction** telle quelle — même **couple typo + hue de marque + layout signature + parti-pris motion** qu'un **autre projet de l'usine** ou qu'une **recette non modifiée**. Un rendu qui pourrait servir un autre métier sans changement = convergence = échec de la porte distinctiveness.
+22. **INTERDIT** : livrer un `DESIGN.md` **sans artefact « direction »** (territoire nommé + white space visé vs 5-8 concurrents + 2-3 références réelles) ni **rationale par page**. Sans cette trace, « pourquoi ce design » n'existe pas → template par défaut.
+23. **INTERDIT** : animation **sans fallback `prefers-reduced-motion`** (parallax / transforms sur gros éléments actifs en mode réduit).
+
+**Garde-fou automatisable (lint CI)** : grep qui échoue sur classes `text-indigo-*` / `bg-violet-*` / `from-purple-*`, hex en dur dans `components/`, font-family hors variables, emoji unicode dans les TSX de pages marketing, chaînes du lexique buzz dans le copy. Peu coûteux, attrape ~80 % des régressions. La **convergence** (marqueurs 21-23) n'est pas grep-able : elle se contrôle à la **porte distinctiveness** (§ ci-dessous, check comparatif + rationale + reduced-motion).
+
+---
+
+## Processus de recherche de direction (par projet) — LE cœur anti-convergence
+
+> **On ne « choisit pas une des 5 recettes ».** On **recherche une direction taillée pour CE métier / CETTE marque**, par une recherche courte mais réelle. Les 5 recettes (§Points de départ) sont des **graines/exemples de registre**, jamais la sortie. Deux secteurs n'ont pas le même *white space* → AgencyDesk et un coiffeur **doivent** diverger. Ce processus produit l'artefact qui **justifie « pourquoi ce design »** (exigence Felix) et **empêche la convergence** entre projets.
+
+Chaîne obligatoire, **aucune étape sautée, AVANT tout token** :
+
+1. **Brand audit** — attributs de marque depuis `research/positioning.md` + `research/idea-brief.md` : valeurs, ton, promesse, passé/présent/futur voulu, cible. Règle : **chaque décision visuelle (couleur, typo, layout, motion) devra tracer à un attribut de marque**, pas à un goût.
+
+2. **Audit concurrentiel VISUEL (5-8 réfs)** — le geste central de l'art direction. Cartographier « à quoi ressemble le secteur **aujourd'hui** » sur 5-8 concurrents/voisins : **palette dominante, type de typo, densité, motion**. But : trouver le **white space** — la **position visuelle libre**. On occupe le **contraste**, on ne se fond pas. C'est CE qui force deux secteurs à diverger (le coiffeur et l'agence B2B n'ont pas le même white space).
+
+3. **Moodboard / références réelles** — sourcer **par intention**, jamais une seule galerie (croiser = anti-recette) :
+   - **flux d'apps du métier** (onboarding/checkout **réels**) → Mobbin, Refero, Pageflows — plus forte valeur pour un SaaS ;
+   - **landing sectorielles / un bloc précis** (pricing, feature grid…) → Land-book (filtrable style/couleur/section), Lapa Ninja, SaaS Landing Page, Landingfolio ;
+   - **niveau award / animé** (scroll, storytelling) → Awwwards, Godly, SiteInspire, Minimal Gallery.
+   Retenir **2-3 références précises (URL)** qui incarnent le white space visé. On duplique la **structure** observée, **jamais** le code, les assets ni le copy (règle §Arsenal — DUPLIQUER).
+
+4. **Direction distinctive DÉRIVÉE** (du moodboard, pas d'un template) — produire les 4 partis-pris :
+   - **Typo expressive = voix de marque** : display à caractère / letterforms qui portent l'identité (sortir du trio serif+sans+mono par défaut si la marque le demande), type fluide pour le **rythme et la hiérarchie**. Levier n°1 de personnalité.
+   - **Système couleur dérivé de la marque** : palette tirée du **territoire du métier** (OKLCH), 1 hue de marque + neutres teintés — **pas** « terracotta partout ». Test : si la palette pouvait servir un autre métier, elle n'est pas dérivée.
+   - **Layout signature** : le parti-pris spatial (asymétrie, calques/superpositions maîtrisées, crops inattendus — *controlled chaos*), issu des relations spatiales du board — l'inverse du centré-minimal générique.
+   - **Parti-pris motion** (voir §Direction motion) : **où** (hero / micro-interactions / empty states / loading / success), **pourquoi**, quelle couche (Lottie/Rive), **`prefers-reduced-motion`** respecté.
+   - + **grain / texture** si la marque le porte (*visible craft* contre le poli lisse stérile de l'IA).
+
+5. **Artefact « direction » (mini brand-book), AVANT le code** — écrit dans `DESIGN.md` : **1 territoire visuel nommé** + le **white space visé** (vs les concurrents cartographiés) + **2-3 références précises (URL)** + **palette dérivée** + **couple typo** + **1 motion signature**. C'est le livrable qui **justifie** et qui **empêche la convergence**. Chaque token doit tracer à un attribut de marque (étape 1).
+
+6. **Rationale par page** — attacher à **CHAQUE type de page** (landing, auth, dashboard, detail, portal, settings, empty states…) une **ligne « intention »** : *pourquoi ce layout / cette hiérarchie / cette anim servent le job de CETTE page*, reliée à la direction. Ex. « hero asymétrique = white space vs concurrents centrés » ; « empty state animé = réduire la friction d'activation » ; « dashboard dense en `tabular-nums` = le job est de scanner des chiffres ». Sans cette trace → retour au template. (Section dédiée du `DESIGN.md`.)
+
+### Porte « distinctiveness » (binaire — un échec = pas de présentation à la porte)
+- **(a) Test anti-convergence** : si la **même palette + typo + motion** pouvait servir un **autre métier** sans changement → **FAIL** (direction pas assez taillée).
+- **(b) Check comparatif** : le rendu **ne doit ressembler NI au défaut / à une recette non modifiée, NI à un autre projet de l'usine**. Même **couple typo + hue de marque + layout signature + parti-pris motion** qu'un projet précédent = convergence = **FAIL**.
+- **(c) Rationale par page présent ET tenu** : chaque type de page a sa ligne « intention » dans `DESIGN.md`, **et le rendu la tient** (le layout/anim décrit est bien celui livré).
+- **(d) `prefers-reduced-motion` respecté** partout (marqueur 23).
+Un design qui rate (a), (b), (c) ou (d) repart au **mouvement concerné** (recherche de direction / dérivation / écran), pas de rustine.
 
 ---
 
@@ -95,10 +140,10 @@ Un seul set : **Lucide** (licence ISC). Un seul style : taille et stroke uniform
 - `focus-visible` ring visible sur tout élément interactif.
 - hover / active / disabled définis partout.
 - empty states dessinés, skeletons de chargement, erreurs de formulaire inline.
-- Motion : une animation seulement si elle communique (changement d'état, direction d'attention) ; durées 150-250ms, easing standard.
+- Motion : une animation seulement si elle communique (changement d'état, direction d'attention) ; durées 150-250ms, easing standard ; **parti-pris motion décidé par projet** (§Direction motion) et **`prefers-reduced-motion` respecté**.
 
-### 9. Pipeline thème (AVANT la première page)
-1. Fixer le registre dans DESIGN.md : registre esthétique nommé (éditorial / technique / chaleureux / premium / brutal), paire de polices, couleur de marque, neutres, radius, style d'ombres, 3 références réelles (ex. « hero split comme Stripe, bordures comme Linear »).
+### 9. Pipeline thème (APRÈS la recherche de direction, AVANT la première page)
+1. **La direction est déjà recherchée** (§Processus de recherche de direction : brand audit → audit concurrentiel visuel / white space → moodboard 2-3 réfs réelles → 4 partis-pris dérivés). Le pipeline thème ne fait que **matérialiser** cette direction dans `DESIGN.md` : territoire nommé, paire de polices (voix de marque), couleur **dérivée du métier**, neutres teintés, radius, style d'ombres, motion signature, **white space visé + 2-3 références réelles (URL)** — jamais « 3 références décoratives » posées après coup.
 2. Partir d'un preset tweakcn (Apache-2.0, vendorable — jamais Amethyst/violet) ou en générer un.
 3. Exporter les CSS vars ; remplacer les polices du preset par la paire choisie.
 4. Fixer radius / shadows selon la personnalité.
@@ -108,9 +153,9 @@ L'agent qui code n'improvise JAMAIS le thème en cours de route. Dans le prompt 
 
 ---
 
-## Recettes (directions complètes)
+## Points de départ (5 graines de registre — JAMAIS la sortie)
 
-L'étape 08 puise ses 3 propositions dans CES recettes (en adaptant la couleur de marque à la niche). Ne jamais proposer 3 recettes du même registre.
+⚠️ Ces 5 recettes sont des **graines de recherche**, pas un menu à choisir. Elles donnent un **registre de départ** (couples typo, familles de neutres, motifs de layout éprouvés) que le **§Processus de recherche de direction fait DIVERGER** vers une direction taillée pour CE métier / CETTE marque. **Règle dure : la sortie doit diverger de sa graine** — couleur **dérivée du territoire du métier** (jamais la teinte d'exemple telle quelle), typo/motion taillées, layout signature propre. Une sortie identique à sa recette de départ = convergence par template = **échec de la porte distinctiveness** (marqueur 21). L'étape 08 **seede** ses 3 variantes shotgun sur **3 registres différents** puis **recherche** chacune — jamais 3 graines du même registre, jamais une graine servie brute.
 
 ### R1 — « Éditorial chaleureux »
 - **Registre** : humain, artisanal, proche — le produit parle comme un commerçant, pas comme une plateforme.
@@ -147,7 +192,7 @@ L'étape 08 puise ses 3 propositions dans CES recettes (en adaptant la couleur d
 - **Layout** : radius 0-2px, bordures épaisses 1-2px, typographie surdimensionnée, grilles cassées volontairement (mais spacing base-4 strict), pas d'ombres.
 - **Niches** : design tools, produits pour créatifs, audiences jeunes, marques qui veulent trancher.
 
-**Structure de landing non-médiane (ordre éprouvé, toutes recettes)** : hero 2 colonnes aligné gauche (headline spécifique + screenshot produit dans un cadre à bordure 1px) → bandeau preuve concrète (démo 30s ou stat réelle en display géant) → features en bento asymétrique → section SOMBRE de rupture (use-case ou citation fondateur) → pricing sobre 2 colonnes max → CTA final court sur fond teinté → footer dense. Détail des sections : voir `landing-playbook.md`.
+**Structure de landing non-médiane (ordre éprouvé, quelle que soit la direction)** : hero 2 colonnes aligné gauche (headline spécifique + screenshot produit dans un cadre à bordure 1px) → bandeau preuve concrète (démo 30s ou stat réelle en display géant) → features en bento asymétrique → section SOMBRE de rupture (use-case ou citation fondateur) → pricing sobre 2 colonnes max → CTA final court sur fond teinté → footer dense. Détail des sections : voir `landing-playbook.md`.
 
 ---
 
@@ -180,10 +225,49 @@ Règle plugin (rappel) : **vendoring MIT / Apache-2.0 / ISC uniquement**, avec f
 |---|---|---|---|
 | **Motion** (ex-Framer Motion, motion.dev) | MIT | **dépendance par défaut** côté React | micro-interactions, transitions d'état, presence enter/exit, layout animations |
 | **GSAP** + tous plugins (ScrollTrigger, SplitText…) | GSAP Standard — gratuite depuis 3.13 (rachat Webflow), usage commercial inclus, mais **pas MIT** | dépendance npm OK ; **JAMAIS vendoré** (règle vendoring MIT/Apache/ISC) | scènes scroll orchestrées, timelines, typo animée — **seulement si la recette le justifie** |
+| **@lottiefiles/dotlottie-react** (runtime WASM) | MIT | dépendance npm, **lazy-load** via `<MotionAsset>` | motion **décoratif / one-shot** : hero illustré, loading, empty state, célébration — asset re-thémé aux tokens |
+| **@rive-app/react-canvas** (runtime WASM) | MIT | dépendance npm, **lazy-load** via `<MotionAsset>` | motion **interactif piloté par l'état** : icônes réactives, toggles, mascotte — **seulement si beaucoup d'interactif** (amortir les 200 KB) |
 | **next/og / @vercel/og** (moteur Satori) | Next.js MIT ; Satori MPL-2.0 | dépendance (`next/og` est inclus dans Next.js) ; ne pas vendorer Satori | **og-images générées en code** avec les tokens du thème (display + couleur de marque du `DESIGN.md`) — jamais d'og-image statique bricolée ni d'image IA |
 | **Galeries de blocs code** (shadcn blocks, HyperUI, Magic UI, templates Vercel MIT…) | MIT / Apache-2.0 / ISC — **à vérifier par bloc** | **duplication** selon la règle vendoring (LICENSE + PROVENANCE) | squelettes de sections, dashboards, pricing — toujours **re-thémés** (règles ci-dessous) |
 | **Galeries d'inspiration** (Mobbin, Godly, Land-book, Landingfolio…) | contenu propriétaire | **référence de patterns uniquement** : on duplique la **structure** observée, jamais le code, les assets ni le copy | choisir un squelette de section éprouvé avant de coder |
-| **Nano Banana** (Gemini 2.5 Flash Image) | API Google (clé en env, jamais en dur) | création de **visuels de marque** : logo, favicon, illustrations d'états vides | **jamais à la place d'un screenshot produit** (interdit n°17), jamais pour une fausse preuve (n°18) |
+| **Nano Banana Pro** (`gemini-3-pro-image`, Google/Gemini) — helper `_shared/blocks/web-saas/scripts/generate-visual.mjs`, clé `GEMINI_API_KEY` en env (jamais en dur) | API Google | **moteur de visuels du plugin** (`providers.visuals="nano-banana"`) : **création** de visuels **on-brand dérivés de `DESIGN.md`** — hero éditorial/atmosphérique, **OG image**, illustrations d'empty-states, spot art, favicon/wordmark. Sortie `public/generated/`, référencée via `next/image` | prompts **dérivés de la direction** (palette/typo/métier), jamais du stock/placeholder ; **jamais maquillé en screenshot produit** (n°17) ni en fausse preuve (n°18) |
+
+### Génération de visuels (Nano Banana Pro) — création on-brand, levier anti-convergence
+
+Quand le design a besoin d'**imagerie** — hero éditorial/atmosphérique, **OG image**, illustrations d'**empty-states**, **spot art**, favicon/wordmark — on **GÉNÈRE** un visuel dérivé de la **direction du projet** (`DESIGN.md` : palette de marque, typo, métier, parti-pris). **Jamais** du stock générique ni un placeholder. C'est un **levier d'anti-convergence côté image** : deux projets de métiers différents → prompts différents → visuels différents (le coiffeur et l'agence B2B ne partagent pas leur hero).
+
+- **Moteur** : Nano Banana Pro (`gemini-3-pro-image`, image Google/Gemini) — modèle prouvé pour un rendu premium, texte lisible, on-brand. Réglé par `providers.visuals="nano-banana"` (`config-schema.md`).
+- **Helper réutilisable** : `_shared/blocks/web-saas/scripts/generate-visual.mjs` (présent dans le châssis en `scripts/generate-visual.mjs`). Signature : `node scripts/generate-visual.mjs "<prompt>" public/generated/<nom>.png [model] [aspect]`. La clé `GEMINI_API_KEY` est lue depuis `~/.saas-factory/.env` — **jamais en dur, jamais commitée**.
+- **Prompt = dérivé de `DESIGN.md`**, pas générique : sujet + style (éditorial/premium…) + **palette de la marque** + cadrage/aspect + « NO lorem text / NO fake UI » au besoin. C'est la règle CRÉER (l'identité) de l'arsenal.
+- **Sortie et câblage** : `public/generated/` (ex. `hero.png`, `og.png`, `empty-<liste>.png`), **référencée via `next/image`** dans les composants — pas des placeholders. L'**OG image** générée est branchée dans les `metadata` (`openGraph.images`) — soit ce raster Nano Banana Pro, soit un `next/og` codé (les deux comptent comme « généré on-brand » ; jamais une OG statique bricolée ni du stock).
+- **Garde-fous** : jamais à la place d'un **vrai screenshot produit** (interdit n°17 — la preuve « voici l'app » reste un screenshot) ni d'une **fausse preuve sociale** (n°18 : avatars/logos/personnes réalistes inventés). Chaque visuel généré est **référencé par un écran réel** (pas de décoration « pour faire joli »).
+- **Repli honnête (`safety-rails.md` §6)** : `GEMINI_API_KEY` absente ou `visuals="none"` → **ne pas simuler** d'images ; s'arrêter proprement sur la génération, livrer le reste, consigner « ajoute ta clé pour générer les visuels ».
+- **Décider quoi générer** : matrice `skills/08-design-system/references/matrices-decision.md` (M5). **Câblage build** : le walking skeleton appelle le helper depuis `DESIGN.md` (`skills/12-build/references/walking-skeleton.md`).
+
+### Direction motion (couche d'animation par projet)
+
+Chaque projet choisit **une couche d'animation** avec un **parti-pris** (décidé au §Processus de recherche de direction, matérialisé dans `DESIGN.md` §Direction motion), pas des micro-anims génériques saupoudrées. Trois runtimes, trois niveaux de coût/pouvoir :
+
+| Runtime | Poids (gzip) | Format | Pouvoir | Cas d'usage |
+|---|---|---|---|---|
+| `lottie-react` | ~60 KB | JSON | zéro interactivité, one-shot | le plus simple, décoratif |
+| `@lottiefiles/dotlottie-react` | ~100 KB (WASM) | `.lottie` (ZIP, 40-70 % + léger que le JSON) | one-shot + **state machines** (fin 2025) | **décoratif / one-shot** : hero illustré, loading, empty state, célébration/confetti |
+| `@rive-app/react-canvas` | ~200 KB (WASM) | `.riv` (50-80 % + petit, parfois 10-15×) | **state machines interactives natives** | **interactif piloté par l'état de l'app** : micro-interactions, icônes réactives (hover/scroll), toggles, mascotte réactive |
+
+**Règle de choix (par cas d'usage) :**
+- Décoratif / one-shot → **dotLottie-react** (léger, assets abondants).
+- Interactif piloté par l'état → **Rive react-canvas** (les state machines évitent d'empiler des variantes). ⚠️ un seul petit icône animé **ne justifie PAS** les 200 KB de Rive ; beaucoup d'icônes interactives, **oui** (le runtime s'amortit).
+- Transitions d'état React / presence / layout → **Motion** (déjà la dépendance par défaut) ; scène scroll orchestrée → **GSAP** (seulement si la direction l'exige).
+
+**Sources d'assets :** LottieFiles (lottiefiles.com — free + premium, export dotLottie/JSON), Rive Community (rive.app/community/files — tout pensé interactif), LottieFolder. **Un asset générique non retouché = slop** : le prendre comme **base**, puis **recolorer / retimer aux tokens de la marque** (règle DUPLIQUER re-thémé).
+
+**`prefers-reduced-motion` — non négociable (marqueur 23).** Hook `useReducedMotion` (matchMedia `'(prefers-reduced-motion: reduce)'`, avec listener pour les changements live). Trois niveaux de fallback :
+- **(a) gate simple** — couper l'autoplay / rendre une frame statique ;
+- **(b) Lottie/dotLottie** — jouer un marqueur nommé `reduced motion` s'il existe ;
+- **(c) Rive** — passer un booléen `prefersReducedMotion` dans la state machine pour router vers un chemin « réduit ».
+Principe : garder l'**opacité**, supprimer les **transforms** sur gros éléments et le **parallax**.
+
+**Un composant `<MotionAsset>` unique et theming-aware** (patron châssis) qui : choisit le runtime, respecte reduced-motion **par défaut**, **lazy-load** le WASM/asset (jamais dans le bundle critique), et lit les couleurs des **design tokens**. Compile-safe (tsc + next build), réutilisable par tous les projets, animation **décidée par la config de la direction** — jamais hardcodée.
 
 ### Règles CRÉER vs DUPLIQUER
 
@@ -203,9 +287,9 @@ Règle plugin (rappel) : **vendoring MIT / Apache-2.0 / ISC uniquement**, avec f
 2. **INTERDIT** : fade-in décoratif généralisé (toutes les sections qui « apparaissent » au scroll), parallax gratuit, hover inerte, boucles infinies hors loading, animation d'entrée sur chaque carte d'une grille.
 3. **Durées** : micro-interactions 150-250 ms ; entrées/transitions 300-400 ms ; jamais > 500 ms hors scène scroll volontaire (registre brutal/créatif).
 4. **Easing** : ease-out pour les entrées, ease-in-out pour les déplacements ; jamais linear (hors marquee), jamais bounce/elastic hors R5.
-5. **Routage lib** : Motion par défaut (état, presence, micro-interactions) ; GSAP **seulement** quand la recette exige une scène orchestrée (scroll storytelling, typo animée — typiquement R5, éventuellement une landing R3). Jamais les deux libs pour le même type d'effet sur la même page.
-6. **Budget** : 1-2 effets « signature » max par page (même règle que Magic UI) ; le reste = micro-interactions fonctionnelles.
-7. **`prefers-reduced-motion` respecté** : toute animation non essentielle désactivée.
+5. **Routage lib** (voir §Direction motion) : **Motion** par défaut (état, presence, micro-interactions) ; **dotLottie** pour le décoratif/one-shot (hero illustré, loading, empty state, success) ; **Rive** pour l'interactif piloté par l'état (icônes réactives, mascotte, toggles) ; **GSAP** seulement pour une scène scroll orchestrée. Jamais deux libs pour le même type d'effet sur la même page.
+6. **Budget** : 1-2 effets « signature » max par page (même règle que Magic UI) ; le reste = micro-interactions fonctionnelles. Le motion signature du projet est **déclaré dans `DESIGN.md` §Direction motion**.
+7. **`prefers-reduced-motion` respecté** (marqueur 23) : via `useReducedMotion` + `<MotionAsset>`, les **3 niveaux de fallback** de §Direction motion (gate simple / marqueur Lottie `reduced motion` / booléen Rive). On garde l'opacité, on supprime transforms sur gros éléments et parallax.
 
 ---
 
@@ -229,7 +313,15 @@ Utilisée par le Designer-agent (étape 13) et la QA (étape 14), sur screenshot
 14. Un hex en dur ou une classe couleur Tailwind brute existe dans les composants ?
 15. Le thème est resté sur les defaults shadcn (zinc) sans personnalisation ?
 
+**Convergence & justification (porte distinctiveness — voir §Processus de recherche de direction) :**
+16. La **direction** (palette + typo + motion) pourrait servir un **autre métier** sans changement ? *(test anti-convergence)*
+17. Le rendu **ressemble à une recette non modifiée** OU à **un autre projet de l'usine** (même couple typo + hue de marque + layout signature + parti-pris motion) ? *(check comparatif)*
+18. Un **type de page** n'a **pas de ligne « intention » (rationale)** dans `DESIGN.md`, OU le **rendu ne tient pas** le rationale déclaré ?
+19. Une animation **ignore `prefers-reduced-motion`** (transforms / parallax actifs en mode réduit) ?
+
 **Score : 0 OUI = ship. 1+ OUI = retour en design (pas de rustine ponctuelle).** Même règle partout : porte de l'étape 08, passe d'intégration (étape 12), cran Designer (étape 13), QA (étape 14) — un marqueur coché = FAIL.
+
+> **Altitude des points 16-19.** (16) et (18-rendu) et (19) se vérifient **par écran** (crans 12/13/14). (17 — comparaison à un autre projet) et (18-artefact — présence du rationale + de l'artefact « direction ») se vérifient au **niveau produit** : porte 08 (à la création de la direction) et étape 14 (faux-client, sur le produit réel). Le cran Designer (13) vérifie que **le rendu de la surface tient son rationale** et respecte reduced-motion.
 
 ---
 
@@ -258,3 +350,7 @@ Utilisée par le Designer-agent (étape 13) et la QA (étape 14), sur screenshot
 - https://github.com/motiondivision/motion (Motion, MIT)
 - https://github.com/vercel/satori (MPL-2.0) et https://vercel.com/docs/og-image-generation (`next/og` / @vercel/og)
 - https://vercel.com/templates et https://mobbin.com / https://godly.website / https://land-book.com (galeries — inspiration de structure uniquement)
+- Recherche direction / white space : https://land-book.com/ · https://www.saasui.design/best-saas-ui-design-inspiration · https://avedesign.studio/guide/moodboards-the-strategic-tool-hiding-in-plain-sight/ · https://www.nngroup.com/articles/mood-boards/ · https://www.fontfabric.com/blog/10-design-trends-shaping-the-visual-typographic-landscape-in-2026/ · https://www.designmonks.co/blog/brand-design-trends-2026
+- Galeries de sourcing : https://mobbin.com · https://refero.design · https://pageflows.com · https://www.lapa.ninja · https://www.awwwards.com · https://godly.website · https://www.siteinspire.com
+- Motion (Lottie/Rive) : https://unicornicons.com/learn/rive-vs-lottie · https://www.pkgpulse.com/guides/lottie-vs-rive-vs-css-animations-web-animation-formats-2026 · https://rive.app/blog/rive-as-a-lottie-alternative · https://lottiefiles.com · https://rive.app/community/files/ · https://lottiefolder.com/
+- Reduced motion : https://rive.app/docs/editor/accessibility/reduced-motion · https://motion.dev/docs/react-use-reduced-motion · https://joshcomeau.org/react/prefers-reduced-motion/

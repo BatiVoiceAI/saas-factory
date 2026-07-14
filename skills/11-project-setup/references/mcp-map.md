@@ -31,6 +31,8 @@ Les **invariants sont les mêmes** dans les deux branches : sonde d'idempotence 
 
 **Auth.** Les connexions vivent **côté connecteur** (OAuth/MCP), établies par `infra-setup`. Pour les non-MCP (Resend) **et pour la branche self-host** (Gitea/Forgejo, Supabase self-hosted, Coolify), l'URL d'instance + le token viennent de `~/.saas-factory/.env` — appelés via `Bash`/curl, jamais logés, jamais commités.
 
+**Config git du repo (`git_author` → `git config`, pas de MCP, pas une variable d'env).** Comme `email_from → EMAIL_FROM`, la config globale est mappée vers le projet — mais ici ce n'est **pas** une env var : au scaffold (avant tout commit, cf. `provisioning-plan.md §Ordre & parallélisme`), l'orchestrateur mappe `config.git_author.email → git config user.email` et `config.git_author.name → git config user.name` du **repo projet** via `Bash` (déjà dans `allowed-tools`). **NON-secret** → jamais `.env`, jamais commité : c'est une **identité d'auteur** de commit, comme `email_from`. 🚨 **Invariant scopé `hosting = vercel`** : `git_author.email` **DOIT** être membre de la team **Vercel** sinon le déploiement est refusé **`readyState = BLOCKED`** (blocage silencieux : build vert, deploy refusé). Hors Vercel (Coolify self-host, CF Pages) **et en archétype `automation`** (host = ordonnanceur GitHub Actions), la config git author reste une hygiène d'authorship mais **n'est pas une porte de déploiement**. Champ + invariant complet : `infra-setup/references/config-schema.md §git_author`.
+
 ## Compétence (anti-hallucination)
 Avant d'écrire une migration RLS ou une config DNS, le sous-agent **consulte les skills de référence** (`reference-skills.md`) pour appliquer les bonnes pratiques de l'éditeur — pas d'approximation.
 
@@ -74,8 +76,10 @@ managed = Supabase MCP cloud (migrations) + API Management (Auth) :
      bloc SMTP pose COMPLET en un coup (PATCH smtp partiel vide les autres champs → 500),
      rate_limit_email_sent~30 + smtp_max_frequency~15s desserres (defaut 2/h bloque l'utilisateur),
      mailer_otp_exp=600, mailer_otp_length=6 (defaut Supabase=8 → PIN a 6 = nb cases input chassis),
-     site_url + uri_allow_list (https://<slug>.<domaine>/auth/callback),
-     mailer_autoconfirm=false (confirmation requise, public) | true (dev/perso)
+     password_min_length=8 + password_required_characters (au moins lettres+chiffres — flux OTP → mot de passe),
+     templates OTP CODE SEUL : {{ .Token }} SANS {{ .ConfirmationURL }} (magic link supprime — decision produit Felix),
+     site_url + uri_allow_list (https://<slug>.<domaine>/auth/callback — conserve pour futur OAuth, plus de magic link),
+     mailer_autoconfirm=false (confirmation requise via OTP, public) | true (dev/perso)
      → idempotence : lire la config Auth, patcher si different — SAUF le bloc SMTP (indivisible : un champ diff ⇒ repose tout)
      → 4 gotchas SMTP detailles : agents/provisioner-db.md etape Auth (source unique)
 6. loger ref + URL dans status/   (les clés + $RESEND_API_KEY → .env, jamais dans le status)
@@ -89,6 +93,8 @@ self-host = Supabase self-hosted DÉJÀ EXISTANT (SUPABASE_URL + SUPABASE_SERVIC
      GOTRUE_SMTP_HOST/PORT/USER/PASS/SENDER_NAME/ADMIN_EMAIL (Resend, pass=$RESEND_API_KEY,
        ADMIN_EMAIL=$EMAIL_FROM sur le DOMAINE VERIFIE — invariant From = domaine verifie),
      GOTRUE_SMTP_MAX_FREQUENCY~15s + GOTRUE_RATE_LIMIT_EMAIL_SENT~30 (desserres, defaut bloque le re-envoi),
+     GOTRUE_PASSWORD_MIN_LENGTH=8 + GOTRUE_PASSWORD_REQUIRED_CHARACTERS (lettres+chiffres),
+     GOTRUE_MAILER_* templates CODE SEUL ({{ .Token }} sans {{ .ConfirmationURL }} — magic link supprime),
      GOTRUE_MAILER_AUTOCONFIRM, GOTRUE_SITE_URL, GOTRUE_URI_ALLOW_LIST
 5. loger URL d'instance dans status/   (service_role + $RESEND_API_KEY → .env, jamais dans le status)
 ```
@@ -153,6 +159,33 @@ seulement si providers.billing = stripe (mode test) :
 2. create products + prices           (si absents)
 3. create webhook endpoint            (vers l'URL du host)
 ```
+
+## Carte MCP AUTOMATION (archétype `automation` — headless)
+> **Actif UNIQUEMENT si `archetype = automation`.** En `web-saas`, la carte ci-dessus s'applique telle quelle. En automation, on **retire** DNS/hosting-web/email-domaine/billing et le **runtime devient GitHub Actions** (l'ordonnanceur = le host). Détail des retraits + règle « runner éphémère ⇒ Supabase obligatoire » : `provisioning-plan.md` §« Chemin de provisioning AUTOMATION ».
+
+| Ressource automation | Branche | MCP / API | Outils clés | Notes |
+|---|---|---|---|---|
+| **Repo + scheduler** (= CI **et** host) | **managed** | **GitHub MCP** | create repository · **push `.github/workflows/<slug>.yml` (`on: schedule:` 2 crons + `workflow_dispatch`)** · Actions Secrets **+ Variables** | l'ordonnanceur EST le host — **pas de Vercel** · `RUN_MODE` dérivé du cron, jamais secret |
+| **BDD (migrations seules)** | **managed** | **Supabase MCP** (Apache) | `confirm_cost` · `create_project` · `apply_migration` (tables + RPC idempotence, **lesson #15 / RETURNING-safe**) | **PAS de config Auth/SMTP** (`PATCH .../config/auth` non appelé) · accès **service-role only**, RLS **0 policy tenant** |
+| **BDD (self-host)** | **self-host** | **API Supabase self-hosted** (`Bash`/curl / `psql`) | migrations seules sur l'instance | `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (`.env`) · pas de `create_project` |
+| **Runtime / env** | — | **GitHub Actions** (Secrets + Variables) | `set secret` (sensible) · `set variable` (non-sensible) | **remplace l'env host** — il n'y a pas d'hébergeur web (`secrets-wiring.md` §automation) |
+| **Systèmes intégrés source/cible** | provider-only | **MCP/API du système intégré** (ou `Bash`/curl + token) | lire la **source**, écrire la **cible** | tokens = **Secrets d'intégration** (jamais Variables) ; ≥ 1 toujours présent |
+| DNS · hosting-web · email-domaine · billing | **RETIRÉS** | — | — | headless : aucune surface publique / auth / vente (retraits **tracés** au log) |
+
+**Ordonnanceur — alternatives à GitHub Actions** (choix logué) : **cron système** (crontab/systemd sur VM à disque persistant → fallback fichier OK), **conteneur** long-running / sidecar cron, **Cloud Scheduler → Cloud Run job** (éphémère → base durable OBLIGATOIRE). La contrainte d'état durable suit la **cible**, pas le provider.
+
+**Séquence `provisioner-repo-scheduler`** (managed, GitHub MCP)
+```
+1. get repo org/<slug>                       (sonde)
+2. create repository (privé)                 (si absent)
+3. push arbre (bloc automation) + .github/workflows/<slug>.yml
+     → on: schedule: [cron sync, cron digest] + workflow_dispatch
+     → concurrency mono-groupe (cancel-in-progress:false), permissions: contents:read
+     → step `node dist/index.js`, RUN_MODE dérivé de github.event.schedule (jamais secret)
+     → header du workflow documente les caveats : cron UTC only · best-effort · désactivation 60 j · granularité ~5 min
+4. → secrets/variables injectés à l'étape câblage (pas ici)
+```
+**Séquence `provisioner-db-migrations`** = la branche BDD ci-dessus **sans l'étape 5 (config Auth)** : migrations seules → tables + RPC idempotence, service-role, **aucun** `PATCH .../config/auth`.
 
 ## Matrice de repli — MCP indisponible → quoi faire
 Un provider peut ne pas être connecté (config partielle). Règle : **repli honnête** (`safety-rails.md` §6), jamais de simulation.

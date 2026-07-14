@@ -25,7 +25,7 @@ MoSCoW d'abord (le scope), RICE ensuite (l'ordre). RICE ne **remonte** jamais un
    - **Oui, simple confort** → **Could**.
    - **Hors trajectoire v1 / attente qu'on écarte volontairement** → **Won't have (this time)**.
 
-   **Exception unique : le socle « produit complet »** (`completeness-baseline.md`) est **Must d'office** pour tout SaaS public — **exempté du test de retrait**. On adapte ses éléments à la niche (quels champs, quels défauts intelligents), on ne débat jamais de leur existence. Justification dans la table : `socle complétude`.
+   **Exception unique : le socle « produit complet » DE L'ARCHÉTYPE** (`completeness-baseline.md` ; modèle 3 axes en source unique `_shared/state-schema.md` §socle-par-archétype) est **Must d'office** — **exempté du test de retrait**. Le socle **dépend de l'archétype** (web-saas **S1-S8** / landing **LP1-LP4** / automation **AU1-AU5**), plus « universel aux 3 types ». On adapte ses éléments à la niche/au type (quels champs, quels défauts, quel canal), on ne débat jamais de leur existence. Justification dans la table : `socle complétude`.
 3. Écris la table MoSCoW (`product-spec.md` § Priorisation) : `Feature · Bucket · Justification (rattachement Phase 1)`.
 4. Reporte les **Won't** en **Non-goals** du PRD (§ Non-goals de `product-spec.md`).
 
@@ -42,7 +42,7 @@ MoSCoW d'abord (le scope), RICE ensuite (l'ordre). RICE ne **remonte** jamais un
 
 ### Critères de passage (MoSCoW)
 - Chaque feature dans **un seul** bucket.
-- Chaque Must **échoue** au test de retrait (aucun Must « confort ») — **hors socle « produit complet »**, Must d'office.
+- Chaque Must **échoue** au test de retrait (aucun Must « confort ») — **hors socle « produit complet » de l'archétype**, Must d'office.
 - Le bucket **Won't have** est **non vide** et **nommé** (features précises).
 - Chaque ligne porte une **justification rattachée Phase 1**.
 
@@ -50,7 +50,7 @@ MoSCoW d'abord (le scope), RICE ensuite (l'ordre). RICE ne **remonte** jamais un
 - **Le MVP ne se négocie pas à la hausse.** Toute envie d'ajouter un Must → repasser le test de retrait. « C'est mieux avec » n'est pas « indispensable ».
 - **Won't have = protection active du scope.** Ne pas le laisser vide « parce qu'on verra ». Nommer ce qu'on écarte empêche le scope-creep au build.
 - **Un Should n'est pas un Must en attente.** Should = itération *suivante*, pas « Must qu'on n'a pas le temps de faire ».
-- **Le socle « produit complet » n'est pas du gonflement.** Un MVP sans onboarding, profil ou empty states n'est pas « plus petit », il est **inachevé**. À l'inverse, le socle ne crée aucun passe-droit : toute feature **hors socle** repasse le test de retrait normalement.
+- **Le socle « produit complet » n'est pas du gonflement.** Un livrable amputé du socle **de son archétype** (web-saas sans onboarding/profil/empty states ; landing sans waitlist/légal ; automation sans runs/logs/boucle fermée) n'est pas « plus petit », il est **inachevé**. À l'inverse, le socle ne crée aucun passe-droit : toute feature **hors socle** repasse le test de retrait normalement.
 
 ## Partie B — RICE (décision d'ordre)
 
@@ -107,7 +107,7 @@ La priorité d'une feature a **une seule source de vérité** : `product-spec.md
 ## Checklist Definition-of-Done (priorisation)
 - [ ] Chaque feature dans **un seul** bucket MoSCoW, justifié Phase 1 (ou `socle complétude`).
 - [ ] Tous les Must **échouent** au test de retrait (aucun Must confort) — hors socle « produit complet », Must d'office.
-- [ ] Socle « produit complet » **entier en Must**, chaque élément adapté à la niche (`completeness-baseline.md`).
+- [ ] Socle « produit complet » **de l'archétype entier en Must** (web-saas S1-S8 / landing LP1-LP4 / automation AU1-AU5), chaque élément adapté à la niche/au type ; aucun élément d'un autre archétype injecté (`completeness-baseline.md`).
 - [ ] Won't have **non vide et nommé** → reporté en Non-goals du PRD.
 - [ ] RICE : Must/Should scorées, **unité d'effort constante**, Confidence honnête.
 - [ ] Build order alimenté par RICE **et** dépendances (étape 6), pas par RICE seul.
@@ -126,6 +126,7 @@ La priorité d'une feature a **une seule source de vérité** : `product-spec.md
 | **Confidence gonflée** | Tout à 100 % | Rabaisser les estimations au doigt mouillé à 50-80 % |
 | **RICE écrase la dépendance** | Une feature socle reléguée car score faible | Le build order remonte le socle : dépendance > score (étape 6) |
 | **Bucket-shopping** | Une feature « négociée » de Won't vers Must | Le scope se décide au test de retrait, pas à l'envie |
-| **Socle débattu** | Un élément du socle (onboarding, profil, empty states…) dégradé en Should après test de retrait | Le socle est **exempté** : Must d'office (`completeness-baseline.md`) — on adapte à la niche, on ne débat pas |
+| **Socle débattu** | Un élément du socle de l'archétype (onboarding, profil, empty states ; waitlist/légal ; runs/boucle fermée…) dégradé en Should après test de retrait | Le socle **de l'archétype** est **exempté** : Must d'office (`completeness-baseline.md`) — on adapte à la niche/au type, on ne débat pas |
+| **Socle du mauvais archétype** | Éléments d'un autre archétype priorisés (dashboard sur `automation`, onboarding sur `landing`) | Prioriser le socle **de l'archétype** du livrable, pas d'un autre — cf. `completeness-baseline.md` + `state-schema.md` §socle-par-archétype |
 | **Divergence de priorité** | Fiche dit Must, PRD dit Should | Source unique = PRD § Priorisation ; aligner les fiches |
 | **Activation vanity** | Success criterion = « nombre d'inscrits » | Remplacer par le job cœur accompli (ex. « premier livrable exporté ») |

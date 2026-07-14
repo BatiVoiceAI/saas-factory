@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { ui } from "@/lib/i18n";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -51,7 +52,7 @@ export function TopNav({ email }: TopNavProps) {
             variant="ghost"
             size="icon"
             className="rounded-full"
-            aria-label="Menu utilisateur"
+            aria-label={ui.nav.userMenu}
           >
             <Avatar className="h-9 w-9">
               <AvatarFallback>{initialsFromEmail(email)}</AvatarFallback>
@@ -60,12 +61,12 @@ export function TopNav({ email }: TopNavProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel className="truncate font-normal">
-            {email ?? "Compte"}
+            {email ?? ui.nav.account}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => void handleSignOut()}>
             <LogOut className="h-4 w-4" />
-            Se déconnecter
+            {ui.actions.signOut}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

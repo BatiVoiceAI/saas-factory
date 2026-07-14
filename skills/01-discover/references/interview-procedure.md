@@ -31,7 +31,7 @@ L'entretien a un **état courant**. Il ne **monte** d'un cran qu'une fois le **c
  [S7 SIGNAL] (léger) → [S8 CONTRAINTES] → [S9 NON-GOALS (opt.)]
      │
      ▼
- [S10 DÉDUCTIONS] stade + archétype (déduits, pas re-demandés si l'amont suffit)
+ [S10 DÉDUCTIONS] stade + archétype + tenancy + locale (déduits, pas re-demandés si l'amont suffit)
      │
      ▼
  [S11 ÉCRITURE idea-brief]
@@ -88,18 +88,21 @@ L'entretien a un **état courant**. Il ne **monte** d'un cran qu'une fois le **c
 - **Fais** : « Qu'est-ce que ça **ne fera pas**, au moins en v1 ? » Si l'utilisateur ne sait pas, **déduis** 1-2 non-goals raisonnables et marque-les « déduit, à confirmer ».
 - **Passage** : au moins tenté ; cadre le scope dès le départ.
 
-### S10 — Déductions (stade + archétype)
-- **Fais** : déduis le **stade** (decision-matrices.md §2) et l'**archétype** (§3) à partir de ce qui a déjà été dit. **Ne re-demande pas** si l'amont suffit — déduis et **fais confirmer d'un mot** si ambigu.
-- **Passage** : stade et archétype posés (avec note d'incertitude si doute).
+### S10 — Déductions (stade + archétype + tenancy + locale)
+- **Fais** : déduis le **stade** (decision-matrices.md §2) et les **trois axes orthogonaux** du modèle (`_shared/state-schema.md` §modèle 3 axes) à partir de ce qui a déjà été dit. **Ne re-demande pas** si l'amont suffit — déduis et **fais confirmer d'un mot** si ambigu.
+  - **`archetype`** (§3) : `web-saas` | `landing` | `automation` — verrouille le socle de complétude **conditionné par archétype** (web-saas S1-S8 / landing LP1-LP4 / automation AU1-AU5).
+  - **`tenancy`** : `single` par défaut ; `multi-org` si le cadrage est B2B (plusieurs clients/espaces isolés, RLS par org). L'axe `type` (public/interne/perso), lui, est déjà tranché en S2.
+  - **`locale`** : déjà captée via l'écosystème S6 (géo/langue) — la **confirmer** ici (code BCP-47 + `dir` + `jurisdiction`), défaut = langue parlée par l'utilisateur, distincte de la langue de travail du plugin.
+- **Passage** : stade + archétype + tenancy posés (locale confirmée), avec note d'incertitude si doute.
 
 ### S11 — Écriture de l'idea-brief
 - **Fais** : écris `research/idea-brief.md` selon `assets/templates/idea-brief.md`, tous champs remplis ou marqués « à préciser ». Jamais de secret/clé.
 - **Passage** : voir `definition-of-done.md` (checklist complète avant la porte).
 
 ### S12 — Porte de sortie
-- **Fais d'abord (pré-enregistrement du KILL)** : pose la question « **Qu'est-ce qui te ferait abandonner ce projet ?** » — un signal concret, pas un ressenti (« si personne ne s'inscrit en X semaines », « si la cible n'a pas ce budget », « si l'intégration Y est impossible »). Note la réponse **avec ses mots** dans le brief, section « Critère de KILL (pré-rempli) ». Pourquoi maintenant : posé **avant** d'avoir vu le moindre chiffre, ce critère ne pourra pas être déplacé après coup — 17-deploy le convertira en critère mesurable (métrique live + seuil + fenêtre) et 19-retro le confrontera aux chiffres réels.
+- **Fais d'abord (pré-enregistrement du KILL — `public`/`interne` uniquement)** : le Critère de KILL valide un **marché** ; il ne s'applique donc **qu'aux types `public`/`interne`**. Pour un usage **`perso`** (l'utilisateur construit pour lui-même, pas de marché à abandonner), **saute** cette question et marque la section « **sans objet (perso)** ». Sinon, pose la question « **Qu'est-ce qui te ferait abandonner ce projet ?** » — un signal concret, pas un ressenti (« si personne ne s'inscrit en X semaines », « si la cible n'a pas ce budget », « si l'intégration Y est impossible »). Note la réponse **avec ses mots** dans le brief, section « Critère de KILL (pré-rempli) ». Pourquoi maintenant : posé **avant** d'avoir vu le moindre chiffre, ce critère ne pourra pas être déplacé après coup — 17-deploy le convertira en critère mesurable (métrique live + seuil + fenêtre) et 19-retro le confrontera aux chiffres réels.
 - **Fais ensuite** : récap (reformulation + type/route + cible + problème) + **demande confirmation** (`AskUserQuestion`). Puis mets à jour `.saas-factory/state.md`.
-- **Passage** : Critère de KILL noté (ou « à préciser » assumé) + décision explicite reçue. **Ne franchis jamais sans réponse.**
+- **Passage** : Critère de KILL noté (ou « à préciser » assumé) **pour `public`/`interne`** — **sans objet** en `perso` — + décision explicite reçue. **Ne franchis jamais sans réponse.**
 
 ## Data-flow (ce que la Découverte alimente en aval)
 ```

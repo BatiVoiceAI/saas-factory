@@ -2,6 +2,8 @@
 
 L'étape 5 **est** la porte de sortie de la Phase 1 — la seule barrière avant de dépenser le moindre effort produit. **HARD GATE : on n'écrit jamais la suite sans la réponse explicite de l'utilisateur.**
 
+> 🚨 **Nombre d'issues selon la route.** Cette procédure décrit la porte à **4 issues** de la route **`public`** (avec **Go-test**). Sur les **routes allégées (`interne`/`perso`) et l'archétype `automation`**, la porte n'a que **3 issues — Go / Ajuster / No-Go**, **sans Go-test** (pas de marché à sonder par landing+waitlist — `go-test-playbook.md` : « un outil interne/perso ne se waitlist pas » ; recette forcing + porte de ces routes : `references/lite-mode.md`). La machine à états et le routage du « Ajuster » ci-dessous s'appliquent aux deux ; seule la branche **Go-test** est **publique-only**.
+
 ## Machine à états de la porte
 
 ```
@@ -36,7 +38,7 @@ Le retour arrière est autorisé **à tout moment** (cf. protocole de porte, `co
 ## Recette forcing — poser la porte (`AskUserQuestion`)
 
 - **Présente d'abord** : le **bloc §Décision — le POURQUOI** (en tête de l'`opportunity-brief`, non-technique) + ton verdict net (avec sa clause de bascule). Pas le détaillé — le bloc §Décision se suffit.
-- **Ask exact** : quatre issues nommées, **Go / Ajuster / Go-test / No-Go**, chacune avec sa conséquence en une ligne (ce que ça déclenche). Propose **Go-test** en particulier quand le verdict est « Go prudent » ou « Ajuster » faute de signal terrain : c'est le pont proxy → réel au coût minimal (`go-test-playbook.md`).
+- **Ask exact** (**route `public`**) : quatre issues nommées, **Go / Ajuster / Go-test / No-Go**, chacune avec sa conséquence en une ligne (ce que ça déclenche). Propose **Go-test** en particulier quand le verdict est « Go prudent » ou « Ajuster » faute de signal terrain : c'est le pont proxy → réel au coût minimal (`go-test-playbook.md`). **Routes allégées / `automation`** : **trois** issues (Go / Ajuster / No-Go), **ne propose pas Go-test**.
 - **Push jusqu'à** : une des quatre est **choisie**. Un « peut-être », « on verra », « ça dépend » n'est **pas** une réponse → reformule le trade-off et redemande.
 - **Red flags — réponses à ne pas traiter comme un franchissement** :
   - Silence / évitement → repose la question, ne présume rien.

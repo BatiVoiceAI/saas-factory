@@ -12,7 +12,9 @@ concurrency:
 
 jobs:
   # 1. Install — valide que les dépendances s'installent proprement et remplit
-  #    le cache node_modules réutilisé par les jobs suivants (needs: install).
+  #    le cache node_modules réutilisé par les jobs qui font `needs: install`
+  #    (lint, test). Le job PLANCHER `machine-gates` est, lui, volontairement
+  #    autonome (son propre `npm ci` déterministe) — cf. plus bas.
   install:
     name: Install
     runs-on: ubuntu-latest
@@ -33,7 +35,7 @@ jobs:
         run: npm install
 
   lint:
-    name: Lint
+    name: Lint (eslint)
     needs: install
     runs-on: ubuntu-latest
     steps:
@@ -52,27 +54,6 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
       - run: npm run lint
-
-  typecheck:
-    name: Typecheck
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-      - name: Restore node_modules
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package.json') }}
-      - name: Install dependencies (cache miss)
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
-      - run: npm run typecheck
 
   test:
     name: Test (vitest)
@@ -95,14 +76,29 @@ jobs:
         run: npm install
       - run: npm run test -- --run
 
-  build:
-    name: Build
-    needs: install
+  # ───────────────────────────────────────────────────────────────────────────
+  # PLANCHER MACHINE (bloquant) — la COUCHE grep-able/exécutable qui doit passer
+  # AVANT tout jugement d'agent. Doctrine : un LLM peut se convaincre qu'une
+  # checklist « passe » ; la machine, non. Un merge/deploy NE PASSE PAS si l'un
+  # de ces gates est rouge.
+  #
+  # Séquence volontairement ORDONNÉE dans UN SEUL job (un `npm ci` déterministe,
+  # une source de vérité, zéro jugement humain) :
+  #   1. npm ci          — install reproductible depuis package-lock.json.
+  #   2. typecheck       — `tsc --noEmit` : le contrat de types tient.
+  #   3. build           — `next build` : le produit compile réellement.
+  #   4. verify:machine  — slop + sentinelle + secrets + sql + i18n (Node pur).
+  #   5. audit:ci        — `npm audit` high/critical (supply-chain), BLOQUANT.
+  #
+  # Ce job SUBSUME les anciens jobs `typecheck` / `build` / `copy-quality` : on
+  # ne les DUPLIQUE pas, ils sont réunis ici (le plancher est indivisible).
+  machine-gates:
+    name: Machine gates (plancher bloquant)
     runs-on: ubuntu-latest
-    # Le build importe lib/env.ts qui valide l'environnement au chargement.
-    # Les vraies clés viennent des secrets GitHub ; à défaut, des placeholders
-    # NON sensibles satisfont le schéma zod pour que le build passe en CI.
-    # (Aucun secret réel n'est commité — cf. safety-rails §4.)
+    # `build` importe lib/env.ts (validation zod au chargement du module). Les
+    # vraies clés viennent des secrets ; à défaut, des placeholders NON sensibles
+    # satisfont le schéma pour que le build passe en CI (aucun secret réel
+    # commité — cf. safety-rails §4). Aligné sur le job build historique + lighthouse.
     env:
       NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
@@ -114,13 +110,87 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - name: Restore node_modules
-        id: cache
-        uses: actions/cache@v4
+      - name: Install (npm ci — déterministe depuis le lockfile)
+        run: npm ci
+      - name: Typecheck (tsc --noEmit)
+        run: npm run typecheck
+      - name: Build (next build)
+        run: npm run build
+      # verify:machine chaîne les gates Node purs (fs+regex, zéro dépendance) :
+      # slop, sentinelle, secrets, sql, i18n. Chaque gate sort 1 (fichier:ligne)
+      # à la moindre violation → le job rougit. Un gate manquant (script/*.mjs
+      # absent) fait AUSSI rougir : le plancher exige les cinq, jamais moins.
+      - name: Verify machine gates (slop + sentinelle + secrets + sql + i18n)
+        run: npm run verify:machine
+      # npm audit high/critical, BLOQUANT par doctrine. `continue-on-error: false`
+      # est explicite pour interdire de le désamorcer en douce : une CVE
+      # high/critical (y compris dans le toolchain CI, qui manipule les secrets du
+      # runner) doit STOPPER le merge. Escape hatch assumé : `npm audit fix` /
+      # bump de dépendance, pas la neutralisation du gate.
+      - name: Audit dépendances (npm audit high/critical)
+        continue-on-error: false
+        run: npm run audit:ci
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # E2E Playwright — HONNÊTE par construction. Le smoke (`e2e/smoke.spec.ts`)
+  # exige un vrai backend : playwright.config.ts fait `build && start` puis navigue
+  # `/` et `/login`. Sans environnement de test réel, ce job est SKIPPED (grisé) —
+  # JAMAIS faussement `passed`. Avec un env réel (secrets Supabase, ou une preview
+  # via PLAYWRIGHT_BASE_URL), il devient BLOQUANT comme les autres.
+  #
+  # Les secrets ne sont pas lisibles dans un `if:` de job ; on les projette donc
+  # en output booléen via un préflight — seul signal que l'`if:` de `e2e` sait lire.
+  e2e-preflight:
+    name: E2E preflight (env de test dispo ?)
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - id: check
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          PREVIEW_URL: ${{ secrets.PLAYWRIGHT_BASE_URL }}
+        run: |
+          if [ -n "$SUPABASE_URL" ] || [ -n "$PREVIEW_URL" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "Environnement de test détecté → E2E Playwright BLOQUANT."
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=E2E skipped::Aucun environnement de test (ni secrets Supabase réels, ni PLAYWRIGHT_BASE_URL preview). Job E2E SKIPPED — pas faussement vert. Renseigne ces secrets pour l'activer et le rendre bloquant."
+          fi
+
+  e2e:
+    name: E2E (Playwright smoke)
+    needs: e2e-preflight
+    if: needs.e2e-preflight.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    # GitHub Actions exporte déjà CI=true (playwright.config.ts s'en sert :
+    # forbidOnly, retries, serveur frais obligatoire). PLAYWRIGHT_BASE_URL cible
+    # une preview si fournie ; sinon la config démarre build+start en local, ce
+    # qui nécessite de VRAIS secrets Supabase (garantis présents ici par le préflight).
+    env:
+      PLAYWRIGHT_BASE_URL: ${{ secrets.PLAYWRIGHT_BASE_URL }}
+      NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package.json') }}
-      - name: Install dependencies (cache miss)
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
-      - run: npm run build
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (npm ci)
+        run: npm ci
+      - name: Install Playwright browser (chromium)
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright E2E (smoke)
+        run: npm run test:e2e
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -20,7 +20,7 @@ const serverSchema = z.object({
   // Pilote DEUX choses, jamais l'une sans l'autre :
   //   1. l'enrollment (QUI peut entrer) — bloc `auth`, `lib/auth/enrollment.ts` ;
   //   2. le gate d'accès (noindex + redirection de bord) — bloc `access-gate`.
-  // Le MÉCANISME d'auth reste l'OTP passwordless quel que soit le mode : ce
+  // Le MÉCANISME d'auth reste OTP → mot de passe quel que soit le mode : ce
   // réglage ne fait que restreindre l'enrollment et la surface publique.
   // Défaut prudent = `public` (surface ouverte + indexable) ; posé par
   // 11-project-setup selon le `type` du projet (public / interne / perso).
@@ -34,6 +34,10 @@ const serverSchema = z.object({
   // --- Notifications (bloc notifications) — optionnel -------------------
   RESEND_API_KEY: z.string().min(1).optional(),
   EMAIL_FROM: z.string().min(1).optional(),
+  // Secret partagé protégeant la route de cron des boucles fermées
+  // (app/api/cron/notifications). Vercel l'injecte en `Authorization: Bearer`
+  // quand la variable est définie ; sans elle, la route renvoie 401.
+  CRON_SECRET: z.string().min(1).optional(),
 
   // --- Observability (bloc observability) — optionnel ------------------
   SENTRY_AUTH_TOKEN: z.string().min(1).optional(),
@@ -47,6 +51,13 @@ const serverSchema = z.object({
 const clientSchema = z.object({
   // --- Shell / SEO — requis --------------------------------------------
   NEXT_PUBLIC_SITE_URL: z.string().url(),
+
+  // --- i18n (fondation) — optionnel ------------------------------------
+  // Surcharge de la langue du livrable (code BCP-47, ex. "en-US"). Vide = on
+  // retombe sur `PRODUCT_LOCALE` (lib/brand.ts, finalisé au build). Consommée
+  // uniquement via `lib/i18n.ts` ; pilote `<html lang/dir>`, `og:locale` et la
+  // copy centralisée. Non secret.
+  NEXT_PUBLIC_LOCALE: z.string().min(2).optional(),
 
   // --- Supabase (auth/crud) — requis -----------------------------------
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
@@ -68,6 +79,7 @@ const clientSchema = z.object({
  */
 const clientEnvRaw = {
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  NEXT_PUBLIC_LOCALE: process.env.NEXT_PUBLIC_LOCALE,
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,

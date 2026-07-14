@@ -25,7 +25,7 @@ scaffold local (git init + blocs + CLAUDE.md)
 > **Pas de dépendance circulaire.** `provisioner-email` publie **ses propres** records de vérification (DKIM/SPF/DMARC/MX) en appelant **directement le MCP Cloudflare** — records **distincts** du record de routage `<slug>.<domaine>` que possède `provisioner-hosting`. L'email n'attend donc **pas** hosting, et hosting n'attend **pas** l'email.
 
 ## Ordre & parallélisme
-1. **Scaffold local** — séquentiel, en premier (tout en dépend).
+1. **Scaffold local** — séquentiel, en premier (tout en dépend). **🚨 Config git du repo AVANT tout commit** : dès le `git init` (et avant le commit #1), poser la config git **locale** du repo projet depuis `config.git_author` — `git config user.email = git_author.email` et `git config user.name = git_author.name` (identité **non-secrète choisie à `infra-setup`**, comme `email_from`, jamais devinée en cours de run). **Invariant `git_author` scopé à `hosting = vercel`** : c'est **uniquement** quand l'hébergeur est **Vercel** que le git author DOIT être **membre de la team Vercel**, sinon le déploiement (étape 17, `provisioner-hosting` puis push prod) est refusé **`readyState = BLOCKED`** (« Git author `<email>` must have access to the team `<team>` on Vercel to create deployments ») — **blocage silencieux**, pas une erreur de build (`tsc`/`next build` verts, deploy juste refusé). Pour **tout autre host** (Coolify self-host, Cloudflare Pages) **et pour l'archétype `automation`** (host = ordonnanceur GitHub Actions, pas Vercel — cf. §« Chemin de provisioning AUTOMATION »), la config git author reste une **hygiène d'authorship** (commits attribués à une identité stable) mais **n'est PAS une porte de déploiement** : aucun `readyState = BLOCKED` possible hors Vercel. Champ + invariant complet : `infra-setup/references/config-schema.md §git_author`.
 2. **repo · db · email** — **parallélisables** → dispatche les 3 sous-agents **en un seul message**. `email` vérifie **une seule fois** le domaine d'envoi générique (= **le domaine de `email_from`**, réutilisé ensuite par tous les projets, sans re-vérif).
    - **Supabase Auth (SMTP custom = Resend)** — **après les migrations BDD** (db `DONE`), config via l'**API Management** : SMTP Resend, confirmations, `site_url`/redirections (cf. § *Email & Auth*). Lève la limite d'email du SMTP intégré Supabase → **aucun upgrade payant**. Non-bloquant pour hosting.
 3. **hosting** — après **repo+db** seulement (email non-bloquant ; relie le repo, câble l'env).
@@ -39,7 +39,7 @@ Toute la factory partage **un seul domaine d'envoi générique** (jamais un doma
 
 Ordre exact (câblés « ensemble ») :
 - **(a) Domaine d'envoi — vérifié UNE SEULE FOIS.** `provisioner-email` vérifie **le domaine de `email_from`** dans Resend (records SPF/DKIM/DMARC + return-path posés via le MCP Cloudflare, que le provisioning DNS gère déjà). **Sonde d'idempotence** : ce domaine **déjà vérifié** → **réutilisé tel quel** par chaque nouveau projet, **pas de re-vérification**. **Resend gratuit = 1 domaine** : si un domaine **différent** est déjà présent (adresse changée à `infra-setup`), **REMPLACER** (delete l'ancien + add le domaine cible + re-poser ses DNS via Cloudflare) au lieu d'échouer sur le 403 « plan includes 1 domain » — **jamais empiler**.
-- **(b) Supabase Auth — après les migrations BDD.** Une fois la BDD `DONE`, configurer Auth via l'**API Management Supabase** (`PATCH https://api.supabase.com/v1/projects/{ref}/config/auth`, header `Authorization: Bearer $SUPABASE_ACCESS_TOKEN`) : `smtp_host=smtp.resend.com`, **`smtp_port='587'`** (CHAÎNE — un entier vide tout le bloc SMTP), `smtp_user=resend`, `smtp_pass=$RESEND_API_KEY`, `smtp_sender_name` (nom du projet), **`smtp_admin_email=$EMAIL_FROM`** (`config.email_from`, **sur le domaine vérifié** — invariant From = domaine vérifié), **bloc SMTP posé COMPLET en un coup** (un PATCH smtp partiel vide les autres champs → 500), **`rate_limit_email_sent`~30 + `smtp_max_frequency`~15s desserrés** (défaut 2/h bloque l'utilisateur), `mailer_otp_exp=600`, **`mailer_otp_length=6`** (⚠️ défaut Supabase = 8 ; DOIT = le nb de cases de l'input OTP du châssis, sinon la vérif échoue pour tous), `site_url` + `uri_allow_list` (ex. `https://<slug>.<domaine>/auth/callback`, **déterministe** depuis la config — pas besoin d'attendre hosting), et `mailer_autoconfirm` (**`false`** = confirmation email requise, projet public ; **`true`** = dev/perso, auto-confirmé sans email). *(Détail des 4 gotchas SMTP : `agents/provisioner-db.md` étape Auth — source unique.)* **Self-host** (GoTrue) : mêmes réglages via variables d'env de l'instance (`GOTRUE_SMTP_HOST/PORT/USER/PASS/SENDER_NAME/ADMIN_EMAIL`, `GOTRUE_SMTP_MAX_FREQUENCY`~15s + `GOTRUE_RATE_LIMIT_EMAIL_SENT`~30, `GOTRUE_MAILER_AUTOCONFIRM`, `GOTRUE_SITE_URL`, `GOTRUE_URI_ALLOW_LIST`). **Idempotent** : lire la config Auth actuelle, ne patcher que si différente (**sauf le bloc SMTP, indivisible** : un champ diffère ⇒ repose le bloc entier).
+- **(b) Supabase Auth — après les migrations BDD.** Une fois la BDD `DONE`, configurer Auth via l'**API Management Supabase** (`PATCH https://api.supabase.com/v1/projects/{ref}/config/auth`, header `Authorization: Bearer $SUPABASE_ACCESS_TOKEN`) : `smtp_host=smtp.resend.com`, **`smtp_port='587'`** (CHAÎNE — un entier vide tout le bloc SMTP), `smtp_user=resend`, `smtp_pass=$RESEND_API_KEY`, `smtp_sender_name` (nom du projet), **`smtp_admin_email=$EMAIL_FROM`** (`config.email_from`, **sur le domaine vérifié** — invariant From = domaine vérifié), **bloc SMTP posé COMPLET en un coup** (un PATCH smtp partiel vide les autres champs → 500), **`rate_limit_email_sent`~30 + `smtp_max_frequency`~15s desserrés** (défaut 2/h bloque l'utilisateur), `mailer_otp_exp=600`, **`mailer_otp_length=6`** (⚠️ défaut Supabase = 8 ; DOIT = le nb de cases de l'input OTP du châssis, sinon la vérif échoue pour tous), **politique de mot de passe** `password_min_length=8` + `password_required_characters` (au moins lettres + chiffres — flux **OTP → mot de passe**, cf. `agents/provisioner-db.md`), **templates d'OTP CODE SEUL** (`{{ .Token }}` **sans** `{{ .ConfirmationURL }}` — **magic link supprimé**, décision produit Felix), `site_url` + `uri_allow_list` (ex. `https://<slug>.<domaine>/auth/callback`, **déterministe** depuis la config — pas besoin d'attendre hosting ; conservé pour un futur OAuth, plus aucun magic link n'y aboutit), et `mailer_autoconfirm` (**`false`** = confirmation email requise via OTP, projet public ; **`true`** = dev/perso, auto-confirmé sans email). *(Détail des 4 gotchas SMTP + templates code-seul : `agents/provisioner-db.md` étape Auth — source unique.)* **Self-host** (GoTrue) : mêmes réglages via variables d'env de l'instance (`GOTRUE_SMTP_HOST/PORT/USER/PASS/SENDER_NAME/ADMIN_EMAIL`, `GOTRUE_SMTP_MAX_FREQUENCY`~15s + `GOTRUE_RATE_LIMIT_EMAIL_SENT`~30, `GOTRUE_PASSWORD_MIN_LENGTH`/`GOTRUE_PASSWORD_REQUIRED_CHARACTERS`, `GOTRUE_MAILER_AUTOCONFIRM`, `GOTRUE_SITE_URL`, `GOTRUE_URI_ALLOW_LIST`). **Idempotent** : lire la config Auth actuelle, ne patcher que si différente (**sauf le bloc SMTP, indivisible** : un champ diffère ⇒ repose le bloc entier).
 - **(c) Les deux flux sur le même domaine générique.** Confirmation (Auth SMTP) **et** transactionnel (API Resend) partent de la **même adresse `email_from`** / du **même domaine vérifié**, même compte Resend — câblés dans le même run, pas de domaine par projet.
 
 ### Enrollment par type — l'autorité du « déploiement privé », posée ICI
@@ -78,6 +78,67 @@ Le **`type`** du projet (lu dans `research/idea-brief.md` ; défaut prudent = `p
 | Billing | si le projet vend (`providers.billing = stripe`) | sauté (rien n'est vendu) | sauté |
 
 > **Allègements LOGUÉS, jamais silencieux.** Chaque réglage allégé ou appel sauté par cette matrice = **une ligne dans `tech/provisioning-log.md`** (« allègement type=`<type>` : `<réglage>` — `<raison>` »). « Déploiement interne ≠ déploiement bâclé » : l'allègement est un choix **tracé**, pas une omission — la vérif finale (`verification-checklist.md`) refuse un allègement non logué.
+
+## Chemin de provisioning AUTOMATION (archétype headless — worker / cron / bot / intégration)
+> **Conditionné par `archetype = automation`** (`.saas-factory/state.md`, source : `_shared/state-schema.md`). Pour `web-saas` (défaut), rien de cette section ne s'applique — le graphe ci-dessus reste tel quel. Ne s'active **que** sur automation.
+
+Pour une automation headless, la matrice web-saas (repo + db+Auth + email-domaine + hosting Vercel + DNS Cloudflare + billing) est **inadaptée** : il n'y a **ni surface publique, ni auth utilisateur, ni domaine d'envoi produit, ni app hébergée**. Le graphe se **restreint** et **change de host**.
+
+### L'ordonnanceur EST le host
+Le « host » d'une automation cron **n'est pas** un hébergeur web : c'est son **ordonnanceur**. La cible par défaut de la factory est **GitHub Actions `schedule:`** — le **même repo-CI, élargi** : un seul `.github/workflows/<slug>.yml` qui est **à la fois la CI (build) et le scheduler**. Il porte :
+- **2 modes cron** (au minimum) : un cron **`sync`** (cadence courte, ex. `0 */6 * * *`) + un cron **`digest`** (rapport périodique, ex. `0 6 * * *`), le mode étant dérivé du `schedule` déclencheur ; **`workflow_dispatch`** pour le rejeu manuel / smoke-test (remplace la recette live authentifiée 17b en automation) ;
+- `concurrency` mono-groupe (`cancel-in-progress: false`) → renforce l'idempotence mono-instance ;
+- `permissions: contents: read` (le workflow ne pousse rien).
+
+> **Alternatives d'ordonnanceur** (si GitHub Actions ne convient pas — quota, latence, cron < 5 min) : **cron système** (crontab/systemd-timer sur une VM), **conteneur** long-running (`node dist/index.js` en boucle / sidecar cron), **Cloud Scheduler** (GCP) → Cloud Run job. Le choix se **loge** dans `tech/provisioning-log.md`. La contrainte d'**état durable** ci-dessous s'applique à **toute cible à runner éphémère**, pas seulement GitHub Actions.
+
+### 🚨 RÈGLE DURE — état durable sur runner éphémère
+> **Le fallback fichier (`.automation/*.json`) est valide UNIQUEMENT sur disque persistant OU en test local one-shot. Toute cible à RUNNER ÉPHÉMÈRE (GitHub Actions / Cloud Scheduler / Cloud Run job / CI) efface le disque à chaque tick ⇒ l'état repart de zéro ⇒ l'idempotence (run ET entité) est CASSÉE. Sur runner éphémère, une base durable (Supabase) est OBLIGATOIRE — pas optionnelle.**
+
+Cette contrainte **conditionne la reco de déploiement** : si l'ordonnanceur retenu est éphémère (le cas de GitHub Actions), le provisioning **exige** une BDD durable et **refuse** un solde « Supabase optionnel / fallback fichier suffit ». Le fallback fichier n'est un défaut acceptable que pour le **test local** (un run one-shot sur la machine de dev) ou une **VM à disque persistant**. Le châssis présente ailleurs le fallback fichier comme universel ; **ici, pour l'archétype automation à runner éphémère, il ne l'est pas** (leçon transférable §D-3 de la rétro StockSentinel).
+
+### Graphe de dépendances (automation)
+```
+scaffold local (git init + bloc automation + CLAUDE.md)
+      │
+      ├──> provisioner-repo-scheduler   (GitHub repo + workflow schedule: = CI *et* host)  ┐ cœur
+      └──> provisioner-db-migrations    (Supabase : migrations SEULES, PAS d'Auth/SMTP)    ┘ cœur
+                        │
+                        ▼
+      câblage secrets (GitHub Actions Secrets + Variables ; + secrets d'INTÉGRATION source/cible)
+                        ▼
+                 vérif finale (scheduler présent · run one-shot journalisé/notifié · RLS 0 policy tenant)
+```
+
+### Ce qui est RETIRÉ (tracé, jamais silencieux)
+Chaque retrait = **une ligne dans `tech/provisioning-log.md`** (« retrait automation : `<ressource>` — `<raison>` »), comme un allègement de type :
+
+| Ressource web-saas | Statut en automation | Raison |
+|---|---|---|
+| **hosting-web** (Vercel / CF Pages / Coolify) | **RETIRÉ** — remplacé par l'**ordonnanceur** (GitHub Actions `schedule:`) | pas d'app web hébergée ; le host = le scheduler |
+| **DNS public** (Cloudflare `<slug>.<domaine>`) | **RETIRÉ** (sauf si endpoint webhook entrant requis) | headless, aucune surface publique à router |
+| **email-domaine** (vérif domaine Resend + SPF/DKIM/DMARC) | **RETIRÉ** | pas d'email produit/transactionnel utilisateur ni de confirmation de compte ; la **boucle fermée** notifie le *propriétaire* via l'API Resend directe (clé en secret), **sans domaine vérifié à provisionner** |
+| **Supabase Auth / SMTP custom** (confirmations, OTP, `site_url`, `mailer_*`) | **RETIRÉ** | pas d'auth utilisateur ; accès BDD **service-role only** |
+| **billing** (Stripe) | **RETIRÉ** | rien n'est vendu (automation le plus souvent interne) |
+| **`git_author` = porte de déploiement** | **RETIRÉ comme porte** (hygiène d'authorship conservée) | host ≠ Vercel → aucun `readyState = BLOCKED` (cf. §Ordre step 1) |
+
+### db = migrations SEULES (service-role, sans Auth)
+`provisioner-db-migrations` applique **les migrations du modèle de données (étape 9)** — tables du **store de runs** + **entités métier** + fonctions/RPC d'idempotence (unique partielle sur clé d'identité + upsert RPC **lesson #15 42702-safe**, RLS **RETURNING-safe**). Il **ne configure PAS** Auth/SMTP (pas de `PATCH .../config/auth`, pas d'enrollment, pas de `mailer_*`). L'accès est **service-role only** : le worker lit/écrit via `SUPABASE_SERVICE_ROLE_KEY`, qui **bypass RLS**. Donc **0 policy tenant** attendue (pas de `anon`, pas de JWT utilisateur) : RLS peut rester **activée sans policy** (deny-all par défaut, service_role bypass) — c'est la **sonde de vérif** « RLS 0 policy » (l'inverse du web-saas qui *exige* des policies). Détail data-model automation : `skills/09-architecture/references/data-model.md` §automation (hors périmètre de cette étape — on le lit, on ne le redéfinit pas).
+
+### secrets automation → 3 slots (détail : `secrets-wiring.md`)
+- **GitHub Actions Secrets** (masqués) : valeurs **sensibles** — `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY` (notif boucle fermée), `WEBHOOK_URL`/`CRON_SECRET` éventuels, **+ secrets d'INTÉGRATION source/cible**.
+- **GitHub Actions Variables** (lisibles) : config **non-sensible** — `SUPABASE_URL`, `OWNER_EMAIL`, `EMAIL_FROM`, `SYNC_INTERVAL_HOURS`, `DIGEST_HOUR`, seuils métier, `IDEMPOTENCY_WINDOW_SEC`. `RUN_MODE` est **dérivé du cron** dans le workflow, **jamais** un secret.
+- **Slot « secrets d'INTÉGRATION source/cible »** (spécifique automation) : les tokens des **systèmes que l'automation lit/écrit** (ex. `SHOP_API_TOKEN` d'une boutique, clé d'API d'un CRM, token d'un feed fournisseur). Web-saas n'a pas ce slot ; une automation en a **toujours au moins un** (elle *intègre* deux systèmes). Oublier ce slot = worker qui ne peut ni lire la source ni écrire la cible.
+
+### Matrice de routage au démarrage — surcharge automation
+En plus de la matrice web-saas ci-dessus, `archetype = automation` **remplace** les branches hosting/email/billing par :
+
+| Condition | Action |
+|---|---|
+| `archetype = automation` | dispatch **repo-scheduler + db-migrations** seulement ; **ne dispatche ni** `provisioner-hosting`, `provisioner-email`, ni billing (retraits tracés) |
+| ordonnanceur = GitHub Actions (défaut) ET `SUPABASE_URL` absent | **BLOQUANT** : runner éphémère sans base durable → I1 cassé. Refuser le solde ; exiger la BDD (règle dure ci-dessus), guide `infra-setup`. **Jamais** de « fallback fichier suffit » sur runner éphémère. |
+| cible = disque persistant (VM cron système) OU test local one-shot | fallback fichier `.automation/*.json` accepté comme défaut ; Supabase recommandé mais non bloquant |
+| endpoint webhook entrant requis (bot/intégration push) | ré-activer un chemin DNS/host **minimal** pour ce seul endpoint, logué `[SÉCU]` ; le cron reste le host principal |
 
 ## Chaque sous-agent reçoit (dans son prompt de délégation)
 - La **config globale** (providers connectés, domaine, hébergeur) **+ la branche à emprunter** (managed vs self-host, lue dans `config.json`).

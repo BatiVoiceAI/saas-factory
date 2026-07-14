@@ -14,12 +14,14 @@ Chaque ligne : le champ, son critère de passage, le red-flag qui le recale.
 | **Cible** | métier/segment **+ volume**, cherchable | catégorie (« les PME ») |
 | **Alternative** | ≥1 alternative concrète ; **concurrents nommés extraits** | « rien » balancé sans creuser |
 | **Type + route** | type tranché **et** route écrite | type mouvant non tranché |
+| **Langue du livrable** | `locale` (+ `dir`, `jurisdiction`) écrit — défaut = langue parlée par l'utilisateur, distincte de la langue de travail du plugin (`_shared/state-schema.md` §Locale) | langue du produit non captée / supposée « fr » par défaut |
 | **Stade** | pré-produit / utilisateurs / payants | non déduit |
 | **Écosystème** | secteur · géo/langue · réglementaire · intégrations (chacun rempli ou « rien de particulier ») | intégrations en survol non nommées |
 | **Signal préliminaire** | noté **avec son poids** (fort/faible), ou « aucun » | enthousiasme poli compté comme demande |
 | **Non-goals** | ≥1, ou déduits « à confirmer » | liste de rêve déguisée |
-| **Critère de KILL (pré-rempli)** | question « qu'est-ce qui te ferait abandonner ? » posée à la porte, réponse notée **avec ses mots** (signal concret) | absent ; ou reformulé en langage d'agent ; ou un ressenti (« si je n'y crois plus ») accepté sans pousser vers un signal observable |
-| **Archétype** | pressenti (défaut web-saas) + note si doute | absent |
+| **Critère de KILL (pré-rempli)** *(public/interne ; **sans objet en perso**)* | pour public/interne : question « qu'est-ce qui te ferait abandonner ? » posée à la porte, réponse notée **avec ses mots** (signal concret). **Perso : sauté** (pas de marché à abandonner) — non bloquant | absent **en public/interne** ; ou reformulé en langage d'agent ; ou un ressenti (« si je n'y crois plus ») accepté sans pousser vers un signal observable. *(En perso, l'absence est normale, jamais un recalage.)* |
+| **Archétype** | pressenti (défaut web-saas) + note si doute — pilote le socle conditionné par archétype (`_shared/state-schema.md` §modèle 3 axes) | absent |
+| **Tenancy** | posé : `single` par défaut, `multi-org` si B2B (multi-clients/espaces isolés) | absent / supposé multi-org sans raison B2B |
 | **Hygiène** | **zéro secret / clé** dans le fichier | un secret recopié |
 
 **Règle du « à préciser »** : un champ sans réponse ferme se marque `à préciser`, jamais inventé. Si **problème** ou **cible** (les deux critiques) restent « à préciser », le brief est **fragile** → signale-le à la porte comme point à consolider (candidat « Ajuster » en étape 5).
@@ -34,13 +36,13 @@ Chaque ligne : le champ, son critère de passage, le red-flag qui le recale.
 [ ] Écosystème : 4 sous-champs traités
 [ ] Signal annoté avec son poids ; interest ≠ demand respecté
 [ ] Contraintes fatales éventuelles remontées en gras
-[ ] Stade + archétype déduits (pas re-demandés inutilement)
+[ ] Stade + archétype + tenancy déduits (pas re-demandés inutilement)
 [ ] Aucun secret dans le brief ni l'état
 [ ] Rien résolu : pas de solution/techno/code/teardown (HARD GATE tenu)
 ```
 
 ## Porte de sortie (légère mais bloquante)
-1. **Pré-enregistre le Critère de KILL** : « Qu'est-ce qui te ferait abandonner ce projet ? » — pousse jusqu'à un signal concret, note la réponse avec ses mots dans le brief (section dédiée).
+1. **Pré-enregistre le Critère de KILL** *(public/interne uniquement — sauté en perso, pas de marché à abandonner)* : « Qu'est-ce qui te ferait abandonner ce projet ? » — pousse jusqu'à un signal concret, note la réponse avec ses mots dans le brief (section dédiée).
 2. **Récapitule** en clair : reformulation + type/route + cible + problème.
    > Exemple de formulation : « On part sur un SaaS **public**, cible **le plombier solo ~5 devis/semaine**, problème **la ressaisie des devis le soir (~1h, erreurs)** — c'est bien ça ? »
 3. **Demande confirmation** (`AskUserQuestion`). **Ne franchis jamais sans réponse.**
@@ -55,7 +57,8 @@ Chaque ligne : le champ, son critère de passage, le red-flag qui le recale.
 ## Mise à jour de l'état (`.saas-factory/state.md`)
 En sortie, renseigne au minimum :
 - **Type / route** (décide des étapes actives)
-- **Archétype**
+- **Archétype** (pilote le socle de complétude — `_shared/state-schema.md` §modèle 3 axes)
+- **Tenancy** (`single` défaut · `multi-org` si B2B)
 - **Phase 1 · Étape 01** · statut `fait`
 - **Ambition** (perso/interne court · public complet) — déductible du type
 

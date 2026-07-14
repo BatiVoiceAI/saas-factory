@@ -9,9 +9,10 @@ import { env } from "@/lib/env";
  * dans l'Edge Runtime. C'est sans risque de fuite : on ne lit que des variables
  * NON secrètes (`APP_ACCESS_MODE`, `AUTH_ALLOWED_EMAIL_DOMAINS`), jamais une clé.
  *
- * Le châssis a UN mécanisme d'auth : l'OTP passwordless (`lib/auth/actions.ts`).
+ * Le châssis a UN mécanisme d'auth : OTP → mot de passe (`lib/auth/actions.ts`,
+ * l'e-mail est vérifié par un code à 6 chiffres, puis un mot de passe est posé).
  * L'enrollment ne change PAS ce mécanisme — il restreint seulement QUI a le droit
- * d'obtenir un code, selon `APP_ACCESS_MODE` :
+ * d'obtenir un code d'inscription, selon `APP_ACCESS_MODE` :
  *
  *  - `public` : signup ouvert. N'importe quelle adresse reçoit un code et le
  *    compte est créé à la volée (`shouldCreateUser: true`).

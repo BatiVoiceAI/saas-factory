@@ -26,3 +26,21 @@ export const brand = {
   /** Description meta (≤ 155c) — proposition de valeur, dérivée du positionnement. */
   description: "Châssis micro-SaaS — Next.js 15, Supabase, Tailwind, shadcn/ui.",
 } as const;
+
+/**
+ * Langue du LIVRABLE (code BCP-47 : `fr-FR`, `en-US`, `es-ES`, `ar`…).
+ *
+ * ⚠️ **Sentinelle du châssis, sœur de `brand`** : champ de 1er rang `locale`
+ * (cf. `_shared/state-schema.md` §Locale du livrable — SOURCE UNIQUE), **capté à
+ * l'intake, propagé, invariant**, finalisé au **walking skeleton (étape 12)** par
+ * l'**écrivain unique** — exactement comme `brand.name` (cf. `CONVENTIONS.md`
+ * §9 † & §12). Le défaut châssis `"fr-FR"` = **langue de travail interne**, à
+ * paramétrer depuis `locale` au build ; un produit `en-US` ne doit garder aucun
+ * résidu FR.
+ *
+ * Consommé UNIQUEMENT via `lib/i18n.ts` (qui en dérive `locale`, `dir` et le
+ * dictionnaire de copy) — ne pas relire cette constante en dur ailleurs. Une env
+ * `NEXT_PUBLIC_LOCALE` (cf. `lib/env.ts`) peut la **surcharger** sans toucher au
+ * code (ex. prévisualisation multi-langue) ; sinon cette valeur fait foi.
+ */
+export const PRODUCT_LOCALE = "fr-FR";

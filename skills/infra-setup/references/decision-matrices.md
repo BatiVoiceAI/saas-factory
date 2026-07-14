@@ -31,6 +31,7 @@ Les services **forkés** (repo, BDD, hébergement, obs, LLM) **offrent le choix 
 | BDD, CI, obs, LLM | oui (défaut = selon profil) | non — appliquer le défaut du profil, **override possible par service** |
 | DNS, provider email | oui (`stack-defaults.md`, provider-only) | non — appliquer le défaut, mentionner qu'il est swappable entre providers |
 | **Adresse d'expéditeur (From, `email_from`)** | défaut **proposé** (`no_reply@<domain>`, ou `mail.` si apex déjà email) mais dépend de l'utilisateur | **oui, léger** (forcing court, `connection-procedure.md §5`) — son **domaine = celui vérifié dans Resend** (gratuit = 1 seul) |
+| **Identité git-author (`git_author.email` / `.name`)** | défaut **proposé** (l'email du compte Vercel connecté, lisible via `GET /v2/user`) mais dépend de l'utilisateur | **oui, léger** (capturé à l'onboarding comme `email_from`, `config-schema.md §git_author`) — **doit** être l'email de ton compte **GitHub qui est AUSSI membre de ta team Vercel** (souvent le même email GitHub+Vercel) ; sinon Vercel renvoie **BLOCKED** au déploiement (`failure-modes.md`, invariant complet `config-schema.md §git_author`) |
 
 ## Matrice — Hébergement (managé ↔ open-source)
 Trancher **un** provider et ne connecter que celui-là. Défaut = selon **profil** (managé → Vercel/Cloudflare ; open-source → Coolify).
@@ -125,12 +126,12 @@ Pour ces services, l'auto-hébergement **ne répond pas au besoin cœur** → le
 
 | Condition | LLM texte | Visuels (Nano Banana) |
 |---|---|---|
-| Défaut | Gemini 2.5 Flash (`stack-defaults.md`) → `llm = "gemini"` | **couvert par la même clé Google** → `visuals = "nano-banana"` |
+| Défaut | Gemini 2.5 Flash (`stack-defaults.md`) → `llm = "gemini"` | **Nano Banana Pro** (`gemini-3-pro-image`) **couvert par la même clé `GEMINI_API_KEY`** → `visuals = "nano-banana"` |
 | Déjà une clé OpenAI / préférence GPT | `llm = "gpt-4o"` (ou autre), clé dans `.env` | **non couvert** : soit **clé Google dédiée** (`GOOGLE_API_KEY`/`GEMINI_API_KEY`) → `visuals = "nano-banana"`, soit `visuals = "none"` (fallback, l'étape 11 coupe la génération d'images) |
 | Pas de features IA texte prévues | `llm` sautable | mais **les visuels exigent quand même une clé Google** → clé déposée → `"nano-banana"`, sinon `"none"` |
 
 - **Piège à éviter** : croire que « choisir un LLM » suffit pour les visuels. Avec un LLM non-Google, **aucune clé Google n'est capturée** → sans clé dédiée, `visuals = "none"`, on le dit franchement (pas de visuels fantômes).
-- **Défaut adossé** : `stack-defaults.md` ne liste pas encore de moteur image ; en attendant, le défaut visuels de ce setup est **Nano Banana (Gemini)**, swappable comme les autres.
+- **Défaut adossé** : le moteur image par défaut (`stack-defaults.md`) est **Nano Banana Pro** (`gemini-3-pro-image`, Google) via `scripts/generate-visual.mjs` — visuels dérivés de `DESIGN.md`, jamais du stock ; swappable comme les autres.
 
 ## Matrice — Périmètre de connexion selon la réponse au consentement
 (complète `consent-briefing.md`)

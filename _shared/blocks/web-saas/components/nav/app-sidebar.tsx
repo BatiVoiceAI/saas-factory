@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Package,
-  Settings,
 } from "lucide-react";
 
 import { brand } from "@/lib/brand";
@@ -27,7 +26,6 @@ const navItems: NavItem[] = [
   { title: "Tableau de bord", href: "/dashboard", icon: LayoutDashboard },
   { title: "Éléments", href: "/items", icon: Package },
   { title: "Facturation", href: "/billing", icon: CreditCard },
-  { title: "Réglages", href: "/settings", icon: Settings },
 ];
 
 /**

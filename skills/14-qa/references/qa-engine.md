@@ -11,7 +11,7 @@ Premier filtre, avant d'ouvrir un navigateur : **le produit doit se builder pour
 - **Régression** : un build cassé se documente comme un bug (test/vérif de non-régression = le build lui-même dans la CI) ; note la cause (`_shared/lessons.md`, dérive « passe tsc / casse build »).
 
 ## Navigateur — Playwright (via `webapp-testing`)
-Le faux-client teste dans un **vrai navigateur headless** via **Playwright**, en s'appuyant sur le skill **`webapp-testing`** (Anthropic, **Apache-2.0**) — la brique officielle pour écrire/exécuter des tests UI. *(À vendorer dans `vendor/webapp-testing/` — Apache-2.0, conserver LICENSE + PROVENANCE.)*
+Le faux-client teste dans un **vrai navigateur headless** via **Playwright**, en s'appuyant sur le skill **`webapp-testing`** (Anthropic, **Apache-2.0**) — la brique officielle pour écrire/exécuter des tests UI. *(Pas encore vendoré — batch réseau : procédure + candidats dans `{PLUGIN_ROOT}/vendor/VENDORING-TODO.md`. En attendant : si le skill `webapp-testing` est installé chez l'utilisateur, l'invoquer ; sinon Playwright direct — `playwright-core` est déjà dans les deps du châssis web-saas.)*
 - Lance l'app en **staging** (sous-domaine provisionné à l'étape 11) ou en local.
 - Clics, formulaires, navigation, assertions d'état, responsive, **screenshots sur échec**.
 

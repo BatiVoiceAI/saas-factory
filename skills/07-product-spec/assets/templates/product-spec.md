@@ -8,7 +8,8 @@
 - **Cible :** <persona précis, caractéristiques observables>
 - **Edge :** <axe différenciant, ou absence assumée>
 - **Intégrations / écosystème :** <outils à connecter, repris de idea-brief>
-- **Type de produit :** <SaaS public / outil interne entreprise / outil perso — cadre le canal des boucles et l'adaptation du socle>
+- **Archétype :** <web-saas / landing / automation — **conditionne le socle de complétude** : web-saas → S1-S8, landing → LP1-LP4, automation → AU1-AU5 ; `_shared/state-schema.md` §socle-par-archétype>
+- **Type de produit :** <SaaS public / outil interne entreprise / outil perso — cadre le canal des boucles et le calibrage du socle, par-dessus l'archétype>
 
 ## Scope — workflow cœur
 <!-- UN workflow cœur bien fait. Micro-SaaS niché, pas plateforme horizontale. Décrire le parcours de bout en bout : c'est ce que le MVP doit rendre fluide. -->
@@ -23,26 +24,45 @@
 - **Chemin le plus court :** <entrée → onboarding (2-4 écrans) → … → aha — N étapes>
 
 ## Liste des features
-<!-- Liste COMPLÈTE dérivée de : (a) le workflow cœur, (b) les features réclamées (demand-signals), (c) les manques concurrents (opportunity-brief), (d) le socle « produit complet » S1-S8 injecté d'office (rattachement « socle complétude »). Une ligne par feature ; fiche PROFONDE dans product/features/NN-<slug>.md pour les Must (allégée pour Should). -->
+<!-- Liste COMPLÈTE dérivée de : (a) le workflow cœur, (b) les features réclamées (demand-signals), (c) les manques concurrents (opportunity-brief), (d) le socle « produit complet » injecté d'office, CONDITIONNÉ PAR L'ARCHÉTYPE (web-saas → S1-S8 · landing → LP1-LP4 · automation → AU1-AU5 ; rattachement « socle complétude »). Une ligne par feature ; fiche PROFONDE dans product/features/NN-<slug>.md pour les Must (allégée pour Should). -->
 | # | Feature | Priorité (M/S/C/W) | Rattachement Phase 1 |
 |---|---|---|---|
 | 01 | <nom> | <Must / Should / Could / Won't> | <problème / demande / manque concurrent / socle complétude> |
 
-## Socle « produit complet » (Must d'office — universel aux 3 types)
-<!-- Injecté d'office, exempté du test de retrait : on ADAPTE chaque élément au type/à la niche, on ne débat pas de son existence. « Socle réduit » = décision justifiée PAR ÉLÉMENT (outil interne/perso), jamais une dispense de type. Détail : references/completeness-baseline.md. -->
-| Élément | Adaptation au type / à la niche |
+## Socle « produit complet » (Must d'office — CONDITIONNÉ PAR L'ARCHÉTYPE)
+<!-- Injecté d'office, exempté du test de retrait : on ADAPTE chaque élément au type/à la niche, on ne débat pas de son existence. Le socle DÉPEND DE L'ARCHÉTYPE (web-saas S1-S8 / landing LP1-LP4 / automation AU1-AU5) — un product-spec de landing ou d'automation N'HÉRITE PAS du socle web-saas (pas d'onboarding/dashboard/entité CRUD imposés). NE GARDER QUE LE BLOC de l'archétype du projet (§ Contexte → Archétype) ; supprimer les deux autres. « Socle réduit » = décision justifiée PAR ÉLÉMENT, jamais une dispense d'archétype. Détail : references/completeness-baseline.md ; portes par archétype : routing.md ; source : _shared/state-schema.md §socle-par-archétype. Le calibrage par type (public/interne/perso) module le canal/mode par-dessus. -->
+
+<!-- ▼ Si archétype = web-saas → garder ce bloc (S1-S8), supprimer les deux autres -->
+| Élément (web-saas) | Adaptation au type / à la niche |
 |---|---|
 | S1 · Onboarding wizard (2-4 écrans) → crée l'entité cœur avec défauts intelligents modifiables | <ex. salon : nom, adresse, horaires, 3 prestations types pré-remplies> |
 | S2 · Profil / settings complet (infos, email, suppression de compte RGPD ; rôles + audit si interne) | <…> |
 | S3 · Empty states pédagogiques (chaque écran vide guide vers l'action) | <…> |
 | S4 · Emails / notifications transactionnels brandés (canal adapté au type) | <…> |
-| S5 · Pages légales FR (mentions, confidentialité, CGV si vente ; équivalent interne/perso adapté) | <…> |
+| S5 · Pages légales **adaptées à la juridiction** `jurisdiction`/`locale` (FR → mentions + confidentialité + CGV si vente ; US/EN → Terms + Privacy ; DE → Impressum + Datenschutz ; jamais « FR » en dur ; équivalent interne/perso adapté) | <…> |
 | S6 · 404 brandée | <…> |
 | S7 · Seed / demo data marquée « exemple » et supprimable | <…> |
 | S8 · Metadata & favicon brandés (title, description, favicon, OG, lang fr) | <…> |
 
+<!-- ▼ Si archétype = landing → garder ce bloc (LP1-LP4), supprimer les deux autres. PAS d'onboarding wizard, PAS de dashboard, PAS d'entité CRUD. -->
+| Élément (landing) | Adaptation à la niche |
+|---|---|
+| LP1 · Sections du landing-playbook (hero, problème, solution, preuve, CTA…) | <…> |
+| LP2 · Pages légales **adaptées à la juridiction** `jurisdiction`/`locale` (jamais « FR » en dur) | <…> |
+| LP3 · Waitlist / CTA (boucle fermée : confirmation + trace lead) | <…> |
+| LP4 · Métadonnées & favicon (title, description, OG, lang) | <…> |
+
+<!-- ▼ Si archétype = automation → garder ce bloc (AU1-AU5), supprimer les deux autres. PAS d'UI produit (headless). -->
+| Élément (automation) | Adaptation à la niche |
+|---|---|
+| AU1 · Config / secrets (déclarés, jamais en dur ; via infra-setup) | <…> |
+| AU2 · Historique des runs / logs consultables | <…> |
+| AU3 · Healthcheck / statut d'exécution | <…> |
+| AU4 · Boucle fermée (notification succès/échec au bon canal + trace) | <…> |
+| AU5 · Idempotence (re-run sûr, pas de double effet) | <…> |
+
 ## Priorisation — MoSCoW (source unique de la priorité)
-<!-- Fusion §5 : la matrice vit ICI, plus dans un fichier séparé. Chaque feature dans UN bucket. Le Won't have est AUSSI important que le Must : il protège le scope. Justification = rattachement Phase 1. Le socle S1-S8 est Must d'office (justif « socle complétude »). Méthode : references/prioritization.md. -->
+<!-- Fusion §5 : la matrice vit ICI, plus dans un fichier séparé. Chaque feature dans UN bucket. Le Won't have est AUSSI important que le Must : il protège le scope. Justification = rattachement Phase 1. Le socle « produit complet » (conditionné par l'archétype : S1-S8 / LP1-LP4 / AU1-AU5) est Must d'office (justif « socle complétude »). Méthode : references/prioritization.md. -->
 | Feature | Bucket | Justification (rattachement Phase 1) |
 |---|---|---|
 | <nom> | Must / Should / Could / Won't | <pourquoi ce bucket> |
@@ -56,7 +76,7 @@
 ## MVP (les Must, rien d'autre)
 <!-- Fusion §5 : la définition du MVP vit ICI. Le plus PETIT produit qui résout VRAIMENT le problème cœur. Le socle « produit complet » en fait partie d'office : sans lui le MVP n'est pas plus petit, il est inachevé. -->
 - **Hypothèse cœur (falsifiable) :** « si on donne <capacité> à <cible>, alors <comportement/valeur attendu> ».
-- **Features Must :** <UNIQUEMENT les Must de la matrice — aucun Should/Could> + socle « produit complet » S1-S8.
+- **Features Must :** <UNIQUEMENT les Must de la matrice — aucun Should/Could> + socle « produit complet » de l'archétype (web-saas → S1-S8 · landing → LP1-LP4 · automation → AU1-AU5).
 - **Success criteria (mesurables) :** <activation = job cœur accompli (ex. « premier livrable exporté »), rétention, complétion du workflow, willingness-to-pay — pas de vanity metric>.
 - **Out-of-scope :** <repris du Won't have — nommer protège le focus au build>.
 

@@ -21,7 +21,45 @@ Le défaut de l'archétype couvre 95 % des micro-SaaS. Ne dévie que sur exigenc
 
 > Chaque déviation du défaut = un ADR avec réversibilité honnêtement notée « difficile ». Ne marque **jamais** un choix multi-tenant « réversible : facile ».
 
+## Variante AUTOMATION — tables d'état service-role-only (multi-tenant « sans objet »)
+
+> Conditionnement par archétype. Le modèle à 3 axes (`archetype` / `type` / `tenancy`) et la définition de `automation` vivent en **source unique** dans `_shared/state-schema.md §Modèle à 3 axes`. Ici on ne redéfinit rien : on dérive **ce que devient le modèle de données** quand `archetype = automation`. Toute la procédure « multi-tenant » ci-dessus (dérivation depuis US produit, tenant, RLS, `anon`) est **conçue pour `web-saas`** ; en `automation` elle est **inapplicable telle quelle** — appliquer le multi-tenant à un headless est un **faux-positif** (l'inverse du bug des portes de complétude, §`state-schema.md`).
+
+Un `automation` n'a **pas de schéma applicatif orienté utilisateur** : pas de session, pas de JWT, pas de rôle produit, pas de surface `anon`. Ses tables sont un **état d'automatisation** (config, historique de runs + logs, curseurs d'idempotence, éventuelles entités métier créées par le job), **écrites et lues par le worker seul** via `service_role` (REST `fetch` — cf. `_shared/archetypes/automation.md`, socle AU1-AU5). Conséquences directes sur la procédure :
+
+| Point de la procédure web-saas | En automation |
+|---|---|
+| **Stratégie multi-tenant** (table ci-dessus) | **sans objet** — pas de tenant, pas d'`org_id`, pas de FK propriétaire. Une seule « organisation » implicite : le worker. Ne pose **pas** de `tenant_id` « au cas où ». |
+| **Ligne « Tenant »** de chaque table | **sans objet** — remplace par « écrit/lu par : worker (`service_role`) ». |
+| **Règles RLS** (§ suivant) | **RLS activée mais deny-by-default sans policy** : la table est **service-role-only**. `service_role` **bypasse RLS** ; on n'ajoute **aucune** policy `select/insert/update/delete` (aucun rôle non-privilégié n'y accède). Documenter ce choix explicitement (RLS ON + 0 policy = « accès worker uniquement », pas un oubli). |
+| **Frontière de confiance JWT** | **sans objet** — il n'y a pas de client à qui ne pas faire confiance. Les secrets d'intégration (token boutique, clé Resend) sont la seule frontière, portée par la config (AU1), pas par RLS. |
+| **Surface `anon`** | **sans objet** — un headless n'expose **rien** à `anon`. Tout le bloc « Accès public anonyme » est ignoré (l'admin optionnel de statut/logs se protège par accès restreint, pas par un signup public). |
+
+### L'invariant d'ENTITÉ idempotente est en 1er rang (avant tout le reste)
+En web-saas, le premier invariant listé est souvent l'unicité **par tenant**. En automation, **le risque n°1 — et donc le premier invariant à poser** — est l'**idempotence au grain de l'entité** que le job crée : « un même déclencheur métier (ex. un manque de stock) ne doit produire **au plus une** entité ouverte (ex. un réappro), même si le run est rejoué ». C'est distinct de l'idempotence de **run** (AU5 `withIdempotency` : « un effet au plus par tick ») : le grain **entité** exige sa propre contrainte DB. Pose-le **en tête** de la table des invariants d'intégrité, avec :
+
+| Invariant (grain entité) | Contrainte DB | Jamais |
+|---|---|---|
+| Au plus une entité ouverte par déclencheur métier (au plus un réappro par manque) | **index unique partiel** sur la **clé d'identité déterministe** `WHERE statut = 'ouvert'` + **upsert RPC atomique** (`insert … on conflict … do nothing/update`) | `SELECT` « existe-t-il déjà ? » puis `INSERT` (course : deux runs concurrents passent tous deux) |
+
+- **Clé d'identité déterministe = attributs STABLES seulement.** La clé qui identifie l'entité **exclut toute quantité mutable**. Un `sha256(sku | besoin | fenêtre)` qui inclut la quantité manquante re-crée un doublon **dès que la quantité change** au run suivant — piège classique. La clé porte l'**identité** (quoi/où/quelle fenêtre), pas l'**état** (combien). Le patron complet 2-grains (run vs entité) + migration exemple vivent dans le socle automation (`_shared/archetypes/automation.md` AU5 + `_shared/blocks/automation/README.md`) — on ne le duplique pas ici, on **exige** sa contrainte au modèle.
+- **Fenêtre déterministe** (le composant temporel de la clé) : ne **jamais** utiliser `now()` nu dans la clé (chaque run tombe dans un bucket différent → l'idempotence ne tient pas). Bucketise sur une **fenêtre calculée** : `floor((epoch(t) − EPOCH_CONSTANTE) / PÉRIODE_SEC)`, avec `EPOCH_CONSTANTE` **fixe** (constante versionnée du code, jamais l'heure de démarrage) et un **préfixe versionné** (`ss:v1:sync:…`) pour pouvoir changer de schéma de fenêtre sans collision. La période DOIT dériver de la **cadence réelle** du worker (piège de la fenêtre 24 h par défaut du châssis — cf. socle automation).
+
+### RETURNING est SÛR sur table service-role-only (le piège RLS n'existe que sous policy SELECT auto-référente)
+Le piège « `new row violates row-level security policy` au premier `INSERT` » — celui qui casse `.insert().select()` — **n'existe QUE** quand une **policy `SELECT` auto-référente** (qui re-requête sa propre table pour décider de la visibilité) s'applique au `RETURNING`. Un `INSERT … RETURNING` (côté SDK : `.insert(…).select()`) fait passer les lignes retournées **par la policy `SELECT`** ; si cette policy re-lit la table (ex. « je vois la ligne si j'appartiens à son org » alors que l'org vient d'être créée dans le même insert), le check échoue et l'insert entier est rejeté.
+
+Sur une table **service-role-only** (automation) : **il n'y a aucune policy `SELECT`**, et `service_role` **bypasse RLS** de toute façon. Donc **`INSERT … RETURNING` / `.insert().select()` est SÛR** — récupère librement l'id/la ligne insérée, y compris l'upsert d'idempotence d'entité. **Ne transpose PAS** la prudence « RETURNING piégé » du contexte web-saas ici : ce serait une contrainte fantôme. La règle exacte : *le RETURNING n'est risqué que sous une policy SELECT auto-référente ; sans policy SELECT (service-role-only) il est inconditionnellement sûr.*
+
+### Patron « domain store » (REST service-role + fallback fichier)
+Le worker parle à ses tables d'état en **REST `service_role`** (pas de SDK lourd — cf. AU5). Le patron réutilisable pour une **entité métier** persistée par le job = un **« domain store »** : un module qui expose `get/upsert/list` sur l'entité, **REST Supabase en primaire** et **fallback fichier local** (`.automation/*.json`) en secours. Deux règles dures sur le fallback :
+- **Concurrence** : le fallback fichier ne tient pas sous accès concurrent → n'est valide qu'en mono-instance (le `concurrency` du scheduler garantit un run à la fois).
+- **Éphémérité** (⚠️ décisif au déploiement) : sur **runner éphémère** (GitHub Actions, Cloud Scheduler, CI), le disque est **effacé à chaque tick** → `.automation/*.json` disparaît → **l'idempotence d'entité est cassée en silence**. Donc : *fallback fichier valide UNIQUEMENT sur disque persistant OU test local one-shot ; **runner éphémère ⇒ table Supabase durable OBLIGATOIRE***. Cette contrainte **conditionne la reco de déploiement** (§`skills/17-deploy/references/automation-deploy.md`).
+
+Toute fonction/RPC posée pour ce patron (upsert atomique d'idempotence d'entité) reste soumise à **lesson #15** : garde-fou anti-42702 obligatoire (`#variable_conflict use_column` **ou** préfixes `p_`/`v_` + qualification `table.colonne`) — cf. §Robustesse des fonctions PL/pgSQL ci-dessous. Un upsert d'idempotence est typiquement `SECURITY DEFINER` + `RETURNS TABLE` → cible directe du 42702.
+
 ## Règles RLS (le socle du multi-tenant sur Supabase)
+
+> Archétype `automation` : ce bloc est **sans objet** (tables service-role-only, RLS ON + 0 policy) — voir §Variante AUTOMATION ci-dessus. Le reste de cette section vaut pour `web-saas`.
 - **Toute table tenantée porte `tenant_id`** (ou une FK vers l'org) et **active RLS**. Une table tenantée sans RLS = fuite de données inter-clients → `[SÉCU]`.
 - **Deny-by-default** : RLS activée, aucune policy permissive « à tous ». On ajoute les policies `select/insert/update/delete` explicitement.
 - **Le tenant vient du token de session**, jamais d'un paramètre client (sinon un client lit les données d'un autre en changeant l'ID). Frontière de confiance : le `tenant_id` de la requête est **dérivé du JWT**, pas du body.

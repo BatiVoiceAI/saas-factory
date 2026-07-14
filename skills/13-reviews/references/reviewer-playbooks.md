@@ -68,7 +68,11 @@ Sortie de tout cran : un **bloc verdict** (voir `assets/templates/cascade-verdic
 ### Sous-procédure (dans l'ordre)
 1. **Conformité archi** — respect de `tech/architecture.md` (couches, dépendances, frontières de confiance §3.6), couplage, pas de contournement de la structure décidée.
 2. **Perf / dette** — requêtes N+1, boucles non bornées, allocation dans un chemin chaud, dette introduite (raccourci non tracé → doit devenir un `CONCERNS` logué, pas un secret).
-3. **Sécurité outillée** — lance le **`security-review` vendoré** (diff-aware) **puis** ouvre la/les carte(s) pertinente(s) de `owasp-cards.md` selon la nature de la feature (routage : voir `owasp-cards.md`). **Exploit concret par finding**, tag `[SÉCU]`.
+3. **Sécurité outillée** — exécute le **`security-review` vendoré** (diff-aware), **puis** ouvre la/les carte(s) pertinente(s) de `owasp-cards.md` selon la nature de la feature (routage : voir `owasp-cards.md`). **Exploit concret par finding**, tag `[SÉCU]`.
+   - **Le moteur** : `{PLUGIN_ROOT}/vendor/security-review/.claude/commands/security-review.md` (résolution `{PLUGIN_ROOT}` : `_shared/vendored-engine-protocol.md` §0). **Lis-le et suis sa procédure à la lettre** (objectif >80 % de confiance, catégories, exclusions dures, format de finding).
+   - **Adapter son préambule** : le fichier ouvre sur des blocs `!`git status/diff/log …`` pensés pour une slash-command — **reproduis-les toi-même** avec le diff de LA feature : `git status`, `git diff --merge-base <branche-de-base>` (la lane/branche de base du worktree, pas forcément `origin/HEAD`), `git log <base>..HEAD`. C'est ce diff-là que la procédure analyse.
+   - **Affinage** (faux positifs / focus) : `{PLUGIN_ROOT}/vendor/security-review/docs/custom-filtering-instructions.md` + `custom-security-scan-instructions.md`.
+   - *(La GitHub Action Python du repo amont n'est PAS vendorée — c'est une dépendance CI optionnelle ; ici le moteur EST la procédure markdown, exécutée par toi.)*
 4. **STRIDE par frontière** — pour chaque frontière de confiance touchée (de `tech/architecture.md` §3.6), passe les 6 lettres.
 5. **Fonctionnel** — comme les autres crans, la feature fait-elle ce que dit la story (angle système).
 6. **Cross-check `codex` (OPTIONNEL)** — si `codex` présent + activé par l'utilisateur, lance-le en vérification indépendante **ici** (seule vraie sortie du biais mono-modèle). Jamais imposé, aucune API forcée.
@@ -96,7 +100,7 @@ Sortie de tout cran : un **bloc verdict** (voir `assets/templates/cascade-verdic
 - **Routage** : exploit démontré → `FAIL` [SÉCU] ; risque réel non exploitable en l'état → `CONCERNS` [SÉCU] ; entorse archi tracée et assumée → `WAIVED` ; exclusion dure → **jamais** `FAIL`.
 
 ### DoD CTO (checklist)
-- [ ] `security-review` vendoré **lancé** sur le diff.
+- [ ] Moteur `security-review` **exécuté** sur le diff de la feature (`{PLUGIN_ROOT}/vendor/security-review/.claude/commands/security-review.md` **ouvert via Read**, procédure suivie — pas de « scan » improvisé de mémoire).
 - [ ] Carte(s) `owasp-cards.md` pertinente(s) ouverte(s) selon la nature de la feature (web / LLM / agentique).
 - [ ] **STRIDE** passé sur chaque frontière de confiance touchée.
 - [ ] Chaque finding sécu = **exploit concret** cité (`fichier:ligne` + scénario), pas « risque théorique ».
@@ -112,10 +116,12 @@ Sortie de tout cran : un **bloc verdict** (voir `assets/templates/cascade-verdic
 
 ### Sous-procédure (dans l'ordre)
 1. **Conformité `DESIGN.md`** — tokens (couleur / espacement / typo), composants du système (pas de one-off réinventé), hiérarchie visuelle décidée.
-2. **Checklist anti-slop** — passe la **checklist de review de `_shared/design-doctrine.md` point par point, en binaire**, sur le rendu réel des surfaces touchées (screenshot **desktop + mobile**). **Un marqueur coché (OUI) = `FAIL`** → retour dev avec le numéro du point + le screenshot comme preuve. Pas de rustine ponctuelle : un marqueur systémique (gradient interdit, gris purs, 3 cartes identiques…) se corrige au **thème/pattern**, pas à l'écran isolé.
+2. **Checklist anti-slop + convergence** — passe la **checklist de review de `_shared/design-doctrine.md` point par point, en binaire (19 points)**, sur le rendu réel des surfaces touchées (screenshot **desktop + mobile**). **Un marqueur coché (OUI) = `FAIL`** → retour dev avec le numéro du point + le screenshot comme preuve. Pas de rustine ponctuelle : un marqueur systémique (gradient interdit, gris purs, 3 cartes identiques…) se corrige au **thème/pattern**, pas à l'écran isolé.
+   - **Porte distinctiveness (16-19)** au niveau de la surface : **(18) rationale par page tenu** — la surface a une ligne « intention » dans `DESIGN.md` §Rationale par page (pourquoi ce layout/hiérarchie/anim) **et le rendu la tient** (le layout/anim livré = celui déclaré) ; **(19) `prefers-reduced-motion`** respecté (aucun transform/parallax actif en mode réduit) ; **(16) motion** = 1-2 effets signature max, pas de fade-in généralisé. *(17 convergence inter-projets + présence de l'artefact « direction » = niveau produit, contrôlés porte 08 + étape 14.)*
 3. **États UI** — vérifie les **4 états** de chaque surface : *loading · vide (empty) · erreur · succès*. Un état manquant = trou UX. L'état **vide** doit porter un **CTA d'amorçage** (pas une liste nue).
 4. **Parcours / clarté** — le flux de la feature est-il compréhensible sans notice ? Affordances, libellés, feedback d'action.
-5. **Accessibilité outillée** — lance l'**`accessibility-review` vendoré** (WCAG 2.1 AA) : contraste, navigation clavier, cibles ≥ 44px, sémantique lecteur d'écran (labels, rôles, focus visible).
+5. **Accessibilité outillée** — exécute l'**`accessibility-review` vendoré** (WCAG 2.1 AA) : contraste, navigation clavier, cibles ≥ 44px, sémantique lecteur d'écran (labels, rôles, focus visible).
+   - **Le moteur** : `{PLUGIN_ROOT}/vendor/accessibility-review/SKILL.md` (résolution `{PLUGIN_ROOT}` : `_shared/vendored-engine-protocol.md` §0). **Lis-le et passe sa grille WCAG 2.1 AA critère par critère** sur les surfaces touchées (code + screenshots desktop/mobile) — chaque violation citée avec le **numéro de critère** (ex. 1.4.3) + le **ratio mesuré**, pas « à l'œil ».
 6. **Verdict** + preuve citée (composant/écran + règle DESIGN.md, point de checklist anti-slop ou critère WCAG violé).
 
 ### Critères de passage
@@ -142,10 +148,11 @@ Sortie de tout cran : un **bloc verdict** (voir `assets/templates/cascade-verdic
 
 ### DoD Designer (checklist)
 - [ ] Tokens `DESIGN.md` respectés (couleur / espacement / typo).
-- [ ] **Checklist anti-slop** de `_shared/design-doctrine.md` passée **point par point** (binaire), sur screenshot **desktop + mobile** — **0 marqueur coché** (1 marqueur = `FAIL` → retour dev).
+- [ ] **Checklist anti-slop** de `_shared/design-doctrine.md` passée **point par point** (binaire, **19 points**), sur screenshot **desktop + mobile** — **0 marqueur coché** (1 marqueur = `FAIL` → retour dev).
+- [ ] **Rationale par page tenu** (point 18) : la surface correspond à sa ligne « intention » dans `DESIGN.md` §Rationale par page ; **`prefers-reduced-motion` respecté** (point 19).
 - [ ] Composants du **système** réutilisés (pas de one-off réinventé sans raison).
 - [ ] Les **4 états** (loading / vide / erreur / succès) présents sur chaque surface pertinente (état vide = avec CTA).
-- [ ] `accessibility-review` vendoré **lancé** ; contraste, clavier, cibles 44px, lecteur d'écran vérifiés.
+- [ ] Moteur `accessibility-review` **exécuté** (`{PLUGIN_ROOT}/vendor/accessibility-review/SKILL.md` **ouvert via Read**, grille passée critère par critère) ; contraste, clavier, cibles 44px, lecteur d'écran vérifiés.
 - [ ] Chaque finding = composant/écran + **règle DESIGN.md ou critère WCAG** cité.
 - [ ] Verdict au format + preuve citée.
 

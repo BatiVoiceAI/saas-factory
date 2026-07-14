@@ -10,7 +10,7 @@ Règles transverses, lues une fois. Elles priment sur le comportement par défau
 ## Déterminisme
 Même principe qu'en Phase 1 : chaque étape suit une **procédure normée**, jamais improvisée. Les frameworks de priorisation (**MoSCoW / RICE**) et de valeur (JTBD, Value Proposition Canvas) viennent de `startup-design/references/frameworks.md` — on les applique, on ne les réinvente pas.
 
-## Réutilisation — `startup-design` (déjà vendoré, `vendor/startup-skill/startup-design/`)
+## Réutilisation — `startup-design` (déjà vendoré, `{PLUGIN_ROOT}/vendor/startup-skill/startup-design/`)
 - **Phase 6 « Product »** = l'engine de l'**étape 7** : produit `mvp-definition` (must/should/could/won't + out-of-scope + success criteria), `feature-prioritization` (MoSCoW/RICE + dépendances + effort + build order), `user-stories`, `roadmap` — via `startup-design/references/frameworks.md`.
 - **Phase 4 « Strategy »** (business model, lean canvas) = appui de l'**étape 6**.
 - **Calibration (ta surcouche)** : on ne garde **que la tranche produit / business** ; le brand, les financials et la validation de `startup-design` sont ignorés ici (déjà couverts ou hors périmètre Phase 2).
