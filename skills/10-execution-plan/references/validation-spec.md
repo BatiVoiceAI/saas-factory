@@ -44,6 +44,24 @@ Budget d'itération      ─▶ plafond de boucles + critère de sortie (anti-bo
 
 > Le composer **écrit** cette dégradation dans la spec de validation de chaque feature automation (colonne DoD), pour que la cascade Phase 4 sache que le cran Designer est **déclaré N/A** et que l'edge passe au CEO-persona — jamais un cran « oublié en silence ».
 
+### Variante ECOMMERCE — cran Designer COMPLET + edges d'achat durs (workflow · boucle EC4 · 3 pièges)
+> **Conditionné par `archetype = ecommerce`** (`.saas-factory/state.md`, source `_shared/state-schema.md` ; canon `_shared/archetypes/ecommerce.md`). **À l'inverse d'automation, ecommerce A une UI** (vitrine · fiche produit · panier · checkout) : le **cran Designer reste COMPLET** — aucune ligne visuelle n'est dégradée. Ce que la variante ajoute, ce sont des **edges DURS de commerce** que la spec de validation de chaque feature d'achat doit poser — l'équivalent e-commerce de la « boucle fermée + idempotence » d'automation, exigés par le **CEO-persona + le CTO** :
+
+- **Workflow d'achat conforme au PRD (edge dur).** La feature d'achat n'est « faite » que si le parcours **catalogue (EC1) → panier (EC2, sous-total recalculé serveur) → checkout one-shot (EC3, `mode:payment`) → commande (EC4)** est conforme au PRD de bout en bout. Un maillon manquant, un `mode:subscription`, ou un total fourni par le client = critère **rouge**.
+- **Boucle fermée EC4 — aucune vente muette.** Toute vente confirmée déclenche **confirmation au CLIENT** (email Resend immédiat) **ET** notification **au MARCHAND** (nouvelle commande) : c'est la boucle fermée de l'archétype (`_shared/boucles-fermees.md`), l'équivalent commerce de la boucle fermée automation. Une commande payée sans cette double notification = boucle ouverte = critère **rouge**.
+- **3 pièges non négociables (P1/P2/P3).** La spec pose comme edges **DURS** — un seul non prouvé = **porte fermée** (`_shared/archetypes/ecommerce.md` §Pièges + §Critères d'acceptation) :
+  - **P1 — survente** : décrément de stock **atomique** (update conditionnel `stock >= :qty` ou `CHECK (stock >= 0)` dans la **même transaction** que la commande, **au paiement confirmé**) — deux commandes concurrentes sur le dernier article ne réussissent pas toutes les deux.
+  - **P2 — intégrité prix** : montant **recalculé côté serveur** depuis le catalogue (jamais un total client) ; la ligne de commande **snapshot** le prix payé — un panier au prix altéré est rejeté/recalculé.
+  - **P3 — idempotence webhook** : commande créée **une seule fois** malgré les redeliveries Stripe (contrainte unique `stripe_session_id`, upsert `on conflict do nothing`) + **signature** du webhook vérifiée.
+- **DoD ecommerce (le socle transverse s'applique, cran Designer CONSERVÉ, + spécifiques d'achat)** :
+  - [ ] (conservées — cran Designer COMPLET) Conforme `DESIGN.md` + **états UX vide/chargement/erreur/succès** (panier vide, produit épuisé, paiement refusé, page /merci) · **WCAG 2.1 AA** sur vitrine/fiche/panier/checkout — ecommerce **a** une surface publique.
+  - [ ] **Workflow d'achat EC1→EC4 conforme au PRD** (edge dur ci-dessus) **+ copy dans la langue du client** (fiche produit, checkout, email de confirmation, **CGV/mentions de vente adaptées à `jurisdiction`**).
+  - [ ] **Boucle fermée EC4 prouvée** : confirmation client **ET** notif marchand sur une vente de test réelle.
+  - [ ] **P1 + P2 + P3 prouvés** par des cas limites (concurrence sur le dernier article · panier au prix altéré · redelivery du webhook) — portés aux crans **CEO-persona + CTO** / `[SÉCU]`.
+  - [ ] (conservées) critères d'acceptation verts · frontières de module · `[SÉCU]` (webhook signing secret, service-role stock) · doc à jour · commits TDD.
+
+> Le composer **écrit** ces edges (workflow d'achat · boucle EC4 · P1/P2/P3) dans la spec de validation de chaque feature d'achat (colonne DoD), pour que la cascade Phase 4 les traite comme **durs** : le cran Designer **reste COMPLET** (UI présente) et l'edge commerce est porté par le **CEO-persona + le CTO** — jamais « oublié en silence ». Une feature d'achat dont un seul de P1/P2/P3 n'est pas prouvé se solde `DONE_WITH_CONCERNS` au mieux, jamais « done ».
+
 ## 3. Budget d'itération — plafonner les boucles
 Chaque feature reçoit un **plafond** de boucles de la cascade + un **critère de sortie** (rappel `_shared/safety-rails.md` §7 : pas d'itération infinie).
 

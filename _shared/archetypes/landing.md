@@ -1,6 +1,6 @@
 # Archétype : landing (V1 — bloc partagé, lu à la demande)
 
-Un archétype parmi 3 — le modèle **3 axes orthogonaux** (`archetype` / `type` / `tenancy`) et le **conditionnement du socle par archétype** vivent dans `../state-schema.md` §modèle 3 axes (SOURCE UNIQUE) ; voir aussi `web-saas.md`, `automation.md`. Ici : la fiche de l'archétype **landing**.
+Un archétype parmi 4 — le modèle **3 axes orthogonaux** (`archetype` / `type` / `tenancy`) et le **conditionnement du socle par archétype** vivent dans `../state-schema.md` §modèle 3 axes (SOURCE UNIQUE) ; voir aussi `web-saas.md`, `automation.md`, `ecommerce.md`. Ici : la fiche de l'archétype **landing**.
 
 > ✅ **Landing buildable par sélection de blocs (Thème C / C2).** Pas de châssis séparé : une landing-only s'assemble en **sélectionnant un sous-ensemble** du châssis `web-saas` — `skeleton` (qui porte **déjà** `components/landing/*` + les gabarits légaux) + le bloc **`waitlist`** (la brique concrète de capture d'emails) + `notifications` + `repo-ci` + `hosting`, **SANS** auth/crud/dashboard/billing. Règle d'assemblage canonique : `../../skills/11-project-setup/references/scaffold-procedure.md` §Sélection des blocs par archétype. Ce fichier pose le **modèle** (forme du livrable, socle, pipeline) ; le contrat du bloc = `../blocks/README.md` §waitlist.
 

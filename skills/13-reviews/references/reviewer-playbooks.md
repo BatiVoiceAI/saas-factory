@@ -71,6 +71,12 @@ Sortie de tout cran : un **bloc verdict** (voir `assets/templates/cascade-verdic
 # Cran 2 — CTO (`agents/cto.md`)
 **Lentille : architecture + sécurité + fonctionnel.** Le cran le plus dense. Deux passes : archi/perf/dette **puis** sécurité outillée.
 
+> **Conditionnement `ecommerce` (à évaluer AVANT la passe sécurité).** Pour une feature de commerce (panier, checkout, paiement, stock), la passe sécurité **inclut obligatoirement** les 3 pièges de `_shared/archetypes/ecommerce.md` §Pièges — traités comme des findings sécu de premier plan, jamais des « détails d'implémentation » :
+> - **P1 survente / course stock** — le décrément DOIT être **atomique** (`update inventory set stock = stock - :qty where product_id = :id and stock >= :qty`, 0 ligne = rupture → refuse ; ou RPC `SECURITY DEFINER` décrémentant dans la même transaction que la création de commande). Un `SELECT stock` puis `if>0 INSERT` = **FAIL** — exploit concret : deux commandes concurrentes sur le dernier article réussissent toutes deux.
+> - **P2 intégrité du prix** — le montant facturé DOIT être **recalculé serveur** depuis le catalogue (seuls `product_id` + quantités). Faire confiance à un total/prix envoyé par le client = **FAIL** — exploit : payload `price: 0.01`. Faille d'**intégrité** (OWASP), pas un détail.
+> - **P3 idempotence webhook** — commande créée **une seule fois** même sur redelivery Stripe (`unique(orders.stripe_session_id)` + signature vérifiée). Sinon **FAIL** — doublons de commande / double débit.
+> **Un seul des trois non prouvé = `FAIL`**, exploit concret cité comme pour tout finding sécu. Parité avec l'idempotence 2-grains exigée au build `automation`. (Pour les autres archétypes, ce bloc est sans objet.)
+
 ### Sous-procédure (dans l'ordre)
 1. **Conformité archi** — respect de `tech/architecture.md` (couches, dépendances, frontières de confiance §3.6), couplage, pas de contournement de la structure décidée.
 2. **Perf / dette** — requêtes N+1, boucles non bornées, allocation dans un chemin chaud, dette introduite (raccourci non tracé → doit devenir un `CONCERNS` logué, pas un secret).
@@ -91,6 +97,7 @@ Sortie de tout cran : un **bloc verdict** (voir `assets/templates/cascade-verdic
 | Perf/dette | pas de régression démontrée dans un chemin chaud | `CONCERNS` en général ; `FAIL` seulement si impact prouvé |
 | Sécurité | 0 exploit **démontré** (pas théorique) | `FAIL` **uniquement** si exploit concret cité ; sinon `CONCERNS` (voir exclusions dures) |
 | STRIDE | chaque frontière passée, 0 menace exploitable ouverte | `FAIL` si menace démontrée `fichier:ligne` + scénario |
+| **Pièges ecommerce** (si `archetype=ecommerce`, feature de commerce) | P1 stock atomique **ET** P2 prix recalculé serveur **ET** P3 webhook idempotent — les trois prouvés | **`FAIL`** dès qu'un seul n'est pas prouvé (exploit concret cité) |
 
 ### Forcing-question — « exploit concret ou rien »
 - **Ask exact** : *« Quelle est la ligne vulnérable, et quel est l'exploit concret pas-à-pas (entrée → effet) ? »*
@@ -119,7 +126,7 @@ Sortie de tout cran : un **bloc verdict** (voir `assets/templates/cascade-verdic
 
 # Cran 3 — Designer (`agents/designer.md`)
 
-> **Conditionnement par archétype (à évaluer AVANT tout).** Ce cran juge une **surface visuelle**. Pour un **`automation`** (headless, pas d'UI), il est **N/A** : rends un verdict `N/A` tracé (« archétype headless — pas de surface à juger ; edge porté par le CEO-persona ») et **laisse monter** la feature vers le CEO-persona. **Ne produis JAMAIS un `FAIL`** pour « `DESIGN.md` non appliqué / pas d'empty-states / a11y non vérifiable » sur du headless — c'est le **faux-négatif d'archétype** (`_shared/state-schema.md` §socle-par-archétype ; l'étape 10 l'a déjà déclaré N/A dans la spec de validation). `web-saas` et `landing` (surfaces réelles) → cran complet ci-dessous, **inchangé**.
+> **Conditionnement par archétype (à évaluer AVANT tout).** Ce cran juge une **surface visuelle**. Pour un **`automation`** (headless, pas d'UI), il est **N/A** : rends un verdict `N/A` tracé (« archétype headless — pas de surface à juger ; edge porté par le CEO-persona ») et **laisse monter** la feature vers le CEO-persona. **Ne produis JAMAIS un `FAIL`** pour « `DESIGN.md` non appliqué / pas d'empty-states / a11y non vérifiable » sur du headless — c'est le **faux-négatif d'archétype** (`_shared/state-schema.md` §socle-par-archétype ; l'étape 10 l'a déjà déclaré N/A dans la spec de validation). `web-saas`, `landing` et **`ecommerce`** (surfaces réelles — pour `ecommerce` : vitrine, fiche produit, panier, checkout) → cran complet ci-dessous, **inchangé** ; `ecommerce` ne reçoit **jamais** un `N/A` Designer.
 
 **Lentille : conformité `DESIGN.md` + UX + accessibilité + anti-slop.** Il ne juge pas « joli » au feeling : il **compare au système** (DESIGN.md), passe la **checklist anti-slop** de `_shared/design-doctrine.md` (binaire, pas d'interprétation) et **audite l'a11y** avec l'outil vendoré.
 

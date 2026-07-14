@@ -1,6 +1,6 @@
 # Archétype : automation (V1 — bloc partagé, lu à la demande)
 
-Un archétype parmi 3 — le modèle **3 axes orthogonaux** (`archetype` / `type` / `tenancy`) et le **conditionnement du socle par archétype** vivent dans `../state-schema.md` §modèle 3 axes (SOURCE UNIQUE) ; voir aussi `web-saas.md`, `landing.md`. Ici : la fiche de l'archétype **automation**.
+Un archétype parmi 4 — le modèle **3 axes orthogonaux** (`archetype` / `type` / `tenancy`) et le **conditionnement du socle par archétype** vivent dans `../state-schema.md` §modèle 3 axes (SOURCE UNIQUE) ; voir aussi `web-saas.md`, `landing.md`, `ecommerce.md`. Ici : la fiche de l'archétype **automation**.
 
 > ✅ **Scaffold code réel livré (C2c) → `../blocks/automation/`.** Ce fichier pose le **modèle** de l'archétype ; le **châssis** qui scaffolde un worker/cron headless existe désormais comme bloc partagé **`_shared/blocks/automation/`** (parallèle à `web-saas/`, **PAS** le châssis web-saas ni l'assemblage `landing`). Il est **dependency-light** — **Node 20+ built-ins** au runtime (`fetch` global, `node:crypto`, `process.env`), **une seule dép externe** (`zod`, validation de la config), ESM TypeScript strict, `tsc --noEmit`-vérifiable — et implémente le socle **AU1-AU5** en fichiers réels `src/*` (mapping ci-dessous). Déploiement = **cron externe / worker long-running / conteneur**, **pas** Next.js/Vercel. Boucle fermée réutilisée conceptuellement (`../boucles-fermees.md`) mais en autonome. Manifeste des fichiers → `../blocks/automation/README.md` (fait foi pour les chemins exacts).
 

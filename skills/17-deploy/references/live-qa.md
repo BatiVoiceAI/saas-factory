@@ -1,5 +1,7 @@
 # Référence — Recette live AUTHENTIFIÉE & boucle de correction (étape 17, après canary)
 
+> **Conditionnement par archétype (trois formes sœurs du contrôle 17b).** Ce fichier porte la recette **`web-saas`** — **AUTHENTIFIÉE** (franchir l'auth + exécuter chaque action RLS-protégée de chaque rôle), détaillée d'abord ci-dessous. Pour **`ecommerce`**, la recette live prend sa **forme propre** — l'**achat de test réel de bout en bout** (Stripe mode test) en **§Variante ECOMMERCE** (fin de fichier) : mêmes exigences (preuve réelle sur la **prod**, boucle de correction **3 cycles**, jamais de « livré » sur un faux vert), cible différente (le **tunnel d'achat + webhook Stripe** au lieu de l'action RLS-protégée). Pour **`automation`** (headless, sans auth ni RLS produit), elle est **remplacée** par la **vérif de boucle fermée headless** → `automation-deploy.md`. S'inscrit dans le routage 17b de `phase-5-launch/references/routing.md` règle 7 (formes sœurs par archétype).
+
 > **Pourquoi.** Le canary (santé) dit « le site répond ». La recette live dit « **le produit marche** ». Mais « marche » a un **niveau minimal non négociable** : **franchir l'auth et exécuter chaque action de valeur RLS-protégée** — parce que **les bugs qui échappent au build ne surgissent QUE là**. Le fondateur non-tech récupère quelque chose de **réellement fonctionnel** — c'est la dernière porte de qualité, sur la **prod réelle**. Un déploiement dont la recette authentifiée n'est pas passée n'est **pas** une livraison.
 
 > **La hiérarchie de preuve — trois niveaux, un seul compte.**
@@ -18,6 +20,7 @@
 - 5. Matrice par type de projet
 - 6. DoD de la recette
 - Modes d'échec
+- **Variante ECOMMERCE — recette live = achat de test réel A→Z** (Stripe mode test · P1/P2/P3 prouvés sur la prod)
 
 ## Séquence
 ```
@@ -124,3 +127,70 @@ Pour chaque échec du rapport, dans l'ordre bloquant → majeur → mineur :
 | Faux vert par autoconfirm | OTP « passe » parce que l'email n'est pas vérifié en vrai | toujours vérifier le **statut Resend** de l'email, pas seulement la session |
 | **Confirmation différée au cron** | après une action, le job de confirmation reste `pending` et n'est envoyé qu'au **prochain cron quotidien** (contrepartie sans notif ~24 h) — la fonction d'envoi ciblé existe mais n'est **pas appelée** au site de l'action (finding « Poser » : `dispatchAppointmentJobs` définie, jamais invoquée) | mesurer l'**immédiateté** : juste après l'action, `notification_jobs.status` = `sent` (pas `pending`) et l'email `sent`/`delivered` **dans les secondes**. Différé au cron = **bloquant** → câbler le call-site d'envoi immédiat dans le handler (`_shared/boucles-fermees.md`) |
 | « Privé » resté ouvert | un e-mail inconnu crée un compte / atteint le dashboard sur un `interne`/`perso` | `disable_signup` non posé **ou** `APP_ACCESS_MODE` resté `public` en env host → retour 11-project-setup / config env + re-preuve ; ne jamais livrer un interne ouvert (P0.5) |
+
+## Variante ECOMMERCE — recette live = achat de test réel A→Z
+
+> **Conditionnement.** S'applique **quand `archetype = ecommerce`** (socle EC1-EC5, pièges P1-P3 — `_shared/archetypes/ecommerce.md`). Elle **ne remplace pas** la machine à états du déploiement ni le canary : elle est la **forme ecommerce du contrôle bloquant de fin de phase (17b)**, sœur de la recette AUTHENTIFIÉE (web-saas, ci-dessus) et de la boucle fermée headless (`automation-deploy.md`). La rigueur est **identique** (preuve réelle sur la prod, boucle de correction **3 cycles**, jamais de « livré » sur un faux vert) ; ce qui change, c'est **quoi on exécute** : le **tunnel d'achat + le webhook Stripe**, pas l'action RLS-protégée d'un rôle.
+
+> **Pourquoi.** Route 200 + canary disent « la vitrine répond ». Ils ne disent **rien** des trois pièges qui cassent une boutique en prod et **ne se voient pas au build** : **survente** (P1), **prix falsifié** (P2), **doublon de commande au rejeu webhook** (P3). Ces bugs ne surgissent **QUE** sur un **achat réel** qui frappe le **vrai webhook Stripe de la prod** — `tsc`/`next build`/canary ne les déclenchent jamais. La recette ecommerce n'est PASSÉE que si un **achat de test réel de bout en bout** a produit **une commande unique + un stock décrémenté atomiquement + les deux emails de boucle fermée**, et que **P1, P2 et P3 sont prouvés sur la prod**.
+
+> **Hiérarchie de preuve — ecommerce.** santé (canary) *(la vitrine répond)* **<** vitrine + fiche produit à 200 *(nécessaire, jamais suffisant)* **<** **achat réel complet A→Z** *(webhook Stripe → commande créée **une seule fois** + stock décrémenté **atomiquement** + emails client & marchand `sent`)* — **seul le 3ᵉ niveau vaut preuve**.
+
+### Prérequis prod (avant le premier achat de test — bloquants)
+- **Stripe en mode TEST** : clés **test** actives (JAMAIS les clés live — un achat de test ne débite personne), paiement avec la carte test **`4242 4242 4242 4242`** (date d'expiration future, CVC quelconque). Toujours `mode:payment` — **jamais** `subscription` (différence dure avec le bloc billing web-saas).
+- **Webhook Stripe branché sur la prod** : endpoint `https://<domaine-custom>/api/stripe/webhook` **enregistré chez Stripe** + **signing secret** (`STRIPE_WEBHOOK_SECRET`) posé en env prod **et vérifié dans le handler**. Sans lui, le webhook n'arrive pas ou sa signature est rejetée → **la commande n'est jamais créée** (la source de vérité reste muette) = bloquant.
+- **Domaine custom sert la vitrine** (sous-domaine + DNS Cloudflare) — **jamais `*.vercel.app`** (règle projet). Le checkout (`success_url`/`cancel_url`) **et** l'endpoint webhook pointent le **domaine custom**, pas l'URL provider par défaut.
+- **Emails depuis le domaine vérifié** : `From` = domaine Resend **vérifié** (SPF/DKIM publiés), sinon la confirmation client part en spam ou est rejetée.
+
+### Séquence
+```
+canary OK ──> prérequis prod (webhook signé · domaine custom sert la vitrine · From vérifié)
+                     ▲                                              │
+                     │ re-achat de test                             ▼   achat de test réel A→Z (Stripe test, carte 4242…)
+              redeploy (même pipeline) <── fix <── commande 1× (P3) · stock −1 atomique (P1) · prix serveur (P2) · emails client+marchand (EC4)
+                     │                    (si KO)
+   3 cycles max ─────┴──> P1 ∧ P2 ∧ P3 prouvés sur la prod → cutover VALIDÉ ; sinon → cutover NON validé (rollback / consignation honnête)
+```
+
+### L'achat de test réel — étapes (chacune : une **preuve**, pas « l'écran confirme »)
+1. **Vitrine + fiche produit (EC1)** — la liste et la **fiche d'un produit publié** se chargent **sur le domaine custom** (prix réel, disponibilité). Route 200 nécessaire, jamais suffisante. Relever le **`stock_avant`** du produit (vérif service_role hors-bande).
+2. **Panier (EC2)** — ajouter le produit → le panier reflète quantité + **sous-total recalculé côté serveur** (jamais un total envoyé par le client).
+3. **Checkout Stripe mode test (EC3)** — lancer le checkout → session Stripe **`mode:payment`** → payer avec **`4242 4242 4242 4242`**. Le montant présenté est **recalculé serveur** depuis le catalogue (à partir des seuls `product_id` + quantités, `lib/pricing/`).
+4. **Webhook prod → commande (EC4 / P3)** — Stripe livre `checkout.session.completed` (ou `payment_intent.succeeded`) à l'endpoint prod **signé** → **`orders` + `order_items` créés** (prix serveur **snapshoté**), statut `paid`. Vérif service_role : **exactement une** ligne sous `stripe_session_id`.
+5. **Stock décrémenté atomiquement (EC5 / P1)** — après le webhook, **`stock_après = stock_avant − qty`**, décrément dans la **même transaction** que la commande (RPC atomique / `update … where stock >= :qty`). Vérif en base.
+6. **Boucle fermée (EC4)** — **email de confirmation au client** (Resend `sent`/`delivered` **dans les secondes**, `From` = domaine vérifié) **ET** **notification au marchand** (nouvelle commande). Aucune vente muette : lire le **statut Resend**, pas « la page /merci s'affiche ».
+
+### Les 3 pièges — **prouvés sur la PROD** (le cœur de la recette, non négociable)
+- **P3 — commande créée UNE SEULE FOIS (idempotence webhook).** **Rejouer le même événement** (dashboard Stripe → *Resend*, ou `stripe events resend <id>`) → **0 doublon** (`on conflict do nothing` sur `stripe_session_id`) **et stock NON re-décrémenté**. *(Miroir exact du rejeu de tick d'automation : rejouer le déclencheur produit **le même effet**, 0 double effet — `automation-deploy.md` §boucle fermée headless.)*
+- **P1 — décrément atomique / anti-survente.** Le stock passe de N à N−1 **une seule fois**, **jamais** un `SELECT stock` puis `if stock>0 then INSERT`. Renforcé quand faisable : **deux checkouts concurrents** sur le **dernier** article → **un seul** aboutit, l'autre est **refusé (rupture)** — jamais deux commandes livrables.
+- **P2 — intégrité du prix, EN LIVE.** Rejouer le checkout avec un **panier au prix altéré** (payload `price: 0.01` / total minoré) → le serveur **recalcule/rejette** : le montant facturé par Stripe = le **prix catalogue serveur**, jamais le prix client ; la ligne de commande **snapshote le prix serveur payé**. Une commande **payée au prix minoré = bloquant**.
+
+*(Secondaire — **si comptes clients** : RLS « mes commandes » — un client authentifié ne lit **QUE ses** commandes, jamais celles d'un autre (miroir du refus cross-tenant web-saas). Le **checkout invité** étant le défaut e-commerce, cette preuve est **conditionnelle** à l'existence de comptes.)*
+
+### Boucle de correction — budget **3 cycles** (identique)
+Pour chaque échec (bloquant → majeur → mineur) : **fix minimal** dans le repo → **gate local** (`tsc` + `next build` verts, jamais de redeploy d'un build rouge) → **redeploy** par le même pipeline → **re-achat de test** : rejouer **le tunnel complet + le rejeu webhook** (non-régression). Un fix qui casse autre chose = échec du cycle. Épuisement du budget : **bloquant subsistant** (survente, doublon, prix minoré, vente muette, webhook mort) → **rollback** (`canary-rollback.md`) — jamais une boutique qui **survend / double-facture / se fait minorer les prix** entre les mains du fondateur ; **majeur/mineur** → produit en ligne, échec **consigné** (`deploy/live-qa-report.md` + `deploy/log.md` `[CONCERNS]`) et **annoncé**.
+
+### Condition de validation du cutover
+🚨 **Un seul de P1 / P2 / P3 non prouvé sur la prod réelle = cutover NON validé** (miroir strict du critère d'acceptation `_shared/archetypes/ecommerce.md` § Critères d'acceptation : « Un seul de P1/P2/P3 non prouvé = porte fermée »). « Déployé + vitrine à 200 » ne vaut **jamais** livraison : la livraison exige un **achat de test réel propre** — commande **1×**, stock **−1 atomique**, **prix serveur**, **emails client + marchand** partis — et les **trois pièges prouvés**.
+
+### DoD — recette ecommerce
+- [ ] **Prérequis prod** vérifiés : webhook Stripe **signé** branché sur le domaine custom · **domaine custom** sert la vitrine (pas `*.vercel.app`) · `From` = domaine **vérifié**.
+- [ ] **Achat de test réel A→Z** passé sur la prod (Stripe mode test, carte 4242) : panier → checkout → webhook → commande `paid`.
+- [ ] **P3** — rejeu du même événement webhook → **0 commande en double**, stock **pas re-décrémenté**.
+- [ ] **P1** — stock décrémenté **atomiquement** (N→N−1 une fois) ; anti-survente prouvé si deux checkouts concurrents testables.
+- [ ] **P2** — panier au **prix altéré** → **recalculé/rejeté** serveur ; montant Stripe = prix catalogue ; prix **snapshoté** sur la commande.
+- [ ] **Boucle fermée (EC4)** — email **client** **ET** notif **marchand** `sent`/`delivered` **dans les secondes** (statut Resend lu), `From` = domaine vérifié.
+- [ ] **(si comptes)** RLS commandes — un client ne voit **que** ses commandes.
+- [ ] **Données de test nettoyées** — commandes `[test]`, comptes `+liveqa@`, produits de test, lignes d'inventaire de test.
+- [ ] `.saas-factory/state.md` : `recette_live: PASS` (ou `PASS_WITH_CONCERNS` + liste) ; **cutover validé ssi P1 ∧ P2 ∧ P3 prouvés**.
+
+### Modes d'échec — ecommerce
+| Mode | Symptôme | Traitement |
+|---|---|---|
+| **Webhook muet / non signé** | l'achat « réussit » à l'écran mais **aucune commande** en base — endpoint prod non enregistré, mauvaise URL (`*.vercel.app`), ou `STRIPE_WEBHOOK_SECRET` absent → signature rejetée | **bloquant** → enregistrer l'endpoint sur le **domaine custom**, poser le signing secret en env prod, re-tester jusqu'à la commande `paid` créée |
+| **Doublon de commande au rejeu (P3)** | rejouer l'événement crée **une 2ᵉ commande** / re-décrémente le stock — idempotence sur `stripe_session_id` absente | **bloquant** → contrainte unique + `on conflict do nothing` sur l'id de session/intent ; re-prouver par rejeu |
+| **Survente (P1)** | deux commandes sur le dernier article réussissent toutes deux — `SELECT` puis `IF` applicatif | **bloquant** → décrément **conditionnel atomique** en base (`… where stock >= :qty`) dans la transaction de la commande ; re-prouver |
+| **Prix client accepté (P2)** | une commande est payée au prix du **payload** (`0.01`) — total pris du client | **bloquant** → montant **recalculé serveur** depuis le catalogue (`lib/pricing/`), prix **snapshoté** ; re-prouver avec un panier altéré |
+| **Vente muette (EC4)** | commande créée mais **0 email** (client et/ou marchand) — call-site d'envoi immédiat manquant | **bloquant** → câbler l'envoi immédiat au webhook (`_shared/boucles-fermees.md`) ; exiger Resend `sent`/`delivered` dans les secondes |
+| **`*.vercel.app` sert la vitrine** | l'URL live est l'URL provider, pas le domaine custom (règle projet violée) | **bloquant** → brancher **sous-domaine + DNS Cloudflare** ; le checkout et le webhook doivent pointer le domaine custom |
+| **Achat « à l'écran »** | verdict sans preuve : page /merci affichée, **0 ligne DB / 0 event Stripe / 0 statut Resend** | rejeter le rapport, re-tester — l'écran ment (miroir « recette à l'écran » web-saas) |

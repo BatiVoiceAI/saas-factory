@@ -61,6 +61,12 @@ Annote la source : **[éprouvé]** (techno mainstream, doc stable) · **[récent
 ## Matrices défaut-vs-déviation (par catégorie)
 La table complète condition → action est dans `decision-matrices.md §4` (web full-stack, BDD/auth, hébergement, email, IA, transcription, backend edge, paiement, obs, jobs). Applique-la ligne par ligne : chaque case « déviation » cochée = **un ADR**.
 
+## Note archétype — ecommerce : Stripe en PAIEMENT one-shot (pas d'abonnement)
+Quand `archetype = ecommerce` (fiche : `_shared/archetypes/ecommerce.md`), le défaut **paiement** dévie du bloc `billing` de web-saas — non pas vers une autre techno, mais vers un **autre mode du même Stripe**. Ce n'est **pas** un ADR : c'est le **défaut de l'archétype ecommerce**, au même titre que l'abonnement récurrent est le défaut de web-saas.
+- **Stripe en mode PAIEMENT ONE-SHOT** — **Checkout** ou **Payment Intents** en **`mode:payment`** (achat de panier). **Jamais `mode:subscription`** : c'est la **différence dure** avec le `billing` récurrent de web-saas. Pas de `prices` récurrents, pas de customer portal d'abonnement, pas d'`invoice.paid` cyclique — **un** `checkout.session.completed` / `payment_intent.succeeded` par commande.
+- **Checkout invité par défaut** — l'email suffit pour acheter ; **un compte client (historique de commandes) est une OPTION, jamais un prérequis à l'achat**. Ne pas gater le checkout derrière un signup (perte de conversion + faux-négatif d'archétype).
+- Le **webhook** (signature vérifiée, idempotent sur l'id de session/intent) est la **source de vérité** de la commande. Patterns DB (idempotence P3, décrément atomique P1, prix serveur P2, RLS catalogue public) : `references/data-model.md §Variante ECOMMERCE`.
+
 ## Quand écrire un ADR
 Décision : `decision-matrices.md §6`. En bref — ADR pour : toute déviation, tout choix structurant/irréversible, tout compromis à impact produit (+ taste decision). Pas d'ADR pour : ce que le défaut couvre, les détails réversibles en 5 min (implémentation Phase 4).
 

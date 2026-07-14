@@ -1,6 +1,6 @@
 # Archétype : web-saas (V1 — bloc partagé, lu à la demande)
 
-Un archétype parmi 3 — le modèle **3 axes orthogonaux** (`archetype` / `type` / `tenancy`) vit dans `../state-schema.md` §modèle 3 axes ; voir aussi `landing.md`, `automation.md`.
+Un archétype parmi 4 — le modèle **3 axes orthogonaux** (`archetype` / `type` / `tenancy`) vit dans `../state-schema.md` §modèle 3 axes ; voir aussi `landing.md`, `automation.md`, `ecommerce.md`.
 
 L'archétype de build par défaut. Cadre la couche technique pour garantir un résultat fiable et reproductible. Deux variables conditionnent ce qui est **réellement** câblé : le `type` (public / interne / perso, capté en 01-discover — routage : `skills/saas-factory/references/routing.md`) et la config `infra-setup` (`~/.saas-factory/`).
 
