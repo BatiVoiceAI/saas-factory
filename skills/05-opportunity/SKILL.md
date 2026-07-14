@@ -66,7 +66,7 @@ node {PLUGIN_ROOT}/scripts/render-report.mjs research/opportunity-brief.md resea
 
 Puis présente le **bloc §Décision — le POURQUOI** (en tête du brief, non-technique, auto-suffisant) + ton **verdict**, et demande explicitement l'issue via `AskUserQuestion`. **N'écris jamais la suite sans sa réponse.** → Machine à états, recette forcing de la porte (réponses à refuser) + routage détaillé : `references/gate-and-routing.md`.
 
-> 🚨 **Nombre d'issues = fonction de la route.** **`public`** → **4 issues** (dont **Go-test**). **Routes allégées (`interne`/`perso`) ET archétype `automation`** → **3 issues** (**Go / Ajuster / No-Go**), **SANS Go-test** : le Go-test sonde une **demande marché** (landing + waitlist), sans objet quand il n'y a pas de marché (`go-test-playbook.md` : « un outil interne/perso ne se waitlist pas » ; cf. `references/lite-mode.md`). Ne propose Go-test que sur la route publique.
+> 🚨 **Nombre d'issues = fonction de la route.** **`public`** (y compris l'archétype **`ecommerce`** — une boutique est **publique avec un vrai marché**, elle suit le **chemin public** comme web-saas) → **4 issues** (dont **Go-test** : un catalogue se pré-teste comme un SaaS, landing + waitlist). **Routes allégées (`interne`/`perso`) ET archétype `automation`** → **3 issues** (**Go / Ajuster / No-Go**), **SANS Go-test** : le Go-test sonde une **demande marché** (landing + waitlist), sans objet quand il n'y a pas de marché (`go-test-playbook.md` : « un outil interne/perso ne se waitlist pas » ; cf. `references/lite-mode.md`). Ne propose Go-test que sur la route publique (dont `ecommerce`).
 
 | Choix | Ce que ça déclenche | Route |
 |---|---|---|

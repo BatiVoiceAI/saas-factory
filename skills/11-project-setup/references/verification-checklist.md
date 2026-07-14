@@ -34,6 +34,18 @@ La passe qui décide si l'étape 11 sort `DONE`, `DONE_WITH_CONCERNS`, ou reste 
 > **`git_author` en automation : PAS une sonde de déploiement.** Host = GitHub Actions, pas Vercel → aucun `readyState = BLOCKED` possible. On ne vérifie **pas** l'appartenance à une team Vercel (invariant scopé `hosting = vercel`, `provisioning-plan.md` §Ordre step 1).
 > **Retraits tracés = condition de vérif.** Comme pour les allègements de type, **chaque retrait automation** (hosting-web, DNS, email-domaine, Auth, billing) doit apparaître dans `tech/provisioning-log.md` : un retrait non logué = **échec de la vérif** (jamais silencieux).
 
+## Sondes ECOMMERCE (archétype `ecommerce` — s'AJOUTENT aux sondes web-saas)
+> **Actives UNIQUEMENT si `archetype = ecommerce`.** Contrairement à automation, ecommerce **ne retire aucune** sonde web-saas (repo / BDD / host / sous-domaine / email / secrets s'appliquent **telles quelles** — la vitrine est une vraie app web publique, comme web-saas `public`). Les sondes ci-dessous **s'ajoutent** pour couvrir le socle boutique (canon `_shared/archetypes/ecommerce.md`). Toutes sont vérifiables à l'étape 11 (migrations appliquées + secrets câblés) — l'app n'est pas encore déployée (cutover = Phase 5), donc on sonde **au niveau BDD/policy/secret**, pas HTTP.
+
+| Ressource ecommerce | Sonde | Vert si | Sinon |
+|---|---|---|---|
+| **Webhook Stripe (paiement one-shot)** | présence du secret `STRIPE_WEBHOOK_SECRET` (par **nom**) + endpoint webhook déclaré côté Stripe, **mode `payment`** | secret câblé (env host) + endpoint `checkout.session.completed`/`payment_intent.succeeded` enregistré, **jamais `mode:subscription`** | `[SÉCU]` + `FAILED` (cœur — sans webhook signé, la commande n'a pas de source de vérité : pièges P2/P3) |
+| **Lecture catalogue publique** | inspecter la policy `select` **anon** sur `products` | l'anon peut lire les **produits publiés seulement** (RLS `select` anon scopée publiés) | `FAILED` (une vitrine non lisible sans auth = boutique morte) |
+| **RLS commandes** | inspecter les policies de `orders`/`order_items` | un client **ne voit que SES commandes** (scopé user), l'admin toutes — jamais un client qui lit les commandes d'un autre | `[SÉCU]` + `FAILED` (fuite de données inter-clients) |
+| **Back-office admin (accès)** | rôle admin distinct sur `products`+`orders` (RLS : admin voit tout) | accès admin provisionné (fondation du CRUD produits + gestion commandes) ; **le back-office UI est re-prouvé au build 12/14** | `DONE_WITH_CONCERNS` (fondation admin absente = boutique non gérable) |
+
+> **Rien de retiré en ecommerce.** À la différence d'automation, **aucune** sonde web-saas n'est « sans objet » (la vitrine est publique, l'email de confirmation et le DNS public existent) : les sondes ci-dessus **complètent** la table web-saas, elles ne la remplacent pas. Le **billing devient une sonde requise** (au lieu de « non-applicable ≠ échec »).
+
 ## Definition of Done — étape 11 complète
 ### Bloquant (sinon l'étape ne peut pas sortir `DONE`)
 - [ ] Scaffold local complet (arbre + blocs câblés + `CLAUDE.md` rempli). Voir `scaffold-procedure.md`.

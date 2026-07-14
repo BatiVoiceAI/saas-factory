@@ -57,5 +57,7 @@ Comment l'orchestrateur de phase tient `.saas-factory/state.md`, reprend une pha
 
 La reprenabilité est un contrat : deux sessions successives sur le même projet produisent le **même** enchaînement déterministe à partir de l'état — surtout ici, où un apply mal repris peut publier deux fois ou couper la prod.
 
+> **Archétype `ecommerce` — pipeline boutique COMPLET (17b ACTIVE, jamais « sans objet »).** Une boutique est une **app web publique** : elle déroule le **pipeline complet** comme web-saas `public` — **SEO (16) actif**, déploiement (17), et **recette live 17b ACTIVE**, spécialisée en **achat de test réel A→Z** (webhook → commande unique → stock décrémenté → email confirmation + preuves **P1/P2/P3**, `references/gates.md` §Archétype `ecommerce`). Ecommerce **n'est donc PAS** dans la branche « 17b sans objet (landing/automation) » : les lignes de reprise « `17` fait mais `17b` pas fait et archétype à auth + RLS → Phase 5 PAS terminée » et « `17b` rouge → reprends au correctif » **s'appliquent telles quelles**. Tant que `17b` n'est pas vert (achat A→Z prouvé), l'état **ne passe pas** à `Phase 5 fait` et on **ne déclare pas « livré »**.
+
 ## Sortie de phase
 `17` `fait` **ET** `17b` `fait` (`recette_live: PASS` — ou 17b sans objet en landing/automation) ⇒ résume en 2 lignes (URL live + santé + verdict recette), mets l'état à `Phase 5 fait`, et annonce **Phase 6** (mesure & rétro). Tant que `17b` n'est pas vert (archétype à auth + RLS), l'état **ne passe pas** à `Phase 5 fait` et on **ne déclare pas « livré »**.
