@@ -2,6 +2,15 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.12.0] — 2026-07-14
+### Changé — effort MAX partout · doctrine ultracode · Thème 2 (hygiène des références)
+- **Directive fondateur** : les 14 agents passent de `effort: high` à **`effort: max`** (Opus 4.8, déterministe). Doctrine gravée (`org-hierarchy.md`) : effort MAX partout ; les **phases de code = ULTRACODE** (fan-out multi-agents 1 feature=1 worktree=1 agent + cascade adversariale 13 + plancher mécanique `machine-gate`).
+- **Thème 2 — hygiène des références** :
+  - **ToC sur les 62 références > 100 lignes** (best-practice officielle « références longues → table des matières en tête ») via `scripts/add-reference-toc.mjs` (idempotent, zéro-dep) — mitige la lecture partielle.
+  - **Références « one-level depuis SKILL.md » — VÉRIFIÉ CONFORME** par un **workflow ultracode** (27 agents parallèles, 1 par skill) : les 27 SKILL.md lient déjà directement toutes leurs références (spot-check 14-qa 6/6, 07 7/7). Le fan-out a *vérifié* la best-practice au lieu de casser le DRY par un aplatissement inutile.
+  - Retrait de l'orphelin daté `_shared/AUDIT-v0.4.4.md`.
+- Non-régression : `evals/run.sh` 6/6 vert.
+
 ## [0.11.0] — 2026-07-14
 ### Ajouté — Campagne « plugin killer », Thème 1 : la MACHINE DE GUERRE (primitives Claude Code)
 > Audit (prisme `docs/RAPPORT-PLUGIN-CLAUDE-CODE.md`, doc officielle) : le plugin avait la méthode (skills), la flotte (14 agents) et avait **codé les pièces mécaniques** (`verify:machine`, healthcheck, run_log) — mais il les **actionnait en prose**, jamais via les primitives qui les *enforce*. Débranché. Ce thème les branche.
