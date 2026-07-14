@@ -20,6 +20,11 @@
     "stripe": {
       "type": "http",
       "url": "https://mcp.stripe.com"
+    },
+    "shadcn": {
+      "_comment": "OPTIONNEL — design (étape 08) : cherche/parcourt/installe des blocs depuis l'écosystème de registres shadcn pour du sourcing de STRUCTURE varié par projet (anti-convergence). Fallback sans MCP : `npx shadcn add <url>`. Voir skills/08-design-system/references/structural-sourcing.md.",
+      "command": "npx",
+      "args": ["-y", "shadcn@latest", "mcp"]
     }
   }
 }

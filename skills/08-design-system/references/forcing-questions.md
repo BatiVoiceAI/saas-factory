@@ -103,7 +103,7 @@ Format de chaque recette :
 
 ### A7 — La landing suit-elle le playbook ? (mouvement 3)
 - **Ask exact (à toi) :** « La landing respecte-t-elle `_shared/landing-playbook.md` : les 11 sections canoniques dans l'ordre, un copy **spécifique** tiré de `positioning.md` + `product/pricing.md`, zéro contenu inventé ? »
-- **Push-until :** structure canonique complète (testimonials conditionnels) ; headline instanciée sur le job du client (formules du playbook) ; prix réels affichés ; hero = screenshot réel de l'app ; zéro lorem/placeholder/buzzword interdit.
+- **Push-until :** **archétype structurel choisi** (adapté au métier, pas l'ordre par réflexe) **+ invariant minimum** du playbook tenu (hero 5-sec, CTA répété, preuve honnête, pricing si vente, footer+légal) ; testimonials conditionnels ; headline instanciée sur le job du client (formules du playbook) ; prix réels affichés ; hero = screenshot réel de l'app ; zéro lorem/placeholder/buzzword interdit.
 - **Red-flags :** hero nu (headline + 2 boutons sans la suite) ; lorem ipsum ou `[placeholder]` ; testimonials/logos/stats inventés ; pricing « contactez-nous » ou tiers non issus de `pricing.md` ; copy générique (« Supercharge your workflow »).
 - **MOU :** hero centré « La plateforme tout-en-un » + 3 cartes + footer 2 liens.
 - **FORT :** navbar → hero 2 colonnes (« Un agenda plein, sans passer la journée au téléphone » + screenshot agenda) → preuve honnête → problème → 3 étapes → features jobs → pricing réel 3 tiers → FAQ → CTA final → footer complet avec pages légales.

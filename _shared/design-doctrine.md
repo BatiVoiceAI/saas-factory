@@ -60,6 +60,7 @@ Liste binaire. Un agent qui produit un de ces marqueurs a échoué, quelle que s
 
 ### Convergence (par template) — le slop de l'usine
 21. **INTERDIT** : réutiliser une **direction** telle quelle — même **couple typo + hue de marque + layout signature + parti-pris motion** qu'un **autre projet de l'usine** ou qu'une **recette non modifiée**. Un rendu qui pourrait servir un autre métier sans changement = convergence = échec de la porte distinctiveness.
+    - **⚠️ La convergence est aussi STRUCTURELLE, pas seulement cutanée.** Deux projets ne doivent partager ni la même **SILHOUETTE de page** (même ordre/structure de sections landing — cf. `_shared/landing-playbook.md` §Menu d'archétypes : chacun choisit un archétype adapté au métier) ni les **mêmes composants shadcn de base non re-thémés**. Re-skinner la même structure (mêmes sections dans le même ordre, mêmes blocs) avec des couleurs différentes = **convergence par template**, même verdict. La parade : **choisir un archétype structurel** (Part A) **+ sourcer des blocs de forme différente** depuis l'écosystème de registres (`skills/08-design-system/references/structural-sourcing.md`, Part B), puis re-thémer.
 22. **INTERDIT** : livrer un `DESIGN.md` **sans artefact « direction »** (territoire nommé + white space visé vs 5-8 concurrents + 2-3 références réelles) ni **rationale par page**. Sans cette trace, « pourquoi ce design » n'existe pas → template par défaut.
 23. **INTERDIT** : animation **sans fallback `prefers-reduced-motion`** (parallax / transforms sur gros éléments actifs en mode réduit).
 
