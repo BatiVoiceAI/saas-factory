@@ -2,6 +2,14 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.10.0] — 2026-07-13
+### Ajouté — Chantier D : gouvernance & anti-dérive (capacité durable)
+> Trou d'audit : CHANGELOG/tags désynchronisés (0.4.4→0.7.1 non tracés — réconciliés par le commit baseline), un faux « done », et **aucun garde-fou empêchant la dérive** (l'asymétrie d'archétype des Chantiers A/B avait justement dérivé en silence).
+- **Auto-audit de couverture archétype** : nouveau `scripts/audit-archetype-coverage.mjs` (zéro dépendance) — vérifie que chaque skill critique (12/13/14/18/19) traite `automation` + que le gate de mesure existe en 12-build + que les 2 châssis vivants sont présents. **8/8 vert** ; il aurait **échoué** avant le Chantier B (13/18/19 = 0 mention automation). À lancer à chaque vague (G6). Audite LE PLUGIN, jamais les runs utilisateur.
+- **Doctrine de dev `CONTRIBUTING.md`** : grave le protocole anti-régression G1-G6 (tag de rollback, **édition additive/conditionnelle**, vérif deux châssis, preuve d'invariance, smoke re-run, discipline de vague) + le rappel snapshot-cache + la frontière Thème C.
+- **Honnêteté rétablie** : le faux « P0.3 events câblés » (v0.4.0) est **rectifié** (définis alors, câblés en v0.8.0). Frontière **Thème C explicite** : un run sur `landing` / `tenancy=multi-org` le **signale et ne bluffe pas** le build (règle de comportement dans `routing.md` + `state-schema.md`) — ferme la seule divergence non-dite que l'audit avait trouvée (02/03/05 landing).
+- **Rappel de périmètre** : couverture pleine A-à-Z = `web-saas` + `automation` (choix assumé) ; `landing` + org substrate restent Thème C, différés **honnêtement**.
+
 ## [0.9.0] — 2026-07-13
 ### Ajouté — Chantier B : l'automation devient un archétype de PREMIÈRE CLASSE dans le jugement
 > Trou d'audit (rétro StockSentinel) : 13-reviews, 18-metrics et 19-retro n'avaient AUCUNE conscience d'archétype → un worker headless était faux-négativé par le cran Designer (FAIL « pas d'empty-states »), puis mesuré contre un funnel AARRR inexistant. 12 et 14 étaient conditionnés, pas eux.
@@ -79,7 +87,7 @@ Refonte qualité majeure, déclenchée par l'usage réel (premier SaaS déployé
 - Portes 12/13/14 durcies : anti-slop binaire, complétude (onboarding → vraie entité, empty states, légal FR, metadata brandées), boucles fermées.
 
 ### Corrigé — roadmap d'audit (Vague A)
-- P0.2 pré-vol « services tiers & déclencheurs » · P0.3 events AARRR câblés · P0.4 invariants DB & anti-abus anonyme en règles d'architecture · P0.6 taille marché produite en amont.
+- P0.2 pré-vol « services tiers & déclencheurs » · P0.3 events AARRR **définis** (catalogue typé `events.ts`) — ⚠️ *rectificatif honnêteté (v0.9.0) : ils n'étaient PAS encore **câblés** aux call-sites ici ; le `capture()` réel a été posé au **Chantier A / v0.8.0**. Le libellé « câblés » de la v0.4.0 était un faux « done ».* · P0.4 invariants DB & anti-abus anonyme en règles d'architecture · P0.6 taille marché produite en amont.
 - P1.1 filet post-launch · P1.2 critère de KILL écrit au lancement · P1.5 hook safety-guard recadré & testé · P1.6 routage de modèle des agents · P1.8 provisioning par type · P1.9 SEO technique = code · P1.10 mémoire portable (`~/.saas-factory/lessons-learned.md`) · P1.11 replis provisioning réels · P1.13 héritage du verdict.
 - Table de routage **canonique** étape × type (`skills/saas-factory/references/routing.md`) ; copies → renvois.
 

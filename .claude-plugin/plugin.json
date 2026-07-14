@@ -1,6 +1,6 @@
 {
   "name": "saas-factory",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Transforme une idée en livrable déployé et vérifié, de bout en bout, selon 3 archétypes (web-saas · landing · automation) : analyse concurrentielle approfondie + validation marché honnête, PRD PM-grade (fonctionnel + technique), design anti-AI-slop, architecture, build multi-agents avec cascade de validation (Tech Lead → CTO → Designer → CEO), auth OTP → mot de passe (vérif e-mail par OTP), boucles fermées, QA faux-client, SEO, déploiement borné + recette live post-deploy, mesure & retro. Châssis livrés : web-saas + automation (worker headless AU1-AU5, idempotence 2-grains, 3 régimes de notif). 6 phases · 19 étapes · qualité avant vitesse.",
   "author": {
     "name": "Felix",

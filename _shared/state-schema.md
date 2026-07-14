@@ -7,7 +7,7 @@ Le fichier d'état global du projet, tenu par le master et chaque phase. **Jamai
 # État — {nom du projet}
 
 ## Cadrage — 3 axes orthogonaux (🚨 champs de 1er rang · SOURCE = §Modèle à 3 axes ci-dessous)
-- **archetype** : web-saas | landing | automation   (défaut `web-saas`) — forme **TECHNIQUE** du livrable ; **conditionne le socle de complétude (07)**
+- **archetype** : web-saas | landing | automation   (défaut `web-saas`) — forme **TECHNIQUE** du livrable ; **conditionne le socle de complétude (07)**. ⚠️ **Couverture A-à-Z clé-en-main = `web-saas` + `automation` uniquement.** `landing` (pas de châssis assemblé) et `tenancy=multi-org` (substrat org) = **Thème C différé** : le run le **signale honnêtement** et n'en bluffe pas le build — règle de comportement dans `skills/saas-factory/references/routing.md` §Périmètre du code châssis + `CONTRIBUTING.md`.
 - **type / route** : public | interne | perso   (modèle d'**ACCÈS/commercial**, **orthogonal** à `archetype` — décide des étapes actives, cf. `routing.md`)
 - **tenancy** : single | multi-org   (défaut `single` ; **web-saas** seulement ; `multi-org` = B2B → substrat org)
 - **Ambition** : perso/interne (court) | public (complet)

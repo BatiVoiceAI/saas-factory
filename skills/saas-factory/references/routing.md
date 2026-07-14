@@ -16,6 +16,8 @@ Les 6 livrables de la vision se dérivent de ce triplet : SaaS public = web-saas
 > - **substrat `multi-org` → scaffold code encore DÉFÉRÉ (Thème C)** : entité **Org** déjà modélisée en pattern par défaut (`skills/09-architecture/references/data-model.md`), mais le bloc org-tenancy assemblé n'est pas livré.
 >
 > Règle : là où une route dit « socle landing » / « substrat org », lire encore **archétype défini au modèle ; scaffold code = Thème C** ; pour « socle automation », lire **scaffold LIVRÉ (`_shared/blocks/automation/`)**.
+>
+> 🚨 **Comportement de run sur un cas Thème C (honnêteté — NE PAS BLUFFER).** Si `archetype=landing` **ou** `tenancy=multi-org`, l'orchestrateur maître le **signale explicitement à l'utilisateur au démarrage**, il ne déroule PAS un build web-saas complet en faisant comme si c'était couvert : *« Le scaffold de code de ce cas est **différé (Thème C)** : le pipeline pose le modèle et réutilise les **briques existantes** (waitlist+landing via `go-test-playbook.md` et `components/landing/*` ; pattern Org via `data-model.md`), mais il n'y a **pas de châssis assemblé clé-en-main**, et certaines étapes amont (**02/03/05** pour un `landing`) sont calibrées web-saas — elles seront **allégées à la main**. »* Puis il propose : continuer en mode « briques + assemblage manuel », ou rester sur `web-saas`/`automation` (couverts A-à-Z). **La transparence prime** : un `landing`/`multi-org` livré à moitié DIT ce qui manque — c'est la seule entorse à « on le dit » que l'audit avait trouvée (divergence silencieuse 02/03/05), fermée ici côté honnêteté. Couverture pleine A-à-Z = `web-saas` + `automation` uniquement (choix de périmètre assumé, `CONTRIBUTING.md`).
 
 ## Ordre de lecture du routage (toujours dans cet ordre)
 
