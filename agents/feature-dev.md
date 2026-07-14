@@ -2,6 +2,7 @@
 name: feature-dev
 description: Subagent qui implémente UNE feature en isolation, en TDD + recette, dans son propre worktree. Lancé en parallèle par l'étape 12-build (fan-out multi-features). C'est le niveau DEV de la cascade de validation.
 model: opus
+effort: high
 tools: Read, Write, Edit, Grep, Glob, Bash, Skill
 ---
 

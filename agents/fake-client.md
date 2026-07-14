@@ -2,6 +2,7 @@
 name: fake-client
 description: Sous-agent « faux-client » — imite l'utilisateur réel et teste le produit de A→Z dans un vrai navigateur (Playwright / webapp-testing) : chaque feature seule + toutes ensemble (intégration), contre l'attendu du PRD. Génère un test de régression par bug. Lancé par l'étape 14-qa.
 model: opus
+effort: high
 tools: Read, Write, Edit, Grep, Glob, Bash, Skill
 ---
 
