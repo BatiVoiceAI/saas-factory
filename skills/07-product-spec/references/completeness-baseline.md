@@ -75,6 +75,7 @@ Admin minimal (lecture seule des runs) **optionnel**, jamais un dashboard produi
 - **Règle de couplage** : l'onboarding wizard (S1) débouche **directement** sur l'aha moment, ou à une action près. Si l'aha est à 10 étapes, on raccourcit le chemin — pas l'ambition.
 - **Par archétype** : `web-saas` = première action de valeur (ci-dessus) ; `automation` = **premier run réussi** + rapport de boucle fermée reçu par le propriétaire (AU4) ; `landing` = message reçu + **conversion CTA/waitlist** (LP2). Le socle du bon archétype **débouche** sur cet aha.
 - **Où** : section « Aha moment » de `product-spec.md`. Le success criterion d'activation du MVP (`product-spec.md` § MVP, cf. fusion §5) doit pointer cette action, pas une vanity metric.
+- **Event de mesure (câble la Phase 6)** : l'aha moment **déclare l'event analytics à émettre** — `activation_completed` (web-saas) · `waitlist_joined` (landing) · **métriques de run** AU2/AU3 (automation). C'est ce que **12-build câble en `capture()` au call-site** (jumeau de la boucle fermée, `skills/12-build/references/integration-pass.md` §Boucle de mesure) et ce que **18-metrics lit**. De même pour **chaque action de valeur du funnel** : elle nomme son event. Un aha moment / une action de valeur **sans event déclaré** = funnel non mesurable en Phase 6 (bug « AgencyDesk »).
 
 ## Intégration dans la procédure (pas une étape en plus)
 | Étape | Ce que le socle y fait |

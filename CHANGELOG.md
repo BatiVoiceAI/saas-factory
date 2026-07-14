@@ -2,6 +2,13 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.8.0] — 2026-07-13
+### Ajouté — Chantier A : la boucle de MESURE est enfin câblée (pilier de vision tenu)
+> Trou d'audit (run AgencyDesk) : `capture()` n'était posé à AUCUN call-site produit → funnel d'activation muet, Phase 6 aveugle au 1er run. Corrigé de bout en bout, **en miroir des notifications** (câblées au call-site, elles).
+- **Châssis web-saas — la boucle est démontrée, plus seulement définie** : `capture("waitlist_joined")` au succès du `waitlist-form` (action de valeur landing), `identify()`/`resetIdentity()` câblés dans `top-nav` (spine d'identité, no-op si PostHog absent). `events.ts` : event `waitlist_joined` + **contrat de spécialisation** (« 12-build spécialise le catalogue au domaine, pose le `capture()` au call-site »). `grep capture(|identify(` hors `lib/analytics/` : passe de **0** à **3 call-sites réels** ; `tsc` + `verify:machine` (5 lints) verts.
+- **12-build (`integration-pass.md`) — nouveau garde-fou bloquant « Boucle de mesure »** : grep du call-site pour `capture()` (jumeau du grep boucles fermées), **conditionné par type/archétype** (funnel public/interne/perso · `waitlist_joined` landing · métriques de run automation) + mode d'échec « Funnel muet ». Comble le vide que le pré-vol 17 §E dénonçait sans destinataire.
+- **07-product-spec** : l'aha moment **déclare l'event analytics à émettre** (chaîne 07 → 12 `capture()` → 18 lecture). **14-qa** : le faux-client vérifie l'**émission réelle** en staging (PostHog live-events), pas la définition. **17-deploy §E** : check events **conditionné par archétype** (automation → métriques de run, pas funnel). **18-metrics** : lecture d'un funnel réel (délégation du fix vers 12-build désormais honorée).
+
 ## [0.7.1] — 2026-07-13
 ### Corrigé (les moteurs vendorés sont maintenant APPELABLES au runtime — avant, chemins morts → improvisation)
 - **Cause racine** : toutes les références `vendor/…` étaient **relatives et non ancrées** ; au runtime le cwd = le projet du client → `Read vendor/…` échouait, l'agent refaisait la méthode à la main. Deux vendors (`security-review`, `accessibility-review`) n'étaient référencés **par aucun chemin** (cités par nom seulement).

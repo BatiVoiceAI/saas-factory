@@ -26,6 +26,17 @@ export type ActivationMilestone =
   | "onboarding_completed";
 
 /**
+ * ─────────────────────────────────────────────────────────────────────────
+ * CONTRAT DE SPÉCIALISATION (étape 12-build)
+ * ─────────────────────────────────────────────────────────────────────────
+ * Ce registre est un SOCLE générique. À la construction (12-build), il est
+ * SPÉCIALISÉ aux actions de valeur du PRD (étape 07) : on ajoute ici l'event
+ * de CHAQUE action de valeur du domaine, et on pose le `capture()` correspondant
+ * AU CALL-SITE — à côté du dispatch de notification de boucle fermée, exactement
+ * comme les notifications. Le « moment magique » du PRD ⇒ `activation_completed`.
+ * RÈGLE : un event défini sans `capture()` appelant = boucle de mesure ouverte
+ * (interdit — porte grep de 12-build/integration-pass). Voir aussi 18-metrics.
+ *
  * Registre event → shape des propriétés.
  * Une valeur `Record<string, never>` signifie « aucune propriété attendue ».
  */
@@ -39,6 +50,16 @@ export interface AnalyticsEventMap {
     method: "email" | "google" | "github";
   };
   user_signed_out: Record<string, never>;
+
+  // --- Acquisition (archétype landing / bloc waitlist) ------------------
+  /**
+   * Un visiteur a rejoint la liste d'attente. Action de valeur de l'archétype
+   * `landing` : c'est SON « activation » (signal de demande mesurable).
+   */
+  waitlist_joined: {
+    /** Emplacement du formulaire (ex. "hero", "pricing") pour l'attribution. */
+    source?: string;
+  };
 
   // --- Moment magique / activation (étape 18) ---------------------------
   /**
@@ -90,6 +111,7 @@ export const EVENTS = {
   USER_SIGNED_UP: "user_signed_up",
   USER_LOGGED_IN: "user_logged_in",
   USER_SIGNED_OUT: "user_signed_out",
+  WAITLIST_JOINED: "waitlist_joined",
   ACTIVATION_COMPLETED: "activation_completed",
   ITEM_CREATED: "item_created",
   ITEM_UPDATED: "item_updated",

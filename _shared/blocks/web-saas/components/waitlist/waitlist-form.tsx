@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { capture } from "@/lib/analytics/posthog";
 import { ui } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -63,6 +64,9 @@ export function WaitlistForm({
       }
 
       setStatus("success");
+      // Boucle de mesure — action de valeur du landing câblée au call-site
+      // (comme la notif de boucle fermée). No-op si PostHog non configuré.
+      capture("waitlist_joined", source ? { source } : {});
       toast.success(ui.waitlist.successTitle);
     } catch {
       setStatus("error");

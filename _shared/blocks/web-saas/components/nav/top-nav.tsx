@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { identify, resetIdentity } from "@/lib/analytics/posthog";
 import { ui } from "@/lib/i18n";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -35,8 +37,16 @@ function initialsFromEmail(email: string | null): string {
 export function TopNav({ email }: TopNavProps) {
   const router = useRouter();
 
+  // Boucle de mesure — spine d'identité : rattache les events à l'utilisateur
+  // authentifié (no-op si PostHog non configuré). Reset au logout pour ne pas
+  // mélanger les sessions.
+  useEffect(() => {
+    if (email) identify(email);
+  }, [email]);
+
   async function handleSignOut() {
     const supabase = createClient();
+    resetIdentity();
     await supabase.auth.signOut();
     // La protection de route (bloc `auth`, middleware) redirige vers /login.
     router.push("/login");
