@@ -2,6 +2,23 @@
 
 Les choix que `infra-setup` tranche pendant la connexion. Objectif : **décider vite et de façon déterministe**, sans transformer l'onboarding en interrogatoire. La plupart des défauts viennent de `_shared/stack-defaults.md` — on ne les redemande pas, on les **applique** ; on n'interroge que là où le choix dépend vraiment de l'utilisateur (domaine, hébergement, vendre ou non, **posture manage vs open-source**).
 
+## Sommaire
+
+- Matrice — Profil manage vs open-source (posée UNE fois, en tête de setup)
+- Principe — ne demander que ce qui n'a pas de bon défaut
+- Matrice — Hébergement (managé ↔ open-source)
+- Matrice — Repo + CI (GitHub managé ↔ Gitea/Forgejo self-host)
+- Matrice — BDD + Auth (Supabase cloud ↔ Supabase self-host)
+- Matrice — Observabilité (cloud ↔ self-host)
+- Matrice — LLM texte (provider ↔ Ollama local)
+- Matrice — Services provider-only (honnêteté : pas de fork open-source pertinent)
+- Matrice — Billing (Stripe optionnel)
+- Matrice — Observabilité
+- Matrice — Provider LLM & moteur de visuels (découplés)
+- Matrice — Périmètre de connexion selon la réponse au consentement
+- Matrice — Config partielle → conséquence par projet (ce que lira l'étape 11)
+- Modes d'échec de décision + traitement
+
 ## Matrice — Profil manage vs open-source (posée UNE fois, en tête de setup)
 Le plugin **laisse le choix** entre managé et self-host, pour chaque service où les deux existent vraiment. Une **seule question** au démarrage fixe la **posture par défaut** ; chaque service forké peut ensuite être basculé individuellement (override). Interaction minimale : **1 question profil + override optionnel par service**.
 

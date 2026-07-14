@@ -19,6 +19,17 @@ Les 6 livrables de la vision se dérivent de ce triplet : SaaS public = web-saas
 >
 > 🚨 **Comportement de run sur un cas Thème C (honnêteté — NE PAS BLUFFER).** Si `archetype=landing` **ou** `tenancy=multi-org`, l'orchestrateur maître le **signale explicitement à l'utilisateur au démarrage**, il ne déroule PAS un build web-saas complet en faisant comme si c'était couvert : *« Le scaffold de code de ce cas est **différé (Thème C)** : le pipeline pose le modèle et réutilise les **briques existantes** (waitlist+landing via `go-test-playbook.md` et `components/landing/*` ; pattern Org via `data-model.md`), mais il n'y a **pas de châssis assemblé clé-en-main**, et certaines étapes amont (**02/03/05** pour un `landing`) sont calibrées web-saas — elles seront **allégées à la main**. »* Puis il propose : continuer en mode « briques + assemblage manuel », ou rester sur `web-saas`/`automation` (couverts A-à-Z). **La transparence prime** : un `landing`/`multi-org` livré à moitié DIT ce qui manque — c'est la seule entorse à « on le dit » que l'audit avait trouvée (divergence silencieuse 02/03/05), fermée ici côté honnêteté. Couverture pleine A-à-Z = `web-saas` + `automation` uniquement (choix de périmètre assumé, `CONTRIBUTING.md`).
 
+## Sommaire
+
+- Ordre de lecture du routage (toujours dans cet ordre)
+- Archétype **web-saas** (défaut) — matrice étape × type
+- Archétype **landing** — pipeline allégé (page marketing seule)
+- Archétype **automation** — pipeline headless (worker / cron / bot / intégration)
+- Portes actives (par archétype × type)
+- Garde-fous (à conserver tels quels + archétype)
+- Où le routage se décide, où il s'applique
+- Cas limites
+
 ## Ordre de lecture du routage (toujours dans cet ordre)
 
 1. **`archetype` D'ABORD** — choisit la **famille de pipeline** et le **socle** (07 n'est plus universel, il dépend de l'archétype) :

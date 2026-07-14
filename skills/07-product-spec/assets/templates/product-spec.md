@@ -2,6 +2,20 @@
 
 <!-- Artefact CŒUR et UNIQUE de l'étape 7 (rôle PM). LE document qui définit ce qu'on construit. Depuis la fusion §5, il absorbe la priorisation (MoSCoW/RICE) ET le MVP (avant : feature-prioritization.md + mvp-definition.md, qui se recopiaient). La priorité, le MVP et le build order vivent ici UNE seule fois (source unique). Les fiches product/features/NN-*.md portent la profondeur par feature Must (flow, états, règles, boucles, critères, volet technique). Fidèle à la Phase 1 : chaque feature se rattache à un élément de research/ — sinon elle passe en Non-goal. Jamais de page blanche. -->
 
+## Sommaire
+
+- Contexte & besoin
+- Scope — workflow cœur
+- Aha moment
+- Liste des features
+- Socle « produit complet » (Must d'office — CONDITIONNÉ PAR L'ARCHÉTYPE)
+- Priorisation — MoSCoW (source unique de la priorité)
+- MVP (les Must, rien d'autre)
+- Boucles fermées
+- Dépendances & build order
+- Périmètre livré (référence pour le gate pricing ↔ features)
+- Non-goals
+
 ## Contexte & besoin
 <!-- Repris de la Phase 1, PAS réinventé. C'est le socle auquel tout le reste doit se rattacher. -->
 - **Problème :** <le problème cœur, du point de vue de la cible, repris de opportunity-brief>

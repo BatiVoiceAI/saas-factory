@@ -4,6 +4,18 @@ Le détail du déploiement **sûr et borné**. Ce fichier est la **colonne vert�
 
 Principe directeur : **rien d'irréversible sans porte**. On avance étape par étape, chaque apply est réversible en une commande, et on s'arrête au premier échec sans jamais fabriquer un succès (`_shared/safety-rails.md` §6).
 
+## Sommaire
+
+- Machine à états du déploiement
+- Table de routage (calibrage par type de projet)
+- 1. Pré-vol (bloquant)
+- 2. Plan (présenté à l'humain)
+- 3. Porte de publication
+- 4. Apply (via MCP infra) — ordre strict
+- 5. Canary (health check post-deploy)
+- 6. Recette live AUTHENTIFIÉE (bloquant pour la livraison)
+- Rollback
+
 ## Machine à états du déploiement
 
 ```

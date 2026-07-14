@@ -2,6 +2,14 @@
 
 Filet de sécurité de l'étape 2. À passer avant de déclarer la photo marché terminée.
 
+## Sommaire
+
+- Quotas de preuve (SOURCE UNIQUE)
+- Definition-of-Done — l'étape 2 est finie quand…
+- Catalogue de cas limites
+- Modes d'échec (symptôme → cause → parade)
+- Rappel des principes qui priment (source de vérité ailleurs)
+
 ## Quotas de preuve (SOURCE UNIQUE)
 
 **C'est ici que vivent les chiffres « combien suffit ».** Partout ailleurs (SKILL.md, `procedure.md` critères de passage), on **renvoie** à cette table — on ne la recopie pas. Directive fondateur : la Phase 1 doit avoir la profondeur d'une vraie analyse concurrentielle ; ces quotas sont le plancher, pas le plafond. On ne clôt pas l'étape sous quota — on déclare un data gap ou on creuse.

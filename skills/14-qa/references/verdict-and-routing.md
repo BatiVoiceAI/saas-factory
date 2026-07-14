@@ -2,6 +2,16 @@
 
 Comment trancher le **verdict global** de l'étape 14 et router : conforme → étape 15 (client humain) · non conforme → retour cascade/dev, dans le **budget d'itération**. Verdict au format `skills/13-reviews/references/verdict-schema.md` (`PASS/CONCERNS/FAIL/WAIVED` + confiance + **preuve citée**).
 
+## Sommaire
+
+- Machine à états du verdict global
+- Matrice de décision — verdict global
+- Définition — quand une non-conformité renvoie au dev
+- Contextualiser le retour dev (rappel — ta règle)
+- Budget d'itération (borne la boucle)
+- Definition-of-done de l'étape 14 (avant de prononcer le verdict)
+- Modes d'échec du verdict (et parade)
+
 ## Machine à états du verdict global
 ```
           ┌──────────────────────────────────────────────┐

@@ -4,6 +4,16 @@ Condition → action, pour chaque point où l'étape **tranche sans interroger l
 
 ---
 
+## Sommaire
+
+- M1 — Format d'import → action d'extraction (mouvement 1.b)
+- M2 — Type/positionnement produit → graines de registre candidates (mouvement 1.c)
+- M3 — Composer les 3 directions recherchées proposées (mouvement 1.c)
+- M4 — Dériver la liste des écrans depuis le PRD (mouvement 3)
+- M5 — Génération de visuels Nano Banana Pro (mouvement 4)
+- M6 — Dark mode : le fournir ? (mouvement 2.1)
+- M7 — Runtime motion selon le cas d'usage (mouvement 2 / 3 — §Direction motion)
+
 ## M1 — Format d'import → action d'extraction (mouvement 1.b)
 
 Router selon ce qui est déposé. On extrait ce qui existe, on **dérive** le reste au mouvement 2.

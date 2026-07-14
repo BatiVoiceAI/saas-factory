@@ -7,6 +7,14 @@
 
 ---
 
+## Sommaire
+
+- Structure canonique
+- Règles de copy
+- Adaptation par type de projet
+- Checklist landing (binaire)
+- Sources
+
 ## Structure canonique
 
 Ordre imposé. Chaque section répond à une objection précise.

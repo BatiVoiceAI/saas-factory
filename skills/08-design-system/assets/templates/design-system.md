@@ -2,6 +2,21 @@
 
 > Source de vérité visuelle. Toujours lire ce fichier avant toute décision UI, en Phase 2 comme en Phase 3. Ne pas dévier sans accord explicite.
 
+## Sommaire
+
+- Product context
+- Direction visuelle (recherchée) — artefact « direction »
+- Typography
+- Color
+- Spacing
+- Layout / Geometry
+- Direction motion
+- Visuels générés (Nano Banana Pro)
+- Rationale par page
+- Components (shadcn/ui + Tailwind)
+- Tokens → code (mapping exact `app/globals.css`)
+- Decisions log
+
 ## Product context
 <!-- Ce que c'est, pour qui, type (public/interne/perso) — hérité de research/idea-brief.md -->
 <...>

@@ -6,6 +6,16 @@ Détail actionnable de l'Étape 4 (`procedure-detaillee.md`). Un composant = une
 
 ---
 
+## Sommaire
+
+- [1] Alternatives concurrentes — l'ancre
+- [2] Attributs uniques — ⏸ pause founder
+- [3] Value themes — attribut → « so what ? » → bénéfice
+- [4] Best-fit clients — par caractéristiques
+- [5] Catégorie de marché — le cadre
+- [6] Trend overlay — optionnel
+- Validation — les 3 tests (barrière de sortie)
+
 ## [1] Alternatives concurrentes — l'ancre
 
 **Produire.** La liste **complète** de ce que le client ferait sans le produit : directs · adjacents (autre budget, même job) · manuel (Excel, papier) · embaucher quelqu'un · **ne rien faire / statu quo**. Pour chacune : job « embauché », force, où elle casse.

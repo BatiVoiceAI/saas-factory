@@ -2,6 +2,13 @@
 
 Le fichier d'état global du projet, tenu par le master et chaque phase. **Jamais de secret dedans** (les accès vivent dans `~/.saas-factory/`).
 
+## Sommaire
+
+- Format
+- Modèle à 3 axes orthogonaux — `archetype` / `type` / `tenancy` (🚨 SOURCE UNIQUE)
+- Locale du livrable — `locale` / `dir` / `jurisdiction` (🚨 SOURCE UNIQUE)
+- Règles
+
 ## Format
 ```markdown
 # État — {nom du projet}

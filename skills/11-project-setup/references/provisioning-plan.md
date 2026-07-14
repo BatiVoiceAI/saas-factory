@@ -4,6 +4,22 @@ L'ordre, les dépendances et le parallélisme des ressources. Chaque nœud est *
 
 > **Config provider 100 % autonome (après `infra-setup`).** L'utilisateur a fourni comptes + clés **une seule fois** (`infra-setup`) ; ensuite le plugin fait **TOUTE** la config provider **sans intervention par projet** — y compris **Supabase Auth** : SMTP custom = Resend, confirmations d'inscription, `site_url` + URLs de redirection. Effet clé : le **SMTP custom lève la limite de débit** du SMTP intégré de Supabase → **aucun upgrade payant** requis. Zéro config manuelle demandée à l'utilisateur après `infra-setup`.
 
+## Sommaire
+
+- Graphe de dépendances
+- Ordre & parallélisme
+- Email & Auth — un seul domaine générique, deux flux câblés ensemble
+- Routage par provider (managed vs self-host)
+- Routage par type de produit (public / interne / perso)
+- Chemin de provisioning AUTOMATION (archétype headless — worker / cron / bot / intégration)
+- Chaque sous-agent reçoit (dans son prompt de délégation)
+- Reprise
+- Machine à états par ressource
+- Data-flow — qui produit quoi pour qui
+- Matrice de routage au démarrage
+- Modes d'échec de l'orchestration (≠ échec d'une ressource)
+- Micro-exemple (niche-agnostique)
+
 ## Graphe de dépendances
 ```
 scaffold local (git init + blocs + CLAUDE.md)

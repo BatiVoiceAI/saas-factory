@@ -2,6 +2,14 @@
 
 La conduite exacte de la Découverte, étape par étape. Le SKILL.md donne l'aperçu ; ici, la sous-procédure exhaustive de chaque cran : **quoi faire · dans quel ordre · critère de passage avant de monter d'un cran**. Rien n'est improvisé.
 
+## Sommaire
+
+- Invariant
+- Machine à états
+- Sous-procédures (par état)
+- Data-flow (ce que la Découverte alimente en aval)
+- Règle des questions
+
 ## Invariant
 L'entretien a un **état courant**. Il ne **monte** d'un cran qu'une fois le **critère de passage** de l'état atteint. Il peut **retomber** (l'utilisateur se contredit, on découvre un manque) — dans ce cas on re-questionne le point, on ne fabrique jamais la réponse. Un champ sans réponse ferme = « à préciser », jamais inventé.
 

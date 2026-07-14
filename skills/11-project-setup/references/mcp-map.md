@@ -2,6 +2,16 @@
 
 Le provisioning **dépend des MCP officiels** des éditeurs (déclarés dans `.mcp.json.example`, connectés une fois via `infra-setup`). On ne réinvente pas ces API — on les appelle.
 
+## Sommaire
+
+- Règle de routage (managed vs self-host) — À LIRE EN PREMIER
+- Modèle d'outils & auth
+- Compétence (anti-hallucination)
+- Séquences d'appels par ressource (l'ordre exact)
+- Carte MCP AUTOMATION (archétype `automation` — headless)
+- Matrice de repli — MCP indisponible → quoi faire
+- Modes d'échec MCP + traitement
+
 ## Règle de routage (managed vs self-host) — À LIRE EN PREMIER
 Chaque ressource **forkée** a deux variantes. Le provisioner lit `~/.saas-factory/config.json` (**profil** + **provider** de la ressource) et route :
 - **managed** → **MCP officiel** (GitHub / Supabase cloud / Vercel), connecté par `infra-setup`.

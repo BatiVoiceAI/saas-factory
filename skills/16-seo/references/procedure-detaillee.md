@@ -2,6 +2,18 @@
 
 Sous-procédure exhaustive de l'étape 16. Le SKILL.md est le chef d'orchestre ; ici vit le **quoi faire / dans quel ordre / avec quel critère de passage** pour chaque mécanisme. L'étape produit **deux livrables** : **(a) le socle technique (mécanisme 3-A) = du CODE, committé immédiatement, sans gate humain** ; **(b) le contenu éditorial (mécanismes 1, 2, 3-B, 4) = plan + gate humain**. Principe directeur non négociable, qui prime sur tout : **qualité mesurée, jamais du volume** (`quality-guardrails.md`). Aucun mécanisme ne produit une page qui n'a pas passé le self-assessment Helpful Content, et **aucun contenu éditorial ne se publie sans le gate humain** — le socle technique, lui, ne dépend d'aucun gate.
 
+## Sommaire
+
+- Garde d'entrée — le type décide tout
+- Machine à états — deux livrables, un pipeline
+- Data-flow — qui alimente quoi
+- Mécanisme 1 — Mots-clés → clusters
+- Mécanisme 2 — Stratégie + génération MESURÉE de pages
+- Mécanisme 3 — Technique + on-page, en deux temps (3-A socle · 3-B éditorial)
+- Mécanisme 4 — Gate qualité + publication (contenu éditorial SEULEMENT)
+- Mécanisme 5 — Itération (post-lancement, GSC)
+- Definition-of-Done du mécanisme (vue d'ensemble)
+
 ## Garde d'entrée — le type décide tout
 
 ```

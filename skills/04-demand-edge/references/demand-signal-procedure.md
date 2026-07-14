@@ -4,6 +4,17 @@ Réf. de profondeur pour l'étape 4. Le SKILL.md donne l'aperçu ; **ici** la so
 
 ---
 
+## Sommaire
+
+- 0. Data-flow du bloc
+- 1. Extraction ordonnée depuis `market.md` (+ `research/raw/`)
+- 2. Rubrique déterministe → verdict
+- 3. Forcing-questions du bloc demande
+- 4. Vérification adversariale (obligatoire)
+- 5. Definition-of-Done du bloc 1
+- 6. Catalogue de cas limites
+- 7. Modes d'échec (et parade)
+
 ## 0. Data-flow du bloc
 
 ```

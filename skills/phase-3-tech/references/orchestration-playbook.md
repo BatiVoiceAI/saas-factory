@@ -2,6 +2,16 @@
 
 La profondeur de l'orchestrateur. Le SKILL.md donne l'aperçu ; ici vit la mécanique : **comment enchaîner, calibrer, tenir l'autonomie**, sans jamais faire le travail des étapes à leur place. Lu à l'usage. La tenue de l'état, le protocole d'autonomie et les retours arrière ont leur propre référence : `state-and-decisions.md`.
 
+## Sommaire
+
+- Ce que fait (et ne fait pas) l'orchestrateur
+- Table de séquence (le contrat d'enchaînement)
+- Contrôle de réception des artefacts (anti-squelette)
+- Calibrage & routage par type
+- Pré-vol infra (la bascule réel ↔ fallback)
+- Discipline « lire `_shared` une fois »
+- Boucle nominale (pseudo-procédure)
+
 ## Ce que fait (et ne fait pas) l'orchestrateur
 
 L'orchestrateur n'écrit **aucun artefact `tech/*`**, ne conçoit **aucune archi**, ne provisionne **rien lui-même**, ne pose **aucune question technique** (« Postgres ou Mongo ? » = échec — c'est le CTO de l'étape 9 qui tranche). Sa valeur tient en quatre gestes, répétés à chaque étape :

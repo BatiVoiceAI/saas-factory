@@ -6,6 +6,17 @@ Sous-procédures exhaustives pour chaque étape de la « Procédure normée » d
 
 ---
 
+## Sommaire
+
+- Data-flow de l'étape (vue d'ensemble)
+- Étape 1 — Charge le moteur (avant tout le reste)
+- Étape 2 — Branche nos artefacts (ne ré-interroge pas)
+- Étape 3 — Recherche ciblée : uniquement les trous réels
+- Étape 4 — Synthèse Dunford 5+1 (ordre non négociable)
+- Étape 5 — Formalise l'angle différenciant (candidat, PAS de verdict)
+- Étape 6 — Écris `research/positioning.md`
+- Clôture
+
 ## Data-flow de l'étape (vue d'ensemble)
 
 ```

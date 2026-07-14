@@ -11,6 +11,17 @@ La parade est la même pour les deux : imposer des contraintes explicites AVANT 
 
 ---
 
+## Sommaire
+
+- Marqueurs d'AI slop (INTERDITS)
+- Processus de recherche de direction (par projet) — LE cœur anti-convergence
+- Leviers du design distinctif
+- Points de départ (5 graines de registre — JAMAIS la sortie)
+- Sources de blocs vendorables
+- Arsenal créatif — création + duplication
+- Checklist de review anti-slop
+- Sources
+
 ## Marqueurs d'AI slop (INTERDITS)
 
 Liste binaire. Un agent qui produit un de ces marqueurs a échoué, quelle que soit la qualité du reste.

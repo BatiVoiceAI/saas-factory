@@ -11,6 +11,21 @@ Format de chaque recette :
 
 ---
 
+## Sommaire
+
+- Q1 — Le workflow cœur est-il UN parcours, ou trois ? (étape 1)
+- Q2 — Chaque feature se rattache-t-elle à la Phase 1 ? (étape 2)
+- Q3 — Le comportement est-il testable, ou vague ? (étape 5)
+- Q4 — Le « N'inclut pas » borne-t-il vraiment la feature ? (étape 5)
+- Q5 — Le MVP est-il le plus PETIT qui résout le problème ? (étape 3)
+- Q6 — Le Won't have est-il nommé, ou implicite ? (étape 3)
+- Q7 — La story a-t-elle un bénéfice rattaché, et des critères ? (étape 5)
+- Q8 — Le build order suit-il les dépendances, pas les envies ? (étape 6)
+- Q9 — Chaque action de valeur ferme-t-elle sa boucle ? (étape 4)
+- Q10 — Tous les états sont-ils spécifiés, ou seulement le succès ? (étape 5)
+- Q11 — Le volet technique reste-t-il le QUOI logique, sans déborder en 09 ? (étape 5)
+- R1 — Les seuls cas où l'on interroge VRAIMENT l'utilisateur (hors Porte finale)
+
 ## Q1 — Le workflow cœur est-il UN parcours, ou trois ? (étape 1)
 - **Ask exact :** « Décris le parcours de l'utilisateur **de l'entrée au livrable** en une seule ligne continue — combien de fois change-t-il de but en route ? »
 - **Push-until :** un **seul** parcours nommé, du déclencheur au résultat à valeur, sans bifurcation « et aussi il peut… ».

@@ -2,6 +2,20 @@
 
 Le modèle de données est le choix **le plus coûteux à défaire** d'un micro-SaaS : tout le reste (modules, API, UI) s'y adosse, et le changer après le build impose une migration de données. Il mérite donc sa propre procédure normée. Sortie : l'`erDiagram` + les règles RLS de la section 3.3 de `tech/architecture.md`, et l'entrée des migrations `supabase/` (étape 11 / Phase 4).
 
+## Sommaire
+
+- Procédure (déterministe)
+- Choisir la stratégie multi-tenant
+- Variante AUTOMATION — tables d'état service-role-only (multi-tenant « sans objet »)
+- Règles RLS (le socle du multi-tenant sur Supabase)
+- Micro-exemple (niche-agnostique)
+- Invariants d'intégrité DB (contraintes, jamais des checks applicatifs)
+- Accès public anonyme (surface exposée sans login)
+- Robustesse des fonctions PL/pgSQL (collision colonne / variable — bug runtime invisible au build)
+- Cas limites de données (à lister explicitement)
+- Modes d'échec du modèle de données
+- Handoff
+
 ## Procédure (déterministe)
 1. **Dériver les entités** depuis les features + user stories. Un **nom** qui revient dans les US (« projet », « facture », « membre ») = une entité candidate. Une action sur une donnée (« assigner une tâche ») = souvent une relation ou une table de jointure.
 2. **Champs clés par entité** : identifiant, propriétaire (le tenant), horodatage, statut, + les champs métier nommés dans les US. Ne mets **que** ce qu'une US justifie (pas de champ « au cas où »).

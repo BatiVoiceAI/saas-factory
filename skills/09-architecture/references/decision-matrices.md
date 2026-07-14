@@ -2,6 +2,17 @@
 
 Les tables *condition → action* du cadrage technique. Quand un cas rentre dans une ligne, applique l'action sans improviser. C'est ce qui rend l'architecture **reproductible** : deux projets aux exigences proches obtiennent la même stack.
 
+## Sommaire
+
+- §0 — Renvoyer à la Phase 2 (le PRD n'est pas architecturable)
+- §1 — Classer une exigence (dure vs molle)
+- §2 — Stratégie multi-tenant (choix structurant, high-stakes)
+- §3 — Réutiliser un bloc vs custom (le split 80/20)
+- §4 — Défaut vs déviation, par catégorie de stack
+- §5 — Synchrone vs asynchrone (par opération du data-flow)
+- §6 — Quand écrire un ADR (vs laisser à la Phase 4)
+- §7 — Quand arrêter de challenger (budget d'auto-interrogation)
+
 ## §0 — Renvoyer à la Phase 2 (le PRD n'est pas architecturable)
 Déclenché en M1. Le HARD GATE interdit de combler un trou côté produit : si le PRD est cassé, on **s'arrête et on renvoie**, on ne re-spécifie pas.
 

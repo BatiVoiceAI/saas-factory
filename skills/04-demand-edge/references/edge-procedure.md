@@ -6,6 +6,17 @@ Réf. de profondeur pour l'étape 4. Principe qui gouverne tout ce bloc : **edge
 
 ---
 
+## Sommaire
+
+- 0. Machine à états du bloc
+- 1. Sous-procédure pas-à-pas
+- 2. Matrice de tranche (verdict edge)
+- 3. « Pas d'edge » : la sortie honnête (non négociable)
+- 4. Forcing-questions du bloc edge
+- 5. Definition-of-Done du bloc 2
+- 6. Catalogue de cas limites
+- 7. Modes d'échec (et parade)
+
 ## 0. Machine à états du bloc
 
 ```

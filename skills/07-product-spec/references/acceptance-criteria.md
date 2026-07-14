@@ -2,6 +2,15 @@
 
 Procédure exhaustive pour rendre le PRD **exécutable**. **Fusion §5 :** la story et ses critères vivent **dans la fiche feature** (`product/features/NN-*.md` § User story + § Critères d'acceptation) — décision « fiches, pas `user-stories.md` séparé » (cf. `procedure.md` et `feature-spec-depth.md`). Cette référence est la **méthode** (format story, Given/When/Then, catalogue de cas limites) que la fiche applique. Une **story sans critère d'acceptation testable n'est PAS finie** : ce sont les critères qui permettent au build (Phase 3) d'implémenter et au Verifier de vérifier. Une story par feature **Must/Should** (par rôle si plusieurs personas agissent).
 
+## Sommaire
+
+- Ce qui rend le PRD exécutable
+- Partie A — La user story
+- Partie B — Les critères d'acceptation (Given/When/Then)
+- Partie C — Catalogue de cas limites (à balayer pour CHAQUE feature)
+- Checklist Definition-of-Done (§ story + § critères de chaque fiche)
+- Modes d'échec (et comment les gérer)
+
 ## Ce qui rend le PRD exécutable
 
 ```

@@ -2,6 +2,20 @@
 
 Le **flux exécutable** de la phase. Le `SKILL.md` donne l'aperçu ; ici vit la mécanique : séquence, calibrage, portes, retour arrière, état, reprise. Charge ce fichier quand tu pilotes la phase — pas besoin de le relire à chaque étape.
 
+## Sommaire
+
+- Valeur de l'orchestrateur (ce que TU fais, ce que tu ne fais PAS)
+- Discipline « lire `_shared` une fois »
+- Table de séquence (étape → invoque → lit → écrit → porte)
+- Contrôle de réception des artefacts (anti-squelette)
+- Diagramme de flux
+- Matrices de calibrage (par `type`, lu dans `state.md`)
+- Protocole des portes
+- Matrice de retour arrière (« Ajuster » → quelle étape)
+- Tenue de l'état (`.saas-factory/state.md`)
+- Procédure de reprise
+- Passation vers la Phase 3
+
 ## Valeur de l'orchestrateur (ce que TU fais, ce que tu ne fais PAS)
 - **Tu fais** : enchaîner les 3 experts dans l'ordre · lire `state.md` et le `type` pour **calibrer** · tenir l'état · poser les **deux portes** · router les « Ajuster » vers la bonne étape · passer le relais à la Phase 3.
 - **Tu ne fais PAS** : le travail des experts (tu ne rédiges pas le PRD, tu ne choisis pas les couleurs, tu ne fixes pas le pricing) · relancer un moteur vendoré toi-même · recharger `_shared` entre deux étapes.

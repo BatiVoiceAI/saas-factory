@@ -2,6 +2,19 @@
 
 Le gabarit exact du prompt de délégation (`Task`) de chaque provisioner. L'orchestrateur ne provisionne **jamais** à la main : il dispatche ces contrats. Chaque sous-agent est **idempotent** (`idempotence-rollback.md`), **compétent** (`reference-skills.md`), et écrit son verdict dans `status/provision-<resource>.md`.
 
+## Sommaire
+
+- Anatomie d'un contrat (tous les provisioners)
+- Format de sortie `status/provision-<resource>.md`
+- `provisioner-repo` (GitHub + CI) — parallélisable
+- `provisioner-db` (Supabase + migrations + RLS) — parallélisable
+- `provisioner-email` (Resend) — parallélisable, non-bloquant
+- `provisioner-hosting` (DNS routage + host + lie le repo) — après repo+db (email non-bloquant)
+- Contrats AUTOMATION (archétype `automation` — headless) — surcharge conditionnelle
+- Comment l'orchestrateur dispatche (rappel)
+- Recette forcing — accepter ou refuser un `DONE` d'un sous-agent
+- Catalogue de cas limites
+
 ## Anatomie d'un contrat (tous les provisioners)
 Chaque prompt de délégation contient **exactement** ces sections :
 ```

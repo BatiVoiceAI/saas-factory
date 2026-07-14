@@ -4,6 +4,17 @@ Retour du terrain (premier run réel déployé, 2026-07) : un SaaS aux **feature
 
 🚨 **Depuis l'audit v0.4.4 (thème TYPES), le socle n'est plus « universel aux 3 types » : il est CONDITIONNÉ PAR L'ARCHÉTYPE du livrable** (`web-saas` / `landing` / `automation`). Le retour du terrain ci-dessus décrit le socle **web-saas** ; `landing` et `automation` ont **leur propre socle** (ni onboarding, ni dashboard). Le modèle à 3 axes orthogonaux (`archetype` × `type` × `tenancy`) vit en **SOURCE UNIQUE** dans `_shared/state-schema.md` §socle-par-archétype — cf. §Champ d'application.
 
+## Sommaire
+
+- Champ d'application — conditionné par l'**ARCHÉTYPE** (plus « universel aux 3 types »)
+- Le socle **web-saas** (8 éléments S1-S8 — Must d'office pour l'archétype `web-saas`)
+- Le socle **landing** (4 éléments LP1-LP4 — Must d'office pour l'archétype `landing`)
+- Le socle **automation** (5 éléments AU1-AU5 — Must d'office pour l'archétype `automation`)
+- Aha moment (le PRD le nomme — étape 1)
+- Intégration dans la procédure (pas une étape en plus)
+- Checklist Definition-of-Done (socle + aha)
+- Modes d'échec (et comment les gérer)
+
 ## Champ d'application — conditionné par l'**ARCHÉTYPE** (plus « universel aux 3 types »)
 
 🚨 **Le socle n'est PLUS universel : il dépend de l'ARCHÉTYPE** (la forme **technique** du livrable), pas du type d'accès. Le modèle canonique à **3 axes orthogonaux** — `archetype` (forme technique) × `type` (accès : public|interne|perso) × `tenancy` (single|multi-org, web-saas) — vit en **SOURCE UNIQUE** dans `_shared/state-schema.md` §socle-par-archétype ; on y **renvoie**, on ne le recopie pas. Ici, une seule règle : **quel socle pour quel archétype**.

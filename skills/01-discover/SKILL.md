@@ -9,6 +9,23 @@ allowed-tools: Read, Write, Edit, AskUserQuestion, Bash
 
 Procédure déterministe de la **Découverte** : on part de l'idée brute de l'utilisateur et on produit **un seul artefact**, `research/idea-brief.md`, qui alimente toute la Phase 1 et les moteurs réutilisés en aval.
 
+## Sommaire
+
+- À lire d'abord (une fois)
+- Références (la profondeur — charge à la demande)
+- Rôle & garde-fou (HARD GATE)
+- Entrée / sortie (contrat)
+- Principe des questions (le cœur du déterminisme ici)
+- Patron de spécificité (à appliquer au problème ET à la cible)
+- Déroulé
+- Les questions (chacune pédagogique, dans cet ordre)
+- Détection de l'archétype & de la tenancy (2 des 3 axes du cadrage)
+- Langue du livrable (`locale`) — déduite par défaut, 1 seule question optionnelle
+- Écriture de l'artefact — `research/idea-brief.md`
+- Routage par type (à inscrire dans le brief et `state.md`)
+- Porte de sortie (légère)
+- Note de chaînage
+
 ## À lire d'abord (une fois)
 `_shared/lessons.md` et `_shared/safety-rails.md` (règles d'or) ; si présent, `skills/phase-1-validation/references/conventions.md` (persona CEO, contrat d'artefacts, routage — priment sur ton comportement par défaut).
 

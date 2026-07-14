@@ -2,6 +2,16 @@
 
 Procédure exhaustive pour poser le **business model en 1 page** (`product/business-model.md`). Tu **exécutes** le moteur vendoré `startup-design` (Phase 4 « Strategy », `references/frameworks.md`) ; tu ne refais pas la stratégie. Le Lean Canvas d'un micro-SaaS niché est **déjà largement tranché en Phase 1** — ce fichier dit exactement **quel bloc vient d'où**, **dans quel ordre**, et **quoi faire quand la source manque**.
 
+## Sommaire
+
+- Le principe qui gouverne tout : brancher, pas ré-interroger
+- Data-flow : d'où vient chaque bloc
+- Ordre de remplissage (canonique — ne pas dévier)
+- Sous-procédure par bloc
+- Checklist Definition-of-Done (business-model.md)
+- Modes d'échec (et comment les gérer)
+- Micro-exemples (niche-agnostiques)
+
 ## Le principe qui gouverne tout : brancher, pas ré-interroger
 Sur 9 blocs, **5 sont déjà décidés** par les artefacts Phase 1. Les **4 restants** sont une esquisse (channels, revenue, coûts, métriques). Tu **n'ouvres jamais** un intake qui ré-interroge l'utilisateur sur un bloc déjà couvert — c'est un mode d'échec (voir plus bas). Annonce en une ligne : « données Phase 1 utilisées comme point de départ », puis remplis.
 

@@ -2,6 +2,19 @@
 
 Le job « décider ». La rétro (`retro-procedure.md`) a produit les faits ; ici on **tranche** : itérer, tuer, ou parquer — sur un critère écrit, jamais au feeling. C'est l'application directe de la règle d'or (`_shared/lessons.md` §9 : « Kill explicite. Un critère écrit déclenche l'archivage d'une piste morte + un post-mortem de 5 lignes »).
 
+## Sommaire
+
+- Le critère de KILL (écrit, pas au feeling)
+- Continue
+- Post-mortem (si Kill) — exactement 5 lignes
+- Mémoire qui compound (l'actif long terme)
+- Machine à états de la décision
+- Matrice de décision (condition → action)
+- Recette forcing-question — la porte kill/continue
+- La porte — `AskUserQuestion` (options exactes)
+- Checklist definition-of-done (porte)
+- Modes d'échec (porte) + parade
+
 ## Le critère de KILL (écrit, pas au feeling)
 Un projet se tue sur un **critère explicite**, décidé d'avance (règle d'or §9 de `_shared/lessons.md` : kill explicite sur critère écrit). Exemples (à calibrer par projet) :
 - **Pas de signal d'activation** après X semaines en ligne (personne n'atteint le moment magique).

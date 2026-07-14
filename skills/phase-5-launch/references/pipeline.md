@@ -2,6 +2,15 @@
 
 La séquence exacte de la phase, ce que chaque étape **produit**, les **règles d'enchaînement** et les **retours arrière** internes. Le SKILL.md est le chef d'orchestre scannable ; cette carte est la référence à ouvrir quand tu enchaînes.
 
+## Sommaire
+
+- Diagramme de flux détaillé
+- Séquence exacte + contrat de sortie par étape
+- Contrôle de réception des artefacts (anti-squelette)
+- Règles d'enchaînement (déterminisme)
+- Retours arrière internes à la phase
+- Sortie de phase
+
 ## Diagramme de flux détaillé
 
 ```

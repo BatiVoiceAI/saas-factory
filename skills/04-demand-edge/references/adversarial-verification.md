@@ -8,6 +8,14 @@ Cette réf. dit **comment** les appliquer ici, sur les deux blocs (demande **et*
 
 ---
 
+## Sommaire
+
+- 1. Tags de tier (rappel + application)
+- 2. Le triptyque obligatoire : confirmerait / infirmerait / trous
+- 3. Matrice tier × verdict (garde-fou anti-fausse-certitude)
+- 4. Passe honnêteté (honesty-protocol) — checklist de sortie
+- 5. Micro-exemple de bloc vérif bien rempli (niche-agnostique)
+
 ## 1. Tags de tier (rappel + application)
 
 ```

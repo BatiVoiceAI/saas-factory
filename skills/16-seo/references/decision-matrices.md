@@ -4,6 +4,18 @@ Condition → action, pour chaque point où l'étape **tranche sans interroger l
 
 ---
 
+## Sommaire
+
+- M1 — Source de données mots-clés → outil (mécanisme 1.2)
+- M2 — Mot-clé → intention de recherche (mécanisme 1.5)
+- M3 — Scoring d'opportunité d'un mot-clé (mécanisme 1.5 & 2.2)
+- M4 — Combien de pages générer ? (mécanisme 2.1) — LE PLAFOND DUR
+- M5 — Deux clusters se cannibalisent-ils ? (mécanisme 2.3)
+- M6 — Type de schema JSON-LD à poser (mécanismes 3-A et 3-B, `schema-dts`)
+- M7 — Sitemap / robots selon le stack (mécanisme 3-A — socle committé sans gate)
+- M8 — Seuils Core Web Vitals (mécanisme 3-A, re-passé en 3-B — `unlighthouse` en gate)
+- M9 — Action d'itération sur donnée GSC (mécanisme 5.3)
+
 ## M1 — Source de données mots-clés → outil (mécanisme 1.2)
 
 **Le défaut est GRATUIT et assumé** : recherche web manuelle + heuristiques. Les outils data sont un **upgrade optionnel**, utilisés **seulement s'ils ont été provisionnés en amont via `infra-setup`** — on ne demande **jamais** une config d'API en cours d'étape. Une seule source à la fois, on ne cumule pas.

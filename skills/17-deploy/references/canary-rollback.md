@@ -4,6 +4,16 @@ La preuve que la prod est **saine**, et le filet quand elle ne l'est pas. Inspir
 
 Règle d'or : **pas de faux succès** (`safety-rails.md` §6). Un canary rouge → rollback + log honnête. On ne déclare jamais « déployé » sur une impression.
 
+## Sommaire
+
+- Machine à états du canary
+- Seuils (chiffrés — sinon ce n'est pas une mesure)
+- Procédure canary (dans l'ordre)
+- Matrice de décision — verdict canary
+- Runbook de rollback
+- Modes d'échec (et prévention)
+- Sortie
+
 ## Machine à états du canary
 
 ```

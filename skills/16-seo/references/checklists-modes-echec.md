@@ -4,6 +4,17 @@ Les critères d'acceptation par artefact, le catalogue de cas limites, et les mo
 
 ---
 
+## Sommaire
+
+- Definition-of-Done — Socle technique (livrable a, code committé)
+- Definition-of-Done — `seo/topic-cluster-map.md`
+- Definition-of-Done — `seo/plan.md` + pages
+- Definition-of-Done — On-page des pages éditoriales (3-B)
+- Definition-of-Done — Clôture d'étape
+- Catalogue de cas limites (condition → traitement)
+- Modes d'échec (et comment les gérer)
+- Diagramme — la porte de sortie de l'étape 16
+
 ## Definition-of-Done — Socle technique (livrable a, code committé)
 - [ ] `app/sitemap.ts` + `app/robots.ts` **committés** (natifs du framework, M7) ; `robots` **bloque les zones authentifiées** et référence le sitemap.
 - [ ] **Metadata + canonical par route** publique (nom du produit via `lib/brand.ts` + `title.template`, jamais en dur).

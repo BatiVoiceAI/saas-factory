@@ -4,6 +4,16 @@ Procédure exhaustive pour trancher le **scope** et figer le **MVP**. **Fusion �
 
 **Pourquoi l'étape 3 (avant les specs) :** la priorisation est **cheap** (test de retrait sur la liste) et les fiches profondes (étape 5) sont **chères** — on ne déploie la profondeur (`feature-spec-depth.md`) que sur les **Must**. Prioriser d'abord, spécifier en profondeur ensuite.
 
+## Sommaire
+
+- Les deux frameworks ne servent pas à la même chose
+- Partie A — MoSCoW (décision de scope)
+- Partie B — RICE (décision d'ordre)
+- Partie C — Figer le MVP (`product-spec.md` § MVP)
+- Cohérence inter-fichiers (non négociable)
+- Checklist Definition-of-Done (priorisation)
+- Modes d'échec (et comment les gérer)
+
 ## Les deux frameworks ne servent pas à la même chose
 
 ```

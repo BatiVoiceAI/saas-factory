@@ -4,6 +4,18 @@ Ce fichier détaille **chaque phase du moteur vendoré**, exécutée : quoi fair
 
 Rappel du **HARD GATE** (non négociable) : ici tu produis la **photo marché/concurrents** — rien d'autre. Pas de positionnement (étape 3), pas de verdict de demande (étape 4), pas de décision Go/No-Go (étape 5). Chaque fois qu'une phase du moteur déborde sur ces terrains, tu **conserves le brut** (l'aval s'en sert) mais tu ne **conclus** pas.
 
+## Sommaire
+
+- Flux d'ensemble (machine à états)
+- P0 — Pré-vol (garde d'entrée)
+- P1 — Intake (court-circuité par l'idea-brief)
+- P1.5 — Profondeur (calibrer le tier)
+- P2 — Les 3 vagues (procédure par vague)
+- CHECKPOINT — valider le set de concurrents (1 question)
+- P3 — Synthèse (relier, ne pas empiler)
+- P3.5 — Vérification adversariale
+- SORTIE — état & passage de relais
+
 ## Flux d'ensemble (machine à états)
 
 ```

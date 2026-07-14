@@ -11,6 +11,12 @@ Format de chaque recette :
 
 ---
 
+## Sommaire
+
+- Q1 — La direction : la SEULE vraie question utilisateur (mouvement 1)
+- Auto-interrogations (aucune ne sort vers l'utilisateur)
+- R1 — Les seuls cas où l'on interroge VRAIMENT l'utilisateur (au-delà de Q1)
+
 ## Q1 — La direction : la SEULE vraie question utilisateur (mouvement 1)
 - **Ask exact :** « As-tu déjà une **charte graphique / un design system** (couleurs, police, logo) ? Si oui, dépose le fichier ou le dossier ; sinon je te propose 3 directions complètes (polices + couleurs + style de mise en page) à regarder. »
 - **Push-until :** l'utilisateur a soit **déposé** quelque chose (couloir import), soit **retenu une** des 3 recettes rendues visuellement (couloir génération). Un seul choix, pas une discussion ouverte.

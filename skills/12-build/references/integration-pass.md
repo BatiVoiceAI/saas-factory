@@ -2,6 +2,20 @@
 
 L'étape 5 de la procédure. Le parallélisme a un coût caché : les **bugs de jonction** (`_shared/lessons.md`, anti-pattern « parallélisme non maîtrisé »). Un build qui parallélise **sans** passe d'intégration ment sur son état final. Piloté par le Tech Lead.
 
+## Sommaire
+
+- Flux merge → intégration
+- Procédure
+- Catalogue de bugs de jonction (à chercher activement)
+- Definition-of-Done de la passe d'intégration
+- Garde-fous de sortie produit (non-régression du « générique châssis » et du « squelette »)
+- Porte anti-scaffolding — zéro tuyauterie exemple du châssis dans le produit livré
+- Porte « le SQL tourne » — smoke-test des fonctions/RPC contre une vraie base
+- Porte « plan soldé » — le producteur du registre (P0.1)
+- Matrice de décision
+- Forcing-question — « l'intégration est-elle prouvée ? »
+- Modes d'échec
+
 ## Flux merge → intégration
 ```
 lanes DEV-DONE (status/*.md)         Chaque lane part de main (skeleton),

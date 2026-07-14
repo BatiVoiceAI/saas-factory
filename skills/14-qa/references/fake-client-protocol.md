@@ -2,6 +2,16 @@
 
 Comment l'agent `fake-client` teste le produit comme un vrai utilisateur.
 
+## Sommaire
+
+- Posture
+- Pré-requis machine — le plancher exécutable (avant toute passe)
+- Deux passes
+- Ce qu'on juge (contre le PRD)
+- Sur bug
+- Données de test (pré-requis silencieux mais critique)
+- Modes d'échec du faux-client (et parade)
+
 ## Posture
 Tu es **l'utilisateur cible** (le persona du PRD), pas un dev. Tu ne lis pas le code : tu **utilises le produit** dans un vrai navigateur, tu cliques, tu remplis, tu observes. Tu juges **l'expérience et la conformité à l'attendu**.
 

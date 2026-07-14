@@ -6,6 +6,15 @@ Procédure normée pour poser le prix (`product/pricing.md`). C'est la **seule v
 
 > **Vendoring à venir.** On vendorera plus tard un skill de pricing dédié (`coreyhaines31/marketingskills:pricing`). En attendant, applique **cette** procédure — ne l'improvise pas.
 
+## Sommaire
+
+- L'axiome : ancrer sur la VALEUR, jamais sur le coût
+- Procédure (déterministe, 4 mouvements)
+- Écrire `product/pricing.md`
+- Checklist Definition-of-Done (pricing.md)
+- Modes d'échec (et comment les gérer)
+- Micro-exemples (niche-agnostiques)
+
 ## L'axiome : ancrer sur la VALEUR, jamais sur le coût
 Un prix **cost-plus** (« mon hosting coûte X, je mets une marge ») laisse de l'argent sur la table et **sous-vend l'edge**. Le prix se justifie par la **valeur du job résolu** (Value Proposition Canvas) mesurée **contre l'alternative actuelle** — ce que la cible **paie ou perd aujourd'hui** sans l'outil.
 

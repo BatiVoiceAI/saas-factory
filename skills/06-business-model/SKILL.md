@@ -9,6 +9,19 @@ allowed-tools: Read, Write, Edit, Bash
 
 Étape **volontairement légère** : c'est la moins critique de la Phase 2. Mais un pricing propre, ancré sur la valeur, vaut toujours mieux qu'un prix au doigt mouillé — c'est la seule variable qui touche directement le revenu, donc on soigne cette moitié.
 
+## Sommaire
+
+- À lire d'abord (une fois)
+- Ce que fait cette étape (et pourquoi)
+- Entrées / sortie (contrat)
+- Principe : tu EXÉCUTES le moteur, tu ne refais pas la stratégie
+- Références (profondeur, chargées au besoin)
+- Procédure normée
+- Mode interne — ROI interne, pas de pricing marché (~10 lignes)
+- Archétype `automation` — contrat d'artefact : `product/roi.md` (rapport ROI PLEIN, PAS le canvas)
+- Garde-fous
+- Clôture d'étape
+
 ## À lire d'abord (une fois)
 `_shared/lessons.md`, `_shared/safety-rails.md` ; si présent, `skills/phase-2-product/references/conventions.md`.
 

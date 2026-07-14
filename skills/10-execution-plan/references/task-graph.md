@@ -4,6 +4,17 @@ Comment décomposer le build en un graphe de tâches ordonné et parallélisé p
 
 ---
 
+## Sommaire
+
+- Vue d'ensemble — le data-flow du composer
+- Décomposition en tâches TDD
+- Walking skeleton d'abord
+- Analyse de dépendances → lanes
+- Passe d'intégration (ne pas l'oublier)
+- Definition of Done — le graphe est-il prêt à livrer aux agents ?
+- Modes d'échec (à prévenir activement)
+- Sortie (dans `tech/execution-plan.md`)
+
 ## Vue d'ensemble — le data-flow du composer
 
 ```

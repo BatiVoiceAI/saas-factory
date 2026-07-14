@@ -2,6 +2,16 @@
 
 Sous-procédure exhaustive de l'étape 8. Le SKILL.md est le chef d'orchestre ; ici vit le **quoi faire / dans quel ordre / avec quel critère de passage** pour chacun des 4 mouvements. Principe directeur non négociable : **une seule décision utilisateur (la direction visuelle)**, tout le reste **dérivé** automatiquement (lessons.md : interaction minimale). Référence normative transverse : **`_shared/design-doctrine.md`** (§Processus de recherche de direction, §Points de départ = graines, leviers, §Direction motion, marqueurs slop+convergence interdits, porte distinctiveness) — lue AVANT toute proposition ; pour la landing : **`_shared/landing-playbook.md`**.
 
+## Sommaire
+
+- Machine à états — les deux couloirs
+- Data-flow — qui alimente quoi
+- Mouvement 1 — La question DIRECTION (la SEULE interaction)
+- Mouvement 2 — Dériver tout le reste (frontend-design, 1 passe, 0 question)
+- Mouvement 3 — Générer les écrans clés du PRD (frontend-design en CODE)
+- Mouvement 4 — Génération de visuels (Nano Banana Pro)
+- Definition-of-Done du mouvement (vue d'ensemble)
+
 ## Machine à états — les deux couloirs
 
 Toute l'étape se joue sur **une bifurcation unique** au mouvement 1, puis converge :

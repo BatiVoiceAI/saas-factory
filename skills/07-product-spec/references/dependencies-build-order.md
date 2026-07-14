@@ -2,6 +2,18 @@
 
 Procédure exhaustive pour passer d'un ensemble de features à un **ordre de construction** exploitable par la Phase 3. Le build order vit dans `product-spec.md` (§ Dépendances & build order) — **source unique** depuis la fusion §5 (plus de `feature-prioritization.md` séparé). Il combine deux signaux : **les dépendances** (contrainte dure — ce qui doit exister avant quoi) et **le score RICE** (préférence — quoi apporte le plus de valeur en premier). **La dépendance prime toujours sur le score.**
 
+## Sommaire
+
+- Le modèle : un graphe orienté sans cycle (DAG)
+- Sous-procédure
+- Règle d'arbitrage : dépendance > RICE
+- Casser un cycle
+- Critères de passage
+- Cohérence avec l'aval
+- Micro-exemple (niche-agnostique)
+- Checklist Definition-of-Done (build order)
+- Modes d'échec (et comment les gérer)
+
 ## Le modèle : un graphe orienté sans cycle (DAG)
 
 Chaque feature Must/Should est un **nœud**. Une flèche `A ─▶ B` signifie « B dépend de A » (A doit être construit avant B). Le build order est un **tri topologique** de ce graphe, affiné par RICE quand plusieurs features sont libres en même temps.

@@ -8,6 +8,17 @@
 
 > **Principe cardinal — « route 200 ≠ feature qui marche », et « feature qui marche » = feature exécutée SOUS SESSION UTILISATEUR RÉELLE.** La recette n'est **PASSÉE** que si **chaque feature Must du PRD** (`product/features/*`), pour **chaque rôle**, a été **EXÉCUTÉE de bout en bout sur la prod réelle avec un JWT user-scopé** (qui touche les **vraies policies RLS** + les **RPC `security definer`** déployées), avec sa **preuve d'effet** (2xx **+ ligne écrite sous le bon tenant** + notification `sent` immédiate + **refus cross-tenant prouvé**), et qu'elle **échoue bruyamment** à la moindre erreur. « Déployé + build vert + route 200 » ne vaut **jamais** livraison.
 
+## Sommaire
+
+- Séquence
+- 1. Dispatch du live-QA (contrat)
+- 2. Session de test authentifiée sur la prod — technique réutilisable (les DEUX méthodes)
+- 3. Recette AUTHENTIFIÉE — exécuter chaque action RLS-protégée de chaque rôle
+- 4. Boucle de correction — budget **3 cycles**
+- 5. Matrice par type de projet
+- 6. DoD de la recette
+- Modes d'échec
+
 ## Séquence
 ```
 canary OK ──> forger/obtenir session(s) user-scopée(s) (§2) ──> dispatch agents/live-qa.md

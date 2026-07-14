@@ -2,6 +2,14 @@
 
 Ce que fait `infra-setup` quand ça coince, et la passe finale qui décide de `setup_complete`. Principe cardinal : **repli honnête, jamais de bluff** (`_shared/safety-rails.md` §6). Un outil non connecté n'est **jamais** marqué `connected` — on loge le trou, on continue, l'étape 11 basculera en fallback pour lui.
 
+## Sommaire
+
+- Catalogue de cas limites (par outil)
+- Forcing — marquer `connected` ou pas
+- Definition of Done — `infra-setup` complet
+- Machine à états de **sortie** (volet DoD)
+- Handoff
+
 ## Catalogue de cas limites (par outil)
 
 | Cas | Symptôme | Traitement |

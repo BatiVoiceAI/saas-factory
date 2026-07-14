@@ -4,6 +4,13 @@
 
 La fiche feature **absorbe la user story et ses critères d'acceptation** (décision de fusion §5 : on garde les **fiches**, pas un `user-stories.md` séparé — cf. `procedure.md`). Une fiche **Must** sans **flow + états + critères testables + volet technique** est une spec non finie : c'est la condition d'échec du HARD GATE de l'étape 7.
 
+## Sommaire
+
+- Champ d'application (proportionnalité)
+- Les 11 sections d'une fiche Must
+- Critères de passage (par fiche Must)
+- Modes d'échec (et comment les gérer)
+
 ## Champ d'application (proportionnalité)
 | Bucket | Profondeur exigée |
 |---|---|

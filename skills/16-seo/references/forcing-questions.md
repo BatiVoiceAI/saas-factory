@@ -11,6 +11,14 @@ Recettes pour les points où le skill **interroge ou tranche**. Format constant 
 
 ---
 
+## Sommaire
+
+- 1. Self-assessment Helpful Content — par page (auto-interrogation, bloquant)
+- 2. Est-ce qu'on dépasse le plafond ? (auto-interrogation, bloquant)
+- 3. Anti-cannibalisation (auto-interrogation)
+- 4. Gate humain de publication (la SEULE interaction utilisateur — `AskUserQuestion`)
+- 5. Garde de sortie — ne pas itérer sur du bruit (mécanisme 5)
+
 ## 1. Self-assessment Helpful Content — par page (auto-interrogation, bloquant)
 
 Le point le plus important de l'étape. **Avant** de retenir une page (mécanisme 2.5), le skill se pose les questions people-first de Google. Une page qui échoue ne se publie pas : on l'améliore ou on la coupe.

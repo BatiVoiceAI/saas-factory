@@ -2,6 +2,16 @@
 
 Comment **tirer** la donnée de PostHog puis de Sentry, dans le bon ordre, sans se faire piéger par un volume trop faible ou un tracking cassé. La lecture précède toute interprétation : ici on **collecte proprement**, on interprète en étape 3 (`gap-analysis.md`).
 
+## Sommaire
+
+- Data-flow — de l'event brut au bilan
+- HARD GATE — suffisance des données (à passer AVANT toute lecture de funnel)
+- Check « tracking vivant » (à faire même si le volume est bon)
+- Étape 1 — lire PostHog (ordre imposé)
+- Étape 2 — lire Sentry (en parallèle, puis croiser)
+- Catalogue de cas limites (mode d'échec → conduite)
+- Definition of Done — lecture
+
 ## Data-flow — de l'event brut au bilan
 
 ```

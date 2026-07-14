@@ -7,6 +7,15 @@ La **profondeur** de la procédure du SKILL.md. Un seul principe transverse, dé
 > Une valeur collée dans le chat est **compromise** (historique + logs) → **à révoquer immédiatement**. L'assistant ne manipule que le **nom** de la variable, jamais la valeur.
 > Si l'utilisateur colle quand même une valeur secret-shaped → appliquer le **protocole `_shared/safety-rails.md` §4** (stop · ne pas l'utiliser ni l'écrire · prévenir de la compromission + rotation · rappeler `.env`), sans jamais la recopier.
 
+## Sommaire
+
+- Les deux méthodes de connexion (choisir dans cet ordre)
+- 🔑 Scopes requis par outil — À DONNER AU TOKEN au moment de le créer
+- Flux global (machine à états de l'onboarding)
+- Sous-procédure par outil
+- Data-flow — d'où viennent les valeurs, où elles atterrissent
+- Checklist de connexion (par outil)
+
 ## Les deux méthodes de connexion (choisir dans cet ordre)
 
 | Méthode | Quand | Auth réelle | Ce que le plugin voit | Où ça vit |

@@ -4,6 +4,16 @@ Les critères d'acceptation par artefact, le catalogue de cas limites, et les mo
 
 ---
 
+## Sommaire
+
+- Definition-of-Done — `DESIGN.md` (source de vérité)
+- Definition-of-Done — `design/mockups/`
+- Definition-of-Done — `design/brand-assets/` (si généré)
+- Definition-of-Done — Clôture d'étape
+- Catalogue de cas limites (condition → traitement)
+- Modes d'échec (et comment les gérer)
+- Diagramme — la porte de sortie de l'étape 8
+
 ## Definition-of-Done — `DESIGN.md` (source de vérité)
 - [ ] Toutes les sections du template remplies (aucun `<...>` restant).
 - [ ] **Product context** hérité de `idea-brief` (ce que c'est, pour qui, type).

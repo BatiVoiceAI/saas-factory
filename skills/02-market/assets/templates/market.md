@@ -13,6 +13,18 @@
   étape 4), jamais souhaitée. Si un concurrent est meilleur sur un point, le dire (anti-cheerleading).
 -->
 
+## Sommaire
+
+- Synthèse marché (5 phrases max)
+- Dossiers concurrents détaillés
+- Prix — table palier-par-palier
+- Carte de langage (verbatims sourcés)
+- Taille servable & dynamique
+- Matrice comparative
+- Ouvertures observées
+- Fiabilité & confiance
+- Red flags / Yellow flags
+
 ## Synthèse marché (5 phrases max)
 <!-- Écrit EN DERNIER, lu en premier. Concentration (fragmenté / en consolidation / dominé) + dynamique + les 1-2 ouvertures les plus nettes. C'est ce que l'étape 5 relira en priorité. Pas de jargon inutile. -->
 {Concentration + dynamique + ouvertures dominantes, en clair.}

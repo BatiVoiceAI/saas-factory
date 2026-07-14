@@ -4,6 +4,17 @@ L'étape 5 **est** la porte de sortie de la Phase 1 — la seule barrière avant
 
 > 🚨 **Nombre d'issues selon la route.** Cette procédure décrit la porte à **4 issues** de la route **`public`** (avec **Go-test**). Sur les **routes allégées (`interne`/`perso`) et l'archétype `automation`**, la porte n'a que **3 issues — Go / Ajuster / No-Go**, **sans Go-test** (pas de marché à sonder par landing+waitlist — `go-test-playbook.md` : « un outil interne/perso ne se waitlist pas » ; recette forcing + porte de ces routes : `references/lite-mode.md`). La machine à états et le routage du « Ajuster » ci-dessous s'appliquent aux deux ; seule la branche **Go-test** est **publique-only**.
 
+## Sommaire
+
+- Machine à états de la porte
+- Recette forcing — poser la porte (`AskUserQuestion`)
+- Matrice de routage du « Ajuster » — vers l'étape qui a produit le maillon faible
+- Issue « Go-test » — le pont proxy → réel
+- Procédure — `research/post-mortem.md` (si No-Go)
+- Clôture de l'état (étape 6) — `.saas-factory/state.md`
+- Definition of Done — porte & clôture
+- Modes d'échec de la porte
+
 ## Machine à états de la porte
 
 ```

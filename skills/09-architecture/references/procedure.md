@@ -2,6 +2,14 @@
 
 La conduite exacte du cadrage technique, mouvement par mouvement. Le SKILL.md donne l'aperçu ; ici la sous-procédure exhaustive de chaque cran : **quoi faire · dans quel ordre · critère de passage avant de monter d'un cran**. Rien n'est improvisé — la Phase 3 est **100 % autonome** (aucune porte utilisateur), donc le déterminisme de cette machine remplace le jugement humain.
 
+## Sommaire
+
+- Invariant
+- Machine à états
+- Sous-procédures (par cran)
+- Data-flow (ce que l'architecture alimente en aval)
+- Règles opérationnelles (rappel)
+
 ## Invariant
 Le cadrage a un **cran courant**. Il ne **monte** d'un cran qu'une fois le **critère de passage** atteint. Il peut **retomber** : si un mouvement révèle un trou dans un artefact amont, on **redescend** (jusqu'au renvoi Phase 2 si c'est le PRD qui est cassé). Un choix technique sans exigence traçable = un choix orphelin : on le supprime ou on le justifie par un ADR (jamais « au feeling »). Règle d'or transverse : **défaut sauf exigence contraire** (`_shared/stack-defaults.md`).
 

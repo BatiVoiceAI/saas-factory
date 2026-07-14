@@ -1,5 +1,14 @@
 # Référence — Re-dispatch + porte (étapes 5-6) — notre IP
 
+## Sommaire
+
+- Re-dispatch avec budget (étape 5)
+- La porte produit — ship / itérer / stop (étape 6)
+- Machine à états de l'étape 15 (vue d'ensemble)
+- Definition of Done (étapes 5-6)
+- Modes d'échec + parade
+- Principe (le gate produit, pas code-review)
+
 ## Re-dispatch avec budget (étape 5)
 Les tâches `ready-for-agent` repartent dans le build : **étape 12** (dev) → **13** (cascade) → **14** (faux-client), puis re-présentation à l'humain. Le tout dans le **budget d'itération** (`_shared/validation-cascade.md`) : un plafond de tours de revue client + un critère de sortie. Budget épuisé → on présente l'état + le bouton **« ship en l'état »**.
 

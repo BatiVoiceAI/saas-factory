@@ -2,6 +2,17 @@
 
 Le mécanisme qui rend SaaS Factory **meilleur à chaque cycle**. Chaque projet dépose des leçons ; les leçons **transverses** deviennent des règles lues par *tous* les skills au démarrage. Sans cette étape, chaque projet repart de zéro et répète les mêmes erreurs. C'est ici que la méthode capitalise.
 
+## Sommaire
+
+- Les deux niveaux de mémoire
+- Schéma de la ligne `learnings.jsonl` (append-only)
+- Barème de confiance (1-10) — comment noter
+- Matrice de décision — transverse ou pas ?
+- Procédure de remontée dans `~/.saas-factory/lessons-learned.md` (leçon transverse, confiance ≥ 5)
+- Micro-exemples (niche-agnostiques)
+- Checklist definition-of-done (mémoire)
+- Modes d'échec (mémoire) + parade
+
 ## Les deux niveaux de mémoire
 
 ```

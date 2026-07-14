@@ -2,6 +2,23 @@
 
 Procédure exhaustive de l'étape 7. Tu **exécutes** le moteur vendoré `startup-design` (Phase 6 « Product », `references/frameworks.md`) et tu **rediriges ses sorties** vers nos chemins `product/`. Ta surcouche PM = la **profondeur** : un PRD stratégique complet + des fiches feature **profondes** (flow, états, règles métier, boucles fermées, critères testables, volet technique). Ce fichier orchestre les 6 étapes ; la profondeur de chaque étape vit dans sa référence dédiée.
 
+## Sommaire
+
+- Qualité avant vitesse (directive fondatrice)
+- Le principe qui gouverne tout : traduire, pas réinventer
+- Fusion §5 — un PRD, pas cinq fichiers qui se recopient
+- Data-flow : d'où vient le PRD, où il va
+- Ordre canonique (ne pas dévier)
+- Étape 1 — Reprendre le besoin + le contexte
+- Étape 2 — Lister toutes les features
+- Étape 3 — Prioriser (MoSCoW + RICE) → `references/prioritization.md`
+- Étape 4 — Boucles fermées → `_shared/boucles-fermees.md`
+- Étape 5 — Fiches feature profondes → `references/feature-spec-depth.md`
+- Étape 6 — Dépendances + build order → `references/dependencies-build-order.md`
+- Amorce du gate pricing ↔ features livrées (P0.7 — pour 06/12/15)
+- Checklist Definition-of-Done (PRD complet)
+- Modes d'échec (et comment les gérer)
+
 ## Qualité avant vitesse (directive fondatrice)
 Les Phases 1-2 étaient « trop light ». Ici on ne cherche **pas la rapidité mais la qualité** : un vrai PM produit des descriptions produit, fonctionnelles **et** techniques, riches et actionnables. La profondeur exigée n'est **pas** du poids mort — le poids mort, ce sont les **doublons structurels** (qu'on fusionne, §5). Le HARD GATE **échoue** si une feature **Must** n'a pas **flow + états + critères + volet technique** (`feature-spec-depth.md`).
 

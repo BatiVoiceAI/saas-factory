@@ -2,6 +2,21 @@
 
 Le **cœur de valeur** : transformer le langage utilisateur en **items actionnables**. C'est le pont entre le ressenti (étape 3, ses mots) et le build (étape 5, des tâches). L'agent `client-liaison` tourne en **contexte isolé** et produit `client-review-tasks.md` (template `assets/templates/client-review-tasks.md`).
 
+## Sommaire
+
+- Objectif de passage
+- Procédure (agent `client-liaison`)
+- Arbre de classification (dans cet ordre — le premier qui matche gagne)
+- Matrice de décision — classe → route → action
+- Recette forcing-question — trancher bug vs UX vs expansion
+- Anatomie d'une tâche (format `AGENT-BRIEF`, via `write-spec`)
+- Garde-fous
+- Definition of Done (étape 4)
+- Data-flow
+- Modes d'échec + parade
+- Micro-exemple (niche-agnostique)
+- Principe
+
 ## Objectif de passage
 Chaque morceau de feedback réel est **classé** (bug / UX / expansion / non-problème) et **routé** (`ready-for-agent` / `ready-for-human` / `parked`), avec pour chaque item corrigeable une **tâche** exécutable (quoi / où / critère de « corrigé »). Critère de sortie : **rien d'inventé**, **rien de glissé en douce**, et chaque tâche se rattache à une **citation** du feedback.
 

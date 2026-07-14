@@ -8,6 +8,12 @@ Chaque cran clone le **gabarit superpowers** (`requesting-code-review/code-revie
 
 ---
 
+## Sommaire
+
+- Ordre de lecture commun (avant tout cran)
+- Récap — qui juge quoi (anti-recouvrement)
+- Modes d'échec transverses (tous crans)
+
 ## Ordre de lecture commun (avant tout cran)
 1. `status/<feature>.md` — état dev, tests, recette, cran atteint, `[SÉCU]` éventuels.
 2. Le **diff** de la feature (`feature/<slug>`) — la matière à juger.

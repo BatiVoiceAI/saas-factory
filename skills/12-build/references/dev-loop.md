@@ -2,6 +2,21 @@
 
 Ce que fait **chaque dev-agent** sur sa feature, jusqu'à satisfaction.
 
+## Sommaire
+
+- La boucle
+- Sortie du dev-loop
+- Budget
+- Machine à états du dev-loop
+- Critères de passage (condition → autorisé à avancer)
+- Matrice de décision — pendant la boucle
+- Gate de compilation (le tsc strict n'est pas optionnel)
+- Recette — recette de forcing-question (comment trancher « c'est bon ? »)
+- Definition-of-Done (checklist dev-loop, avant COMMIT)
+- Catalogue de cas limites (à balayer, niche-agnostique)
+- Modes d'échec du dev-loop (et parade)
+- Micro-exemple (niche-agnostique)
+
 ## La boucle
 1. **Test technique d'abord (TDD)** — écris le test qui échoue (`test-driven-development`, Iron Law : *NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST*). Regarde-le échouer pour la **bonne** raison.
 2. **Implémente** le minimum pour passer au vert (YAGNI, pas de sur-ingénierie).

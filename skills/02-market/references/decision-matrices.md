@@ -4,6 +4,16 @@ Toutes les décisions tranchées de l'étape 2, sous forme **condition → actio
 
 ---
 
+## Sommaire
+
+- §Routage — que fait-on selon le `type` du brief
+- §Profondeur — calibrer le tier de recherche
+- §Inclusion d'un concurrent — direct, adjacent, ou hors-scope
+- §Détection du whitespace tarifaire
+- §Faiblesse → ouverture (le filtre anti-invention)
+- §Contradiction entre sources — laquelle croire
+- §Découpage inter-étapes — ce qui sort du moteur mais N'EST PAS notre livrable
+
 ## §Routage — que fait-on selon le `type` du brief
 
 | `type` (idea-brief) | Étape 2 (marché) | Action |
