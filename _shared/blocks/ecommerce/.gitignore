@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Secrets — jamais commités (la config vit dans l'environnement, cf. src/config.ts).
+.env
+.env.local

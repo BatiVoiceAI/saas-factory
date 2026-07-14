@@ -1,0 +1,23 @@
+{
+  // ── Châssis ECOMMERCE — ESM TypeScript strict, vérifiable par `tsc --noEmit` ──
+  // NodeNext (module + résolution) : Node 20+ en ESM natif. Conséquence directe :
+  // les imports RELATIFS portent l'extension `.js` (ex. `./config.js`) même si la
+  // source est `.ts` — c'est la sémantique NodeNext, pas une coquille.
+  // Aucune compilation Next.js ici : ce châssis est la LOGIQUE commerce + le SQL,
+  // testable sans réseau. La vitrine/admin/webhook Next se dérivent du socle web-saas.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

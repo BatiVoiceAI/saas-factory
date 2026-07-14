@@ -12,8 +12,9 @@
  * `19-retro` = 0 occurrence de « automation » → worker headless mal jugé/mesuré.
  * Depuis la demande #2 (ecommerce first-class), le même check vaut pour
  * « ecommerce » : chaque skill critique doit AUSSI le traiter (parité archétype).
- * Le châssis `_shared/blocks/ecommerce/` est encore « à bâtir » → PAS de check
- * châssis ecommerce ici tant qu'il n'existe pas (l'ajouter le ferait échouer à tort).
+ * Le châssis `_shared/blocks/ecommerce/` est désormais LIVRÉ (logique commerce
+ * dependency-light + pièges P1/P2/P3 testés + verify:machine 5 lints) → il est
+ * vérifié comme web-saas et automation.
  *
  * Zéro dépendance (fs + regex). Exit 0 si couverture complète, 1 sinon.
  * Usage : `node scripts/audit-archetype-coverage.mjs` (à lancer à chaque vague, G6).
@@ -96,8 +97,8 @@ checks.push({
   detail: hasCaptureGate ? "gate capture() présent" : "gate capture()/« boucle de mesure » absent (régression Chantier A)",
 });
 
-// 3) Les deux châssis vivants existent (web-saas + automation).
-for (const block of ["web-saas", "automation"]) {
+// 3) Les châssis vivants existent (web-saas + automation + ecommerce).
+for (const block of ["web-saas", "automation", "ecommerce"]) {
   let exists = false;
   try {
     exists = statSync(join(ROOT, "_shared", "blocks", block)).isDirectory();

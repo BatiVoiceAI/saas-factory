@@ -40,6 +40,7 @@ run "couverture archétype (12/13/14/18/19)" "node '$ROOT/scripts/audit-archetyp
 echo "── Planchers des châssis (verify:machine) ──────────────"
 run "châssis web-saas (5 lints)"        "cd '$ROOT/_shared/blocks/web-saas' && npm run --silent verify:machine"
 run "châssis automation (2 lints)"      "cd '$ROOT/_shared/blocks/automation' && node scripts/verify-machine.mjs"
+run "châssis ecommerce (5 lints)"       "cd '$ROOT/_shared/blocks/ecommerce' && node scripts/verify-machine.mjs"
 
 echo
 echo "═══════════════════════════════════════════════════════"
