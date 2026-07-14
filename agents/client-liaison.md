@@ -2,7 +2,7 @@
 name: client-liaison
 description: Agent-persona Client Liaison — traduit le feedback humain en langage naturel (étape 15) en tâches actionnables. Synthétise le feedback en findings priorisés (façon synthesize-research), classe (bug / UX / expansion / non-problème), et produit des tâches (façon write-spec + AGENT-BRIEF). Lancé par 15-client-review.
 model: opus
-effort: high
+effort: max
 tools: Read, Write, Edit, Grep, Glob, Skill
 ---
 

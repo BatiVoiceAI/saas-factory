@@ -2,7 +2,7 @@
 name: provisioner-email
 description: Sous-agent de provisioning — responsable du DOMAINE D'ENVOI GÉNÉRIQUE de l'usine (un seul, réutilisé par TOUS les projets). Vérifie une fois chez Resend LE DOMAINE DE L'ADRESSE `email_from` (choisie à infra-setup — apex ou sous-domaine ; invariant : domaine From = domaine vérifié), records DNS publiés via Cloudflare, puis expose les creds SMTP + EMAIL_FROM aux autres provisioners. Resend gratuit = 1 seul domaine → changer d'adresse = REMPLACER le domaine, jamais empiler. Provider-only (Resend/Postmark) — pas de branche self-host. Idempotent. Lancé en parallèle par 11-project-setup.
 model: opus
-effort: high
+effort: max
 # tools: volontairement ABSENT (hérite tout) — les outils MCP (Cloudflare, etc.) sont
 # routés par config.json ; une whitelist statique casserait le routage managed/self-host.
 ---

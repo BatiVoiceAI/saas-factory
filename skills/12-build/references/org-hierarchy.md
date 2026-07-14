@@ -17,8 +17,9 @@ Vendoré (MIT, auto-contenu — LICENSE + PROVENANCE conservés). **Chaque moteu
 - `writing-plans/SKILL.md` (+ `plan-document-reviewer-prompt.md`) — utilisé en amont (étape 10, plan d'exécution).
 > Discipline : la **notice MIT** (Jesse Vincent) reste dans `vendor/superpowers/`. Re-sync = décision explicite (jamais automatique).
 
-## Sélection de modèle — Opus par défaut (mode qualité maximale)
-**Modèle de base du plugin = Opus 4.8** (directive fondateur : **qualité > coût/vitesse** — cf. `skills/saas-factory/SKILL.md` §Cap qualité). **Tout** dispatch de sous-agent tourne sur **Opus** : chaque `agents/*.md` porte `model: opus`. On ne descend **jamais** en gamme « pour le coût » ni « pour aller plus vite ». Un modèle inférieur ne s'envisage que sur un geste **purement mécanique** **ET** **explicitement décidé** au cas par cas — **jamais le défaut**. **Toujours nommer le modèle** en dispatchant un sous-agent : on veut Opus de façon **déterministe**, pas par héritage accidentel du modèle de session.
+## Sélection de modèle & effort — Opus 4.8 · effort MAX partout (mode qualité maximale)
+**Modèle de base du plugin = Opus 4.8, effort `max`** (directive fondateur : **qualité > coût/vitesse** — cf. `skills/saas-factory/SKILL.md` §Cap qualité). **Tout** dispatch de sous-agent tourne sur **Opus 4.8 à `effort: max`** : chaque `agents/*.md` porte `model: opus` **+ `effort: max`** (déterministe, jamais par héritage accidentel de la session). On ne descend **jamais** en gamme ni en effort « pour le coût » ni « pour aller plus vite » — un modèle/effort inférieur ne s'envisage que sur un geste **purement mécanique** **ET** **explicitement décidé** au cas par cas, jamais le défaut.
+- **Phases de code (build) = ULTRACODE.** L'étape 12 ne se contente pas d'un agent à effort max : elle tourne le **pattern ultracode** — **fan-out multi-agents** (1 feature = 1 worktree = 1 dev-agent, en parallèle) + **cascade adversariale** (13 : Tech Lead → CTO → Designer → CEO, veto + preuve citée) + **plancher machine mécanique** (hook `machine-gate` sur `SubagentStop`). C'est la puissance maximale appliquée au code : plusieurs cerveaux Opus max qui construisent et se vérifient mutuellement, pas un seul.
 
 ---
 

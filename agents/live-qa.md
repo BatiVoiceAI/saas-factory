@@ -2,7 +2,7 @@
 name: live-qa
 description: Sous-agent « recette live AUTHENTIFIÉE » — après le cutover (étape 17), FRANCHIT réellement l'auth sur la prod (session user-scopée : OTP complété via boîte sandbox, ou session forgée via l'Admin API Supabase) puis EXÉCUTE chaque action de valeur RLS-protégée de CHAQUE rôle sur le VRAI site (2xx + ligne sous le bon tenant + notification `sent` immédiate + refus cross-tenant prouvé), multi-rôles dès qu'il y a contrepartie, classe les échecs, et alimente la boucle de correction fix→redeploy→re-test jusqu'à un produit réellement fonctionnel. Lancé par 17-deploy après le health check canary.
 model: opus
-effort: high
+effort: max
 tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch, Skill
 ---
 
