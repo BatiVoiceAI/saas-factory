@@ -2,6 +2,15 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.11.0] — 2026-07-14
+### Ajouté — Campagne « plugin killer », Thème 1 : la MACHINE DE GUERRE (primitives Claude Code)
+> Audit (prisme `docs/RAPPORT-PLUGIN-CLAUDE-CODE.md`, doc officielle) : le plugin avait la méthode (skills), la flotte (14 agents) et avait **codé les pièces mécaniques** (`verify:machine`, healthcheck, run_log) — mais il les **actionnait en prose**, jamais via les primitives qui les *enforce*. Débranché. Ce thème les branche.
+- **Portes MÉCANIQUES (3 hooks, 108 cas de test)** : `mcp-guard.sh` (`PreToolUse` matcher `mcp__.*`) referme l'angle mort destructif MCP que le plugin documentait lui-même (DROP/TRUNCATE/DELETE-sans-WHERE + outils delete/destroy/remove distants → `ask`) — **21/21** ; `machine-gate.sh` (`SubagentStop` matcher `feature-dev`) rend **mécanique le plancher machine** (`lessons #18`) : `verify:machine` rouge à la fin d'une lane → `{"decision":"block"}`, le feature-dev corrige avant que son DEV-DONE ne remonte la cascade 13 — **fail-open partout**, **7/7** ; `safety-guard` (Bash) toujours **80/80**.
+- **Flotte configurée** : les 14 agents passent en `effort: high` déterministe (cohérent « Opus partout / qualité max »). *(Différés avec raison : `maxTurns`, `isolation:worktree`, `disallowedTools`.)*
+- **Intelligence de code** : `.lsp.json` (serveur de langage TypeScript, `npx --no-install`, fail-safe) + `typescript-language-server` en devDep du châssis → diagnostics compilateur temps réel pour les agents de build (à confirmer en run réel).
+- **Eval harness** (`evals/`) : `run.sh` agrège en 1 commande toutes les vérifs mécaniques (**6/6 vert**, = check de vague G6 dans `CONTRIBUTING.md`) ; `scenarios/*.json` = rubriques comportement (12/13/14) au format officiel, dérivées des tables « modes d'échec ».
+- Garde-fous tenus : contrat d'I/O officiel des hooks **vérifié avant de coder** ; tout ce qui risquait un faux-blocage (`Stop` global, `maxTurns`, `isolation:worktree`, `disallowedTools`) **différé avec sa raison**. Suivi : `docs/CAMPAGNE-PLUGIN-KILLER.md`.
+
 ## [0.10.0] — 2026-07-13
 ### Ajouté — Chantier D : gouvernance & anti-dérive (capacité durable)
 > Trou d'audit : CHANGELOG/tags désynchronisés (0.4.4→0.7.1 non tracés — réconciliés par le commit baseline), un faux « done », et **aucun garde-fou empêchant la dérive** (l'asymétrie d'archétype des Chantiers A/B avait justement dérivé en silence).
