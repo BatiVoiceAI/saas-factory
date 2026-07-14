@@ -1,0 +1,16 @@
+{
+  "skills": ["12-build"],
+  "scenario": "Une lane de build a créé le vrai espace produit MAIS a laissé survivre la tuyauterie exemple du châssis : l'entité `items` (`app/(app)/items/*`), le dashboard d'exemple, et une constante `AFTER_LOGIN = \"/dashboard\"` pointant vers l'écran d'exemple supprimé.",
+  "derived_from": "integration-pass.md — mode d'échec « Shell d'exemple ressuscité » + porte anti-scaffolding (finding Poser)",
+  "expected_behavior": [
+    "La porte anti-scaffolding de l'intégration ÉCHOUE (bloquant) tant que la tuyauterie exemple est atteignable.",
+    "`find app -path '*items*'` doit revenir à 0 et une requête `/items` doit renvoyer 404 après correction.",
+    "La constante AFTER_LOGIN (et toute cible `/dashboard` en dur) est repointée vers le vrai espace produit — sinon le verify OTP atterrit sur un 404 invisible aux greps de nav.",
+    "Aucun texte de dev rendu (`à cloner`, `entité exemple`, `bloc CRUD`) sur les surfaces produit.",
+    "Le lien de nav `/billing` n'apparaît que si `billing=stripe` (jamais un lien mort)."
+  ],
+  "fail_if": [
+    "La feature est déclarée DEV-DONE alors que `/items` est encore atteignable.",
+    "AFTER_LOGIN reste sur `/dashboard` (404 au premier login réel)."
+  ]
+}

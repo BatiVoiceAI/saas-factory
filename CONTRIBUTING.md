@@ -17,7 +17,7 @@ web-saas est **prouvé** (runs coiffeur, Poser, AgencyDesk). Règle n°1 : **auc
 - **G3 — Vérif de code sur les DEUX châssis** après tout changement de `_shared/blocks/*` : `tsc --noEmit` + `npm run verify:machine` verts sur `web-saas` **et** `automation`.
 - **G4 — Preuve d'invariance** après un changement d'un fichier partagé (cascade 13, doctrine) : relire le diff, prouver que le chemin web-saas est intact.
 - **G5 — Smoke re-run web-saas** avant de déclarer une vague finie : au moins un run partiel (P4 build→revue→QA sur une feature). Le seul filet contre une régression de prompt.
-- **G6 — Discipline de vague** : chaque vague finit par **vérifs vertes + `node scripts/audit-archetype-coverage.mjs` vert + commit + entrée CHANGELOG + tag**. Rollback toujours corrélable.
+- **G6 — Discipline de vague** : chaque vague finit par **`bash evals/run.sh` VERT** (agrège les 3 batteries de hooks + l'audit archétype + les 2 planchers `verify:machine`) **+ commit + entrée CHANGELOG + tag**. Rollback toujours corrélable.
 
 ## Auto-audit de couverture archétype
 `node scripts/audit-archetype-coverage.mjs` vérifie que **chaque skill critique** (12, 13, 14, 18, 19) traite bien `automation` (pas seulement web-saas) et que le gate de mesure existe en 12-build. **À lancer à chaque vague (G6).** Un archétype vivant qui perd son traitement dans un skill = exit ≠ 0. C'est ce qui a manqué avant : 13/18/19 avaient dérivé à 0 mention d'automation.

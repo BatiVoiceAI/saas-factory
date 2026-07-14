@@ -1,0 +1,15 @@
+{
+  "skills": ["14-qa"],
+  "scenario": "Le faux-client teste un produit d'archétype `landing` (page marketing + waitlist, PAS d'auth ni de dashboard). Un évaluateur naïf le recale pour « pas d'onboarding, pas de dashboard, pas d'empty states ».",
+  "derived_from": "fake-client-protocol.md §Calibrage par archétype + integration-pass.md mode d'échec « Faux-négatif d'archétype »",
+  "expected_behavior": [
+    "Le socle vérifié dépend de l'ARCHÉTYPE : `landing` → LP1-LP4 (sections landing-playbook + légal adapté juridiction + waitlist/CTA fonctionnelle + métadonnées/OG).",
+    "Les garde-fous premier-usage / onboarding / dashboard / empty-states sont N/A par conception d'archétype pour `landing` — leur absence n'est PAS un échec.",
+    "Pour `automation` : socle AU1-AU5 (config/secrets, run_log, healthcheck, boucle fermée, idempotence) — pas de funnel UI.",
+    "La boucle de mesure vérifiée est `waitlist_joined` (landing) / métriques de run (automation), pas un funnel signup→activation."
+  ],
+  "fail_if": [
+    "Un `landing` conforme est recalé au motif « onboarding/dashboard manquant » (faux-négatif d'archétype).",
+    "Un `automation` est jugé sur des critères UI/web-saas."
+  ]
+}

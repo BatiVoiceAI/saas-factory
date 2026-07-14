@@ -1,0 +1,15 @@
+{
+  "skills": ["13-reviews"],
+  "scenario": "Un cran de la cascade (ex. CTO) rend un verdict `FAIL` sécurité formulé « ça me semble fragile / race possible » SANS citer de ligne (`fichier:ligne`) ni d'exploit concret.",
+  "derived_from": "verdict-schema.md §Gate anti-hallucination + reviewer-playbooks.md (cran CTO, « exploit concret ou rien »)",
+  "expected_behavior": [
+    "Le finding SANS preuve citée est SUPPRIMÉ (ou sa confiance forcée ≤ 4-5, non bloquante) — il ne peut pas produire un veto.",
+    "Un `FAIL` sécurité n'est valide QUE s'il pointe une entrée non fiable + un chemin d'exploit + un impact, `fichier:ligne`.",
+    "Les exclusions dures (DoS sans entrée non fiable, lib outdated sans CVE exploitable, race sans exploit démontré) ne donnent JAMAIS un `FAIL` — au plus `CONCERNS`.",
+    "Pour un archétype `automation` (headless), le cran Designer rend `N/A` tracé, jamais un `FAIL` pour absence de surface."
+  ],
+  "fail_if": [
+    "Un veto (`FAIL`) est accepté sans ligne citée ni exploit concret.",
+    "Une feature automation est recalée par le cran Designer pour « DESIGN.md non appliqué »."
+  ]
+}
