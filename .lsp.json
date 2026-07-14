@@ -1,0 +1,17 @@
+{
+  "typescript": {
+    "command": "npx",
+    "args": ["--no-install", "typescript-language-server", "--stdio"],
+    "extensionToLanguage": {
+      ".ts": "typescript",
+      ".tsx": "typescriptreact",
+      ".mts": "typescript",
+      ".cts": "typescript",
+      ".js": "javascript",
+      ".jsx": "javascriptreact",
+      ".mjs": "javascript",
+      ".cjs": "javascript"
+    },
+    "diagnostics": true
+  }
+}
