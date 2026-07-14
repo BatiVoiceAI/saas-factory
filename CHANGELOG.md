@@ -2,6 +2,12 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.13.0] — 2026-07-14
+### Ajouté — Campagne « plugin killer », Thème 3 : autonomie & accessibilité (clôt la campagne)
+- **T3.1 — plafond DUR de 7 prompts à l'intake** (exigence fondateur « 0-7 questions, jamais plus », qui n'était pas encodée) : `01-discover` SKILL (5ᵉ règle des questions) + `interview-procedure.md` (conduite transverse) — le budget de 7 couvre TOUT (contenu + reformulation + archétype/tenancy/locale + KILL + confirmation) ; déduire le dérivable en silence ; à 7 atteint, arrêter et déduire.
+- **T3.2 — rendu document accessible** (exigence fondateur « tout livrable consultable par un non-tech ») : `scripts/render-report.mjs` = renderer markdown→HTML **autonome, stylé, zéro-dépendance, prêt à Imprimer → Enregistrer en PDF** (titres/tables/listes/citations/gras/code/liens ; thèmes clair+sombre ; styles d'impression). Câblé à la **porte 05** (rend + présente `opportunity-brief.html` avant la décision Go/Ajuster/Go-test/No-Go) et à la **porte 07** (rend + présente `product-spec.html` avant la validation des fonctionnalités). Réutilisable pour tout rapport.
+> **Campagne « plugin killer » bouclée** (v0.11 → v0.13) : machine de guerre (hooks mécaniques + LSP + évals + effort MAX/ultracode) · hygiène des skills (ToC + one-level vérifié) · autonomie & accessibilité (cap intake + documents rendus). Le plugin est passé de « la doctrine dit » à « le harnais impose », dans le respect des best-practices officielles.
+
 ## [0.12.0] — 2026-07-14
 ### Changé — effort MAX partout · doctrine ultracode · Thème 2 (hygiène des références)
 - **Directive fondateur** : les 14 agents passent de `effort: high` à **`effort: max`** (Opus 4.8, déterministe). Doctrine gravée (`org-hierarchy.md`) : effort MAX partout ; les **phases de code = ULTRACODE** (fan-out multi-agents 1 feature=1 worktree=1 agent + cascade adversariale 13 + plancher mécanique `machine-gate`).
