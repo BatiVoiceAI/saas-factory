@@ -6,7 +6,7 @@ Le routage n'est plus piloté par le seul `type`. Depuis l'audit v0.4.4 (thème 
 2. **`type`** — le modèle d'**ACCÈS/commercial** (`public` | `interne` | `perso`), **orthogonal** à l'archétype → décide la **cérémonie marché & publication** ;
 3. **`tenancy`** (web-saas seulement) — `single` (défaut) | `multi-org` → décide l'activation du **substrat org**.
 
-Les 6 livrables de la vision se dérivent de ce triplet : SaaS public = web-saas+public+single ; outil interne = web-saas+interne ; perso = web-saas+perso ; **landing seule = landing (+public)** ; **automatisation = automation (+interne le plus souvent)** ; **SaaS B2B multi-entreprise = web-saas+public+multi-org**.
+Les 6 livrables de la vision se dérivent de ce triplet : SaaS public = web-saas+public+single ; outil interne = web-saas+interne ; perso = web-saas+perso ; **landing seule = landing (+public)** ; **automatisation = automation (+interne le plus souvent)** ; **SaaS B2B multi-entreprise = web-saas+public+multi-org**. **S'y ajoute l'archétype de PREMIÈRE CLASSE `ecommerce`** (au-delà des 6 livrables d'origine) : **site de vente (boutique) = ecommerce (+public le plus souvent)** — table de dérivation complète, ecommerce compris : `_shared/state-schema.md` §Dérivation des 6 livrables + `_shared/archetypes/ecommerce.md`.
 
 > 🚨 **Le modèle des 3 axes ET le conditionnement du socle par archétype sont définis à UN seul endroit : `_shared/state-schema.md` (SOURCE UNIQUE). Ici on ROUTE dessus — on ne redéfinit pas les axes.** Ce fichier reste **LA table canonique** « étape × (archétype × type × tenancy) » : toute autre mention du routage dans le plugin (orchestrateurs de phase, skills experts) est un **renvoi** (« route selon routing.md ») ; le seul contenu local autorisé ailleurs est le **calibrage de profondeur** d'une étape active, jamais le skip-set.
 
@@ -14,10 +14,15 @@ Les 6 livrables de la vision se dérivent de ce triplet : SaaS public = web-saas
 > - **`automation` → LIVRÉ** : le bloc `_shared/blocks/automation/` **existe** (socle **AU1-AU5** en `src/*` réels + migration + harness `node:test` + runner one-shot). Une route `automation` est **buildable aujourd'hui** ; on ne dit plus « scaffold = Thème C » pour cet archétype. Manifeste des fichiers : `_shared/blocks/automation/README.md`.
 > - **`landing` → scaffold code encore DÉFÉRÉ (Thème C)** : archétype défini au modèle, pas de bloc assemblé. Briques réelles réutilisables : landing+waitlist (`skills/05-opportunity/references/go-test-playbook.md`), composants `components/landing/*` du châssis (`_shared/blocks/web-saas/BLOCKS.md`).
 > - **substrat `multi-org` → scaffold code encore DÉFÉRÉ (Thème C)** : entité **Org** déjà modélisée en pattern par défaut (`skills/09-architecture/references/data-model.md`), mais le bloc org-tenancy assemblé n'est pas livré.
+> - **`ecommerce` → LIVRÉ (logique commerce + SQL + pièges)** : le bloc **`_shared/blocks/ecommerce/`** **existe** — logique testée `lib/pricing` (P2, recalcul serveur) · `lib/inventory` (P1, décrément atomique) · `lib/cart` / `lib/orders` · `webhook` (P3, idempotent), **migrations SQL** (schéma / RLS + RPC `fulfill_paid_order` = P1+P2+P3), `verify:machine` (5 lints) + tests `node:test` **verts**, **dependency-light** (comme `automation/`). Archétype **de PREMIÈRE CLASSE** : détection en **01**, socle **EC1-EC5** en **07**, patterns `skills/09-architecture/references/data-model.md` **§Variante ECOMMERCE**, **Stripe one-shot** (`mode:payment`, jamais abonnement), recette live = **achat de test réel**, metrics = **funnel e-commerce**. L'**UI/app** (vitrine / panier / checkout / back-office / route webhook Next) se **dérive du socle web-saas** en **remplaçant `billing` (abonnement) par le checkout one-shot** — documentée dans `_shared/blocks/ecommerce/BLOCKS.md`, **pas compilée** dans ce châssis. Manifeste : `_shared/blocks/ecommerce/BLOCKS.md` ; fiche : `_shared/archetypes/ecommerce.md`.
 >
-> Règle : là où une route dit « socle landing » / « substrat org », lire encore **archétype défini au modèle ; scaffold code = Thème C** ; pour « socle automation », lire **scaffold LIVRÉ (`_shared/blocks/automation/`)**.
+> Règle : là où une route dit « socle landing » / « substrat org », lire encore **archétype défini au modèle ; scaffold code = Thème C / à bâtir** ; pour « socle automation » **et** « socle ecommerce », lire **scaffold LIVRÉ** (`_shared/blocks/automation/`, `_shared/blocks/ecommerce/`) — pour `ecommerce`, la **logique commerce (+ SQL + pièges) est livrée** et l'**UI se dérive de web-saas**.
 >
-> 🚨 **Comportement de run sur un cas Thème C (honnêteté — NE PAS BLUFFER).** Si `archetype=landing` **ou** `tenancy=multi-org`, l'orchestrateur maître le **signale explicitement à l'utilisateur au démarrage**, il ne déroule PAS un build web-saas complet en faisant comme si c'était couvert : *« Le scaffold de code de ce cas est **différé (Thème C)** : le pipeline pose le modèle et réutilise les **briques existantes** (waitlist+landing via `go-test-playbook.md` et `components/landing/*` ; pattern Org via `data-model.md`), mais il n'y a **pas de châssis assemblé clé-en-main**, et certaines étapes amont (**02/03/05** pour un `landing`) sont calibrées web-saas — elles seront **allégées à la main**. »* Puis il propose : continuer en mode « briques + assemblage manuel », ou rester sur `web-saas`/`automation` (couverts A-à-Z). **La transparence prime** : un `landing`/`multi-org` livré à moitié DIT ce qui manque — c'est la seule entorse à « on le dit » que l'audit avait trouvée (divergence silencieuse 02/03/05), fermée ici côté honnêteté. Couverture pleine A-à-Z = `web-saas` + `automation` uniquement (choix de périmètre assumé, `CONTRIBUTING.md`).
+> 🚨 **Comportement de run — honnêteté sur le périmètre du scaffold (NE PAS BLUFFER).** Si `archetype=landing` **ou** `tenancy=multi-org` (scaffold **non assemblé**), l'orchestrateur maître le **signale explicitement à l'utilisateur au démarrage**, il ne déroule PAS un build en faisant comme si le châssis clé-en-main était couvert. Si `archetype=ecommerce`, il **signale** que la **logique commerce (+ SQL + pièges P1/P2/P3) est LIVRÉE** (`_shared/blocks/ecommerce/`) et que l'**UI se dérive du socle web-saas** — sans prétendre le contraire ni sur-vendre.
+> - **Cas `landing` / `multi-org`** : *« Le scaffold de code de ce cas est **différé (Thème C)** : le pipeline pose le modèle et réutilise les **briques existantes** (waitlist+landing via `go-test-playbook.md` et `components/landing/*` ; pattern Org via `data-model.md`), mais il n'y a **pas de châssis assemblé clé-en-main**, et certaines étapes amont (**02/03/05** pour un `landing`) sont calibrées web-saas — elles seront **allégées à la main**. »* Puis il propose : continuer en mode « briques + assemblage manuel », ou rester sur `web-saas`/`automation` (couverts A-à-Z).
+> - **Cas `ecommerce`** : *« Le **châssis `_shared/blocks/ecommerce/` est LIVRÉ et vérifié** : il fournit la **logique commerce + le SQL + les pièges P1/P2/P3** (`lib/pricing` recalcul serveur, `lib/inventory` décrément atomique, `lib/cart`/`lib/orders`, `webhook` idempotent, migrations RLS + RPC `fulfill_paid_order`, `verify:machine` + tests `node:test` **verts**). L'**UI/app** (vitrine / panier / checkout / back-office / route webhook Next) se **dérive du socle web-saas** en **remplaçant le `billing` abonnement par le checkout Stripe one-shot** — documentée dans le `BLOCKS.md` du châssis, non compilée. La détection (01), le socle EC1-EC5 (07), les patterns (09 §Variante ECOMMERCE) et les pièges P1-P3 (survente / intégrité du prix / idempotence du webhook) sont **définis et appliqués** — c'est un archétype de première classe, **PAS un web-saas déguisé**. »* Puis il propose : dérouler le build (logique livrée du châssis `ecommerce` + UI dérivée de web-saas, socle **EC1-EC5** + pièges **P1-P3** conservés et vérifiés).
+>
+> **La transparence prime** : un cas `landing`/`multi-org` au scaffold non-assemblé DIT ce qui manque — ou, pour `ecommerce`, DIT que la **logique est livrée** et que l'**UI se dérive de web-saas** ; c'est la seule entorse à « on le dit » que l'audit avait trouvée (divergence silencieuse 02/03/05), fermée ici côté honnêteté. Couverture pleine A-à-Z clé-en-main = `web-saas` + `automation` ; `ecommerce` = **logique livrée** (châssis `_shared/blocks/ecommerce/`) + **UI dérivée de web-saas** (choix de périmètre assumé, `CONTRIBUTING.md`).
 
 ## Sommaire
 
@@ -25,6 +30,7 @@ Les 6 livrables de la vision se dérivent de ce triplet : SaaS public = web-saas
 - Archétype **web-saas** (défaut) — matrice étape × type
 - Archétype **landing** — pipeline allégé (page marketing seule)
 - Archétype **automation** — pipeline headless (worker / cron / bot / intégration)
+- Archétype **ecommerce** — pipeline boutique (catalogue / panier / checkout one-shot / commandes / stock)
 - Portes actives (par archétype × type)
 - Garde-fous (à conserver tels quels + archétype)
 - Où le routage se décide, où il s'applique
@@ -35,7 +41,8 @@ Les 6 livrables de la vision se dérivent de ce triplet : SaaS public = web-saas
 1. **`archetype` D'ABORD** — choisit la **famille de pipeline** et le **socle** (07 n'est plus universel, il dépend de l'archétype) :
    - **web-saas** (défaut) → pipeline complet, socle **UI produit** (matrice type × étape ci-dessous) ;
    - **landing** → route **LANDING** (allégée, publique, **SEO conservé**, **PAS d'auth/dashboard**) ;
-   - **automation** → route **AUTOMATION** (headless, **PAS de socle UI**, **boucle fermée obligatoire**).
+   - **automation** → route **AUTOMATION** (headless, **PAS de socle UI**, **boucle fermée obligatoire**) ;
+   - **ecommerce** → route **ECOMMERCE** (boutique publique, socle **EC1-EC5** = catalogue/panier/checkout one-shot/commandes/stock, **PAS le socle UI S1-S8**, **billing = one-shot jamais abonnement**, **pièges P1-P3 non négociables**).
 2. **`type` ENSUITE** — module la cérémonie marché (02-04) et publication (17) **à l'intérieur** de l'archétype. `public` = complet ; `interne`/`perso` = allégé.
 3. **`tenancy` ENFIN** (web-saas uniquement) — `multi-org` **ajoute** le substrat org sans changer la cérémonie de son `type`.
 
@@ -147,6 +154,38 @@ Livrable = **worker / cron / bot / intégration HEADLESS**. **PAS de socle UI pr
 
 ---
 
+## Archétype **ecommerce** — pipeline boutique (catalogue / panier / checkout one-shot / commandes / stock)
+
+Livrable = **site de vente (boutique en ligne)** : catalogue de produits, panier, **paiement one-shot** (achat, PAS abonnement), commandes, stock. Le plus souvent `public`. **Auth CLIENT légère et optionnelle** : **checkout invité par défaut** (email suffit), compte client (historique de commandes) en **option** — jamais un prérequis à l'achat ; **back-office admin** (produits + commandes) au socle. Socle = **ECOMMERCE (EC1-EC5)**, **PAS** le socle UI S1-S8 web-saas. Défini au modèle (`_shared/archetypes/ecommerce.md`, `_shared/state-schema.md`), **scaffold `_shared/blocks/ecommerce/` = LIVRÉ** (logique commerce + SQL + pièges P1/P2/P3, `verify:machine` + tests `node:test` verts) → l'**UI se dérive du socle web-saas** (réutilise skeleton/ui-shell/notifications/legal ; **remplace `billing` abonnement par le checkout Stripe one-shot** ; câble la logique livrée du châssis : catalogue/panier/commandes/stock). C'est un archétype de **PREMIÈRE CLASSE**, **pas un web-saas déguisé**.
+
+| Étape | ecommerce (généralement `public`) |
+|---|---|
+| 01-discover | Exécuter (capte archétype=ecommerce en Q1) |
+| 02-market | Exécuter (boutique publique : marché / niche, comme web-saas public) |
+| 03-positioning | Exécuter (angle de marque / de boutique) |
+| 04-demand-edge | Exécuter |
+| 05-opportunity | Exécuter (complet, public) — « vaut-il la peine d'ouvrir cette boutique ? » |
+| 06-business-model | **Panier moyen / marge / coûts** (paiement one-shot) — **PAS de pricing d'abonnement** |
+| 07-product-spec | **Socle ECOMMERCE (EC1-EC5)** : catalogue, panier, checkout one-shot, commandes + **boucle fermée**, stock — **PAS** le socle UI S1-S8, **PAS** de dashboard SaaS (le back-office admin ≠ dashboard) |
+| 08-design-system | Exécuter : **archétype de structure « boutique »** (vitrine + fiche produit + panier + checkout + /merci) |
+| 09-architecture | Exécuter : patterns e-commerce (`09/data-model.md` **§Variante ECOMMERCE**) + **pièges P1-P3** (survente / prix serveur / idempotence webhook) + Stripe `mode:payment` (jamais `subscription`) |
+| 10-execution-plan | Exécuter |
+| 11-project-setup | DNS **public** + **Stripe one-shot** (checkout + webhook signing secret, **pas** d'abonnement) + email confirmations — câble la **logique livrée** du châssis `_shared/blocks/ecommerce/` + UI dérivée du socle web-saas |
+| 12-build | Gate = **socle ecommerce présent** (catalogue → panier → checkout → commandes → stock) ; cascade avec **cran sécurité RENFORCÉ sur P1-P3** ; **vitrine publique exigée** |
+| 14-qa | Parcours d'**achat de test réel** : ajout panier → checkout Stripe test → webhook → **commande créée une seule fois** (P3) → **stock décrémenté atomiquement** (P1) → **prix recalculé serveur** (P2) → email confirmation client **ET** notif marchand (EC4) |
+| 15-client-review | Persona founder / marchand |
+| 16-seo | **SEO ACTIF** (boutique publique : pages produits / catégories indexées, OG, technique verte) |
+| 17-deploy | **Deploy public + porte** + recette live = **achat de test réel bout-en-bout** (P1-P3 prouvés en prod) |
+| **17b-recette-live-auth.** | **Achat de test réel** + actions RLS-protégées (un client voit **SES** commandes, l'admin toutes ; **refus cross-client** prouvé) — checkout invité + compte optionnel |
+| 18-metrics | **Funnel e-commerce** : vue produit → ajout panier → checkout → achat ; **panier moyen**, taux de conversion, **abandon de panier** — **PAS** le funnel d'activation SaaS |
+| 19-retro | Exécuter |
+
+🚨 **P1-P3 = non négociables en ecommerce** (cf. `_shared/archetypes/ecommerce.md` §Pièges — l'équivalent de l'idempotence 2-grains d'automation) : **P1 survente / course sur le stock** (décrément **atomique** en base, jamais `SELECT stock` puis `if stock>0`), **P2 intégrité du prix** (montant **recalculé côté serveur** depuis le catalogue, **jamais** un total envoyé par le client), **P3 idempotence du webhook Stripe** (commande créée **une seule fois** malgré les redeliveries + signature vérifiée). Les trois **ne se voient pas au build** — la porte 12, la cascade **13** (**cran sécurité renforcé**) et le parcours 14 les vérifient explicitement ; **un seul non prouvé = porte fermée**. La **boucle fermée** (confirmation client + notif marchand, `_shared/boucles-fermees.md`) s'applique aussi : **aucune vente muette**.
+
+🚨 **Distinguo clé ecommerce vs web-saas** : la valeur = **vendre des produits**, pas un workflow applicatif auth+dashboard. Le billing est un **checkout one-shot** (Stripe `mode:payment`), **jamais** un abonnement ; le socle est **EC1-EC5** (catalogue/panier/commandes/stock), **jamais** le socle UI **S1-S8** ; le back-office admin **n'est PAS** un dashboard SaaS. Exiger le socle web-saas d'une boutique = **faux-négatif d'archétype**.
+
+---
+
 ## Portes actives (par archétype × type)
 
 **web-saas** — par type :
@@ -169,16 +208,18 @@ Livrable = **worker / cron / bot / intégration HEADLESS**. **PAS de socle UI pr
 
 **automation** : 🚪 Opportunité (05, lite : boucle nommée) · 🚪 Socle automation (07, dont **boucle fermée** + idempotence) · 🚪 QA run (14 : run → logs → boucle → idempotence) · 🚪 Publication (17, worker/cron, conditionnelle). **16 sautée + noindex.** **Pas** de porte landing/SEO.
 
+**ecommerce** : 🚪 Opportunité (05, public) · 🚪 PRD / socle **EC1-EC5** (07) · 🚪 Charte « boutique » (08) · 🚪 Client-review (15) · **🚪 Gate SEO (16) OUI** (boutique publique) · **🚪 QA achat de test réel (14** : panier → checkout → webhook → **commande unique** → **stock décrémenté** → **prix serveur**) · 🚪 Publication (17, deploy public complet). **Cran sécurité RENFORCÉ P1-P3 (survente / prix / idempotence) en 12/13/14 — un seul non prouvé = porte fermée.** **17b (recette live authentifiée) non contournable** dès qu'il y a RLS commandes.
+
 ## Garde-fous (à conserver tels quels + archétype)
 
-- **Socle = celui de l'ARCHÉTYPE.** La règle « existence des éléments non négociable » de `07/completeness-baseline` devient « existence des éléments **de l'archétype** » : web-saas → socle UI ; landing → socle landing ; automation → socle automation. On **n'injecte plus** le socle UI S1-S8 d'office sur un archétype landing/automation (dashboard parasite = bug corrigé par l'audit v0.4.4).
+- **Socle = celui de l'ARCHÉTYPE.** La règle « existence des éléments non négociable » de `07/completeness-baseline` devient « existence des éléments **de l'archétype** » : web-saas → socle UI ; landing → socle landing ; automation → socle automation ; **ecommerce → socle EC1-EC5** (catalogue/panier/commandes/stock). On **n'injecte plus** le socle UI S1-S8 d'office sur un archétype landing/automation/**ecommerce** (dashboard parasite = bug corrigé par l'audit v0.4.4).
 - **Étapes sautées tracées** dans `state.md` (« 02-market : sautée (route perso) », « 16-seo : sautée + noindex (archétype automation) »), jamais silencieuses.
 - **Sections « non applicable » explicites** dans les artefacts : on dit ce qui manque **par conception d'archétype**, on ne comble pas.
 - **Interdiction de fabriquer un marché manquant** : une route sans 02-04 ne « devine » pas de données marché.
 - **Défauts prudents** : archétype = **web-saas**, type = **public**, tenancy = **single**. Archétype **ou** type ambigu à l'étape 01 → ne devine pas : ce sont les questions de cadrage qui valent d'être posées franchement (elles changent tout le reste). À défaut, cérémonie complète plutôt que sauter une validation qui manquerait.
 - **Déploiement interne / landing / automation ≠ déploiement bâclé** : pré-vol, plan, apply réversible, canary restent — seules changent la **surface publique** et la **cible** (page publique / worker-cron) selon l'archétype.
 - **17b jamais sautée quand l'archétype porte auth + RLS** : « ship plus vite » ne la supprime pas (les bugs RLS/scoping/junction ne surgissent **qu'en connecté**). Un web-saas à auth n'est **jamais « livré »** sur un simple canary vert — il faut la recette live authentifiée VERTE (règle d'or 19, `_shared/lessons.md`).
-- **Scaffold : `automation` LIVRÉ ; `landing` + org = Thème C.** Le bloc `_shared/blocks/automation/` **existe** (AU1-AU5 réels + harness) → une route automation est buildable, on scaffolde depuis ce bloc. Pour `landing` et le substrat `org`, router reste valide au MODÈLE mais le code châssis est **déféré** — le signaler honnêtement, ne pas prétendre le contraire.
+- **Scaffold : `automation` + `ecommerce` LIVRÉS ; `landing` + org = à bâtir (Thème C).** Les blocs `_shared/blocks/automation/` (AU1-AU5 réels + harness) et `_shared/blocks/ecommerce/` (logique commerce + SQL + pièges P1/P2/P3, `verify:machine` + tests `node:test` verts) **existent** → une route automation **ou** ecommerce est buildable, on scaffolde depuis ces blocs. Pour `ecommerce`, la **logique** est livrée et l'**UI se dérive du socle web-saas** (remplace `billing` abonnement par le checkout one-shot ; socle **EC1-EC5** + pièges **P1-P3** définis, appliqués et vérifiés — **pas un web-saas déguisé**). Pour `landing` et le substrat `org`, router reste valide au MODÈLE mais le code châssis est **déféré** — le signaler honnêtement, ne pas prétendre le contraire.
 
 ## Où le routage se décide, où il s'applique
 
@@ -188,5 +229,5 @@ Livrable = **worker / cron / bot / intégration HEADLESS**. **PAS de socle UI pr
 ## Cas limites
 
 - **Changement de `type` en cours de route** (ex. un « perso » qu'on décide de rendre public) : **retour arrière** de cadrage → mets à jour `Type / route` dans l'état, réactive les étapes précédemment sautées (marché 02-04, SEO 16) si la phase concernée n'est pas encore passée. Si elle est passée, signale-le honnêtement (on ne rejoue pas P1 sans le dire).
-- **Changement d'`archetype`** (ex. une `landing` qu'on décide de transformer en `web-saas`, ou l'inverse) : c'est un **changement de SOCLE et de famille de pipeline** — retour arrière de cadrage **majeur**. Mets à jour `Archétype`, signale honnêtement que le pipeline change de famille (socle landing ≠ socle UI ≠ socle automation) ; ne prétends pas récupérer sans coût des étapes qui n'existaient pas dans l'archétype précédent.
+- **Changement d'`archetype`** (ex. une `landing` qu'on décide de transformer en `web-saas`, ou l'inverse ; ou un `web-saas` repositionné en boutique `ecommerce` — le `billing` abonnement devient un checkout one-shot, on ajoute catalogue/panier/stock) : c'est un **changement de SOCLE et de famille de pipeline** — retour arrière de cadrage **majeur**. Mets à jour `Archétype`, signale honnêtement que le pipeline change de famille (socle landing ≠ socle UI ≠ socle automation ≠ socle EC1-EC5 ecommerce) ; ne prétends pas récupérer sans coût des étapes qui n'existaient pas dans l'archétype précédent.
 - **Promotion `single` → `multi-org`** : active le substrat org (07/09/11) ; si 07/09 sont déjà passés, signale que le substrat org (Org, membres, invitations, switch, rôles) doit être rajouté — scaffold = Thème C.

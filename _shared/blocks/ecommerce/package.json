@@ -1,0 +1,24 @@
+{
+  "name": "@saas-factory/ecommerce-chassis",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Châssis d'archétype ECOMMERCE (boutique one-shot) — logique commerce + SQL + pièges P1/P2/P3, dependency-light (Node 20+ built-ins + zod). L'UI/app (vitrine, admin, route webhook Next) LAYER sur le châssis web-saas et est documentée dans BLOCKS.md — PAS compilée ici.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --import tsx \"test/**/*.test.ts\"",
+    "verify:machine": "node scripts/verify-machine.mjs"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0"
+  }
+}

@@ -15,9 +15,13 @@
 - Checklist landing (binaire)
 - Sources
 
-## Structure canonique
+## Structure — palette de sections + choix d'ARCHÉTYPE (plus d'ordre imposé)
 
-Ordre imposé. Chaque section répond à une objection précise.
+Le playbook **ne fige plus UNE structure** (c'était la cause de la convergence : toutes les landings avaient la même silhouette). À la place : une **palette de sections** (chacune répond à une objection) **+ un menu d'archétypes structurels** (après la table) parmi lesquels le Designer **choisit celui qui colle au métier et à la direction visuelle recherchée** (mouvement 1 de l'étape 08). **Deux métiers différents → deux structures différentes.** Ce qui ne varie **jamais** = l'**invariant minimum** ci-dessous ; ce qui **varie** = l'ordre, l'emphase et le layout du reste.
+
+**Invariant minimum (non négociable, TOUTE landing)** : **hero** qui passe le test des 5 secondes + **visuel produit RÉEL** · **CTA primaire** clair et répété (verbe spécifique au job) · **preuve sociale HONNÊTE** (ou aucune — jamais de fausse) · **pricing transparent** si le produit se vend · **footer + légal** conditionné `jurisdiction`/`locale` · **copy spécifique au métier** (zéro lorem) + tech/a11y (§Tech).
+
+### La palette de sections (blocs disponibles — PAS un ordre obligatoire)
 
 | # | Section | Rôle | Contenu type | Longueur |
 |---|---------|------|--------------|----------|
@@ -32,6 +36,20 @@ Ordre imposé. Chaque section répond à une objection précise.
 | 9 | **FAQ / objections** | dernières frictions | 3-5 questions réelles, réponses 1-2 phrases, en HTML visible (jamais image ou tab caché) + schema FAQ | 3-5 Q/R |
 | 10 | **CTA final** | conversion | rappel de la promesse + CTA primaire + CTA alternatif moins engageant (« Voir la démo ») | court, fond teinté |
 | 11 | **Footer complet** | signal produit fini + légal | 4 colonnes : logo+mission+ville / liens produit / **légal conditionné par `jurisdiction`/`locale`** (jeu de pages selon la juridiction — voir §Footer + légal) / contact (email réel) + barre © | pages légales GÉNÉRÉES, pas de liens morts |
+
+### Menu d'archétypes structurels — choisir UN (selon métier × direction visuelle)
+La structure fait partie de la **distinctiveness** (porte 08) : deux projets ne doivent pas partager la même **silhouette de page**. Choisis l'archétype dont la **forme** sert le **white space** du métier (audit visuel concurrentiel, mvt 1) — pas le défaut par réflexe.
+
+| Archétype de structure | Pour quel métier / direction | Forme (ordre & emphase) |
+|---|---|---|
+| **Conversion-dense** | SaaS/B2C direct, décision rapide, achat simple | navbar → hero → micro-preuve → problème → comment-ça-marche → features → (témoignages) → pricing → FAQ → CTA final → footer. Tout above-the-fold compte, CTA répété serré. *(≈ l'ancien « ordre canonique » — désormais UN choix parmi d'autres.)* |
+| **Éditorial / narratif long** | achat réfléchi, premium, agence, marque forte | hero-manifeste → récit du problème (typo large, asymétrie, sections de rupture) → sections story-driven → preuve sélective → CTA sobre. Moins de sections, plus longues. |
+| **Product-led / montre-ne-dis-pas** | produit visuel/outil (le produit EST le pitch) | hero avec démo ou gros visuel produit → showcase features interactif (bento / onglets / scroll orchestré) → copy minimale → CTA. |
+| **Trust local** | B2B local (salon, resto, artisan, cabinet) | hero → services (prix + durée affichés) → adresse/horaires/tél cliquables **en évidence** → preuve locale → CTA réservation. Les signaux de confiance passent en premier. |
+| **Deux faces (marketplace)** | marketplace (offre + demande) | hero centré sur la face à activer d'abord → double proposition de valeur → lien explicite vers l'autre face. |
+| **Statement / bold** | marque affirmée, positionnement audacieux | hero pleine largeur, une idée forte → peu de sections → l'idée répétée avec un vrai parti-pris visuel. |
+
+Un archétype n'est pas un carcan : on peut retirer/réordonner ses sections tant que l'**invariant minimum** tient. La **porte distinctiveness (08)** vérifie que la silhouette choisie n'est ni le défaut réflexe ni celle d'un autre projet de l'usine.
 
 Répétition du CTA : même label dans la navbar, le hero, après chaque 1-2 sections, et en final.
 

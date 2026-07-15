@@ -14,6 +14,7 @@ Le SEO et la forme du deploy dépendent d'abord de l'**archétype**, pas du seul
 |---|---|---|---|
 | web-saas + public (dont **multi-org**) | **actif** | web public + porte complète | **complète, multi-rôles + matrice cross-tenant** (au max en multi-org) |
 | web-saas + interne / perso | **sauté + noindex** | privé/preview, porte conditionnelle | interne : complète + cross-tenant · perso : preuve d'action authentifiée (cross-tenant sans objet) |
+| **ecommerce** (public — boutique) | **actif** (vitrine publique — SEO conservé) | web public + porte complète (+ cutover webhook Stripe) | **achat de test réel A→Z** : panier → checkout Stripe test → webhook → commande (P3) → stock (P1) → email ; **prix serveur (P2)** + RLS commandes ; **gate NON contournable** (un seul de P1/P2/P3 non prouvé = cutover invalidé) |
 | **landing** (public) | **actif** (landing publique — SEO conservé) | web public + porte | **sans objet** (pas d'auth) |
 | **automation** | **sauté + noindex** (headless) | **worker / cron** + porte conditionnelle | **remplacée** par la vérif de boucle fermée (14/17) |
 
@@ -33,6 +34,7 @@ Le SEO et la forme du deploy dépendent d'abord de l'**archétype**, pas du seul
    - **web-saas `public`/`interne`** → 17b **complète**, **multi-rôles** (au moins deux rôles quand ils existent) avec **matrice cross-tenant** ;
    - **web-saas `multi-org`** → 17b **au maximum** : agence vs client **ET** org A vs org B — c'est le cas où surgissent les bugs **RLS/scoping/junction** et les **parcours d'invitation injoignables** (bugs vécus AgencyDesk 2026-07 : `orgs` puis `projects` RLS, invitation client injoignable) ;
    - **web-saas `perso`** (mono-utilisateur/mono-tenant) → preuve d'**action authentifiée** conservée, **matrice cross-tenant sans objet** (un seul tenant) ;
+   - **`ecommerce`** → 17b = **achat de test réel A→Z** sur la prod (Stripe mode test) : panier → checkout → **webhook** → **commande créée une seule fois (P3)** → **stock décrémenté atomiquement (P1)** → **email confirmation client + notif marchand (EC4)**, avec **prix recalculé serveur prouvé (P2)** et **RLS commandes** (un client ne voit pas les commandes d'un autre) + back-office admin ; **un seul de P1/P2/P3 non prouvé = gate fermée, NON contournable** ;
    - **`landing`** → **sans objet** (pas d'auth) ;
    - **`automation`** → **remplacée** par la vérif de **boucle fermée** en connecté/headless déjà portée par 14/17 (run → logs → boucle → idempotence) — pas de recette d'auth utilisateur.
    17b ne se **saute jamais** quand l'archétype porte auth + RLS ; « ship plus vite » ne la supprime pas (les bugs RLS ne surgissent QU'en connecté). Détail normatif : règle d'or 19 (`_shared/lessons.md`).

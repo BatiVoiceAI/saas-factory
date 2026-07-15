@@ -66,6 +66,12 @@ Ne sur-parallélise pas : plus de lanes = plus de bugs de jonction. Regroupe les
 - **Frontières de module typiques** (à mapper en lanes disjointes) : `config`/secrets · `store` (runs + entités, service-role) · `source`/ingestion · `logique métier pure` · `boucle fermée`/notify · `dispatch RUN_MODE` (sync vs digest). Une lane par frontière réelle, comme en web-saas.
 - **L'edge (boucle fermée + idempotence) est porté au cran CEO-persona** (propriétaire de l'automatisation), pas au Designer : le fichier de statut `status/NN-<feature>.md` doit donc remonter, pour les features cœur, le **niveau cascade atteint jusqu'au CEO-persona** (et non « en attente Designer »), avec la preuve boucle fermée + idempotence (run **et** entité).
 
+## Variante ECOMMERCE — lanes design CONSERVÉES, walking skeleton = la verticale d'achat
+> **Conditionné par `archetype = ecommerce`.** **À l'inverse d'automation** (headless), ecommerce **a une UI** (vitrine · fiche produit · panier · checkout) : **toutes les lanes design/UI sont conservées** — la délégation suit le modèle **web-saas**, rien n'est dégradé. Deux spécificités :
+
+- **Le walking skeleton = la verticale d'achat cœur** : catalogue (EC1) → panier (EC2, sous-total **recalculé serveur**) → checkout one-shot (EC3, `mode:payment`) → **webhook Stripe** (source de vérité) → commande (EC4) → **décrément de stock atomique** (EC5). C'est cette tranche, de bout en bout, qui part **en premier** en séquentiel (pas un flux auth→UI générique).
+- **Frontières de module typiques** (à mapper en lanes disjointes) : `shop`/vitrine+fiche produit · `cart`/panier · `checkout`+`api/stripe/webhook` (paiement, **idempotent**) · `orders`/commandes+boucle fermée · `inventory`/stock atomique · `admin`/back-office. La lane checkout/webhook porte les **pièges durs P1/P2/P3** (survente / intégrité prix / idempotence webhook) : pour ces features, `status/NN-<feature>.md` remonte le **niveau cascade jusqu'au CTO + CEO-persona** (avec la preuve des 3 pièges), le cran **Designer restant par ailleurs complet** sur les surfaces d'achat.
+
 ## Modes d'échec (délégation)
 | Mode d'échec | Symptôme | Correctif |
 |---|---|---|

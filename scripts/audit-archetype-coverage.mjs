@@ -10,6 +10,11 @@
  *
  * Ce qu'il aurait attrapé AVANT le Chantier B : `13-reviews`, `18-metrics`,
  * `19-retro` = 0 occurrence de « automation » → worker headless mal jugé/mesuré.
+ * Depuis la demande #2 (ecommerce first-class), le même check vaut pour
+ * « ecommerce » : chaque skill critique doit AUSSI le traiter (parité archétype).
+ * Le châssis `_shared/blocks/ecommerce/` est désormais LIVRÉ (logique commerce
+ * dependency-light + pièges P1/P2/P3 testés + verify:machine 5 lints) → il est
+ * vérifié comme web-saas et automation.
  *
  * Zéro dépendance (fs + regex). Exit 0 si couverture complète, 1 sinon.
  * Usage : `node scripts/audit-archetype-coverage.mjs` (à lancer à chaque vague, G6).
@@ -72,6 +77,17 @@ for (const { skill, corpus } of corpora) {
   });
 }
 
+// 1bis) Conscience d'archétype `ecommerce` dans chaque skill critique (parité automation,
+// demande #2 : ecommerce = archétype de première classe → doit être traité partout aussi).
+for (const { skill, corpus } of corpora) {
+  const n = (corpus.match(/ecommerce/gi) || []).length;
+  checks.push({
+    label: `archétype ecommerce · ${skill}`,
+    ok: n > 0,
+    detail: n > 0 ? `${n} occurrence(s)` : "AUCUNE mention — skill non ecommerce-aware (dérive)",
+  });
+}
+
 // 2) Garde-fou de mesure (capture au call-site) présent en 12-build.
 const build = corpora.find((c) => c.skill === "12-build")?.corpus ?? "";
 const hasCaptureGate = /capture\(/.test(build) && /boucle de mesure/i.test(build);
@@ -81,8 +97,8 @@ checks.push({
   detail: hasCaptureGate ? "gate capture() présent" : "gate capture()/« boucle de mesure » absent (régression Chantier A)",
 });
 
-// 3) Les deux châssis vivants existent (web-saas + automation).
-for (const block of ["web-saas", "automation"]) {
+// 3) Les châssis vivants existent (web-saas + automation + ecommerce).
+for (const block of ["web-saas", "automation", "ecommerce"]) {
   let exists = false;
   try {
     exists = statSync(join(ROOT, "_shared", "blocks", block)).isDirectory();

@@ -12,6 +12,7 @@ L'ordre, les dépendances et le parallélisme des ressources. Chaque nœud est *
 - Routage par provider (managed vs self-host)
 - Routage par type de produit (public / interne / perso)
 - Chemin de provisioning AUTOMATION (archétype headless — worker / cron / bot / intégration)
+- Chemin de provisioning ECOMMERCE (archétype boutique — vitrine publique + paiement one-shot)
 - Chaque sous-agent reçoit (dans son prompt de délégation)
 - Reprise
 - Machine à états par ressource
@@ -156,6 +157,18 @@ En plus de la matrice web-saas ci-dessus, `archetype = automation` **remplace** 
 | cible = disque persistant (VM cron système) OU test local one-shot | fallback fichier `.automation/*.json` accepté comme défaut ; Supabase recommandé mais non bloquant |
 | endpoint webhook entrant requis (bot/intégration push) | ré-activer un chemin DNS/host **minimal** pour ce seul endpoint, logué `[SÉCU]` ; le cron reste le host principal |
 
+## Chemin de provisioning ECOMMERCE (archétype boutique — vitrine publique + paiement one-shot)
+> **Conditionné par `archetype = ecommerce`** (`.saas-factory/state.md`, source : `_shared/state-schema.md` ; canon `_shared/archetypes/ecommerce.md`). **À l'inverse d'`automation`** (qui retire l'essentiel du graphe), **ecommerce REPREND le graphe web-saas complet** — le graphe de dépendances et la machine à états ci-dessus s'appliquent **tels quels**. Une boutique est une **vraie app web publique** (`type = public` le plus souvent) : repo+CI, Supabase (**catalogue / commandes / stock** + RLS), Supabase Auth + SMTP Resend (**compte client optionnel** — le checkout invité est le défaut), email-domaine, hosting Vercel/CF + **DNS Cloudflare public** = **comme web-saas `public`**. Une **seule** ressource se spécialise : le **billing**.
+
+### Billing = Stripe en mode PAIEMENT ONE-SHOT (REQUIS, jamais un abonnement)
+Là où le billing web-saas est **optionnel** (`providers.billing` activé si le SaaS vend un abonnement), une boutique **vend des produits** : le paiement est le **cœur du livrable**, donc **requis**, et il est **one-shot**. Deux secrets Stripe à câbler (étape 6, comme le billing web-saas mais non-sautable), **connectés une seule fois via `infra-setup`** :
+- **clé API Stripe en mode PAIEMENT** — Stripe Checkout / Payment Intents en **`mode:payment`**, **JAMAIS `mode:subscription`** (c'est la différence dure avec le bloc `billing` d'abonnement de web-saas, canon §Stack) ;
+- **webhook signing secret** (`STRIPE_WEBHOOK_SECRET`) — **obligatoire** : le webhook `checkout.session.completed`/`payment_intent.succeeded` est la **source de vérité** de la commande (crée la commande + décrémente le stock, idempotent) ; sans vérification de **signature**, le webhook n'est pas fiable (pièges P2/P3 du canon). Le secret est câblé en **env host** (côté serveur uniquement — jamais exposé client, `secrets-wiring.md`).
+
+Le reste est **identique à web-saas `public`** : Supabase porte le **catalogue / commandes / stock** (RLS : **lecture catalogue publique** sur les produits publiés, un **client ne voit que SES commandes**, admin voit tout), Resend envoie les **confirmations de commande** (boucle fermée EC4 — client **ET** marchand), hosting + DNS Cloudflare exposent la **vitrine publique**. Toutes les clés viennent d'`infra-setup` ; aucune n'est stockée par le plugin.
+
+> **Aucun retrait, aucun allègement tracé.** Contrairement à automation, ecommerce ne retire **rien** du graphe web-saas et n'allège aucune ressource : il **spécialise** le seul billing (abonnement optionnel → paiement one-shot **requis** + `STRIPE_WEBHOOK_SECRET`). Il n'y a donc pas de ligne « retrait » à loguer — seulement le billing rendu **requis** au lieu d'optionnel.
+
 ## Chaque sous-agent reçoit (dans son prompt de délégation)
 - La **config globale** (providers connectés, domaine, hébergeur) **+ la branche à emprunter** (managed vs self-host, lue dans `config.json`).
 - Le **contexte projet** (nom, slug, + modèle de données pour la BDD).
@@ -236,6 +249,7 @@ Condition lue au lancement de l'étape 11 → action.
 | self-host : URL d'instance ou token absent de `.env` | **repli honnête** : ressource `FAILED`, raison précise (creds self-host manquants), guide `infra-setup` ; jamais de faux succès |
 | domaine absent de la config | sauter le sous-domaine, host sur URL par défaut du provider, `[SÉCU]` dans le log |
 | `type` = `interne` ou `perso` (idea-brief) | appliquer la matrice §« Routage par type de produit » (DNS, enrollment, email, billing) — **chaque allègement logué** dans `tech/provisioning-log.md` |
+| `archetype = ecommerce` | graphe web-saas **complet** (repo + Supabase catalogue/commandes/stock+RLS + Auth + email + hosting/DNS public) + **billing Stripe en mode PAIEMENT REQUIS** (`mode:payment` + `STRIPE_WEBHOOK_SECRET`, jamais `subscription`) — rien de retiré, seul le billing passe d'optionnel à requis (§« Chemin de provisioning ECOMMERCE ») |
 
 ## Modes d'échec de l'orchestration (≠ échec d'une ressource)
 

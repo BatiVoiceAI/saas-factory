@@ -9,6 +9,8 @@ Une feature a un **cran courant** (dev → tech-lead → cto → designer → ce
 
 > **Conditionnement par archétype (la chaîne ci-dessous est celle de `web-saas`, inchangée).** Le cran **Designer se juge sur une surface visuelle** ; pour un **`automation`** (headless, pas d'UI), il est **déclaré N/A** — verdict `N/A` tracé, **jamais un cran oublié en silence** — et l'edge (**boucle fermée + idempotence run ET entité**) est **porté par le CEO-persona**, exactement comme l'étape 10 l'a écrit dans la spec de validation de la feature (`skills/10-execution-plan/references/validation-spec.md` §Variante AUTOMATION). La chaîne automation est donc **Tech Lead → CTO → CEO-persona** (Designer = N/A). Un **`landing`** garde son cran Designer (il a des surfaces). Ne JAMAIS FAIL une feature automation pour « DESIGN.md non appliqué / pas d'empty-states / a11y » : c'est le **faux-négatif d'archétype** que ce conditionnement corrige (`_shared/state-schema.md` §socle-par-archétype).
 
+> **`ecommerce` → chaîne COMPLÈTE + cran CTO renforcé.** Une boutique a des surfaces réelles (vitrine, fiche produit, panier, checkout) : chaîne **Tech Lead → CTO → Designer → CEO-persona** au complet — Designer **jamais** N/A (l'inverse du piège automation). **Et** le cran **CTO y est renforcé** : preuve exigée des 3 pièges de `_shared/archetypes/ecommerce.md` §Pièges — **P1** décrément stock atomique, **P2** prix recalculé serveur, **P3** webhook idempotent — un seul non prouvé = `FAIL`. Le **CEO-persona** y valide en plus le **workflow d'achat** et la **boucle fermée EC4** (confirmation client + notif marchand — aucune vente muette).
+
 ## Le cycle (par feature)
 ```
 [dev-validée] → Tech Lead ─PASS→ CTO ─PASS→ Designer ─PASS→ CEO ─PASS→ ✅ VALIDÉE

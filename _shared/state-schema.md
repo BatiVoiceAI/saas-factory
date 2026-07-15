@@ -14,7 +14,7 @@ Le fichier d'état global du projet, tenu par le master et chaque phase. **Jamai
 # État — {nom du projet}
 
 ## Cadrage — 3 axes orthogonaux (🚨 champs de 1er rang · SOURCE = §Modèle à 3 axes ci-dessous)
-- **archetype** : web-saas | landing | automation   (défaut `web-saas`) — forme **TECHNIQUE** du livrable ; **conditionne le socle de complétude (07)**. ⚠️ **Couverture A-à-Z clé-en-main = `web-saas` + `automation` uniquement.** `landing` (pas de châssis assemblé) et `tenancy=multi-org` (substrat org) = **Thème C différé** : le run le **signale honnêtement** et n'en bluffe pas le build — règle de comportement dans `skills/saas-factory/references/routing.md` §Périmètre du code châssis + `CONTRIBUTING.md`.
+- **archetype** : web-saas | landing | automation | **ecommerce**   (défaut `web-saas`) — forme **TECHNIQUE** du livrable ; **conditionne le socle de complétude (07)**. **Châssis A-à-Z clé-en-main : `web-saas` + `automation`** ; **`ecommerce` = logique commerce LIVRÉE** (`_shared/blocks/ecommerce/` : SQL + RPC + pièges P1/P2/P3, `verify:machine` + tests verts) dont l'**UI se dérive du châssis web-saas** (remplace `billing` par le checkout one-shot). `landing` (assemblage de blocs du châssis web-saas) et `tenancy=multi-org` (substrat org) = châssis **différé / à assembler** : le run le **signale honnêtement** et n'en bluffe pas le build — `skills/saas-factory/references/routing.md` + `CONTRIBUTING.md`.
 - **type / route** : public | interne | perso   (modèle d'**ACCÈS/commercial**, **orthogonal** à `archetype` — décide des étapes actives, cf. `routing.md`)
 - **tenancy** : single | multi-org   (défaut `single` ; **web-saas** seulement ; `multi-org` = B2B → substrat org)
 - **Ambition** : perso/interne (court) | public (complet)
@@ -59,7 +59,7 @@ Trois axes **indépendants** cadrent tout livrable, **champs de 1er rang** de l'
 
 | Axe | Valeurs | Défaut | Ce qu'il fixe |
 |---|---|---|---|
-| **`archetype`** | `web-saas` \| `landing` \| `automation` | `web-saas` | **forme TECHNIQUE** du livrable → **conditionne le socle de complétude (07)** + le scaffold (11) |
+| **`archetype`** | `web-saas` \| `landing` \| `automation` \| `ecommerce` | `web-saas` | **forme TECHNIQUE** du livrable → **conditionne le socle de complétude (07)** + le scaffold (11) |
 | **`type`** | `public` \| `interne` \| `perso` | (capté) | modèle d'**ACCÈS/commercial** → **routage** cérémonie/étapes (`routing.md`). **ORTHOGONAL à `archetype`** : inchangé, il ne décide **plus** de la forme technique |
 | **`tenancy`** | `single` \| `multi-org` | `single` | (**web-saas** seulement) granularité du tenant. `multi-org` = **B2B vendu à N entreprises** → active le **substrat org-tenancy** |
 
@@ -81,9 +81,10 @@ Les 6 types nommés par la vision ne sont **pas** un enum : ils se **dérivent**
 | Outil / espace **perso** | `web-saas` | `perso` | `single` |
 | **Landing page seule** | `landing` | `public` (en général) | — |
 | **Automatisation** d'outils internes | `automation` | `interne` (le plus souvent) | — |
+| **Site de vente** (boutique en ligne) | `ecommerce` | `public` (en général) | — |
 | **SaaS B2B multi-entreprise** | `web-saas` | `public` | `multi-org` |
 
-(`tenancy` ne s'applique qu'à `web-saas` ; `—` = sans objet pour `landing` / `automation`.)
+(`tenancy` ne s'applique qu'à `web-saas` ; `—` = sans objet pour `landing` / `automation` / `ecommerce`.)
 
 ### 🚨 RÈGLE — le socle de complétude (07) est CONDITIONNÉ PAR ARCHÉTYPE (plus « universel »)
 
@@ -94,8 +95,9 @@ Le socle de complétude (`skills/07-product-spec/references/completeness-baselin
 | **`web-saas`** | Socle UI actuel **S1-S8** : onboarding wizard qui **crée l'entité cœur**, dashboard non-vide, empty states, profil/settings, emails transactionnels, légal (par `jurisdiction`), 404, seed, metadata/favicon | — |
 | **`landing`** | Socle **LANDING** : sections du landing-playbook (`_shared/landing-playbook.md`) + légal adapté `jurisdiction` + waitlist/CTA + métadonnées/OG | **PAS** d'onboarding wizard, **PAS** de dashboard, **PAS** d'entité cœur CRUD |
 | **`automation`** | Socle **AUTOMATION** : config/secrets, historique de runs + logs, healthcheck, **boucle fermée** (alerte/rapport au propriétaire quand un run échoue/réussit — cf. `_shared/boucles-fermees.md`), idempotence | **PAS** d'onboarding wizard UI, **PAS** de dashboard produit |
+| **`ecommerce`** | Socle **ECOMMERCE (EC1-EC5)** : catalogue produits (RLS lecture publique), panier, **checkout + paiement ONE-SHOT** (Stripe `mode:payment`, jamais abonnement), commandes + **boucle fermée** (confirmation client + notif marchand), inventaire/stock **décrément atomique**. Pièges durs : **survente/course stock · intégrité prix serveur · idempotence webhook** (`_shared/archetypes/ecommerce.md` §Pièges) | **PAS** le socle S1-S8 web-saas d'office (l'entité cœur = produit+commande, pas un CRUD générique ; le back-office admin ≠ dashboard SaaS) |
 
-Le `type` continue d'**adapter** chaque socle (canal, mode d'entrée, ton) — il ne le **choisit** pas : c'est l'`archetype` qui choisit **quel** socle. Une porte de complétude (14/17) qui exige le socle `web-saas` d'un `landing` ou d'un `automation` est un **faux-négatif** (le bug que ce modèle corrige), au même titre que « légal FR en dur ».
+Le `type` continue d'**adapter** chaque socle (canal, mode d'entrée, ton) — il ne le **choisit** pas : c'est l'`archetype` qui choisit **quel** socle. Une porte de complétude (14/17) qui exige le socle `web-saas` d'un `landing`, d'un `automation` ou d'un `ecommerce` est un **faux-négatif** (le bug que ce modèle corrige), au même titre que « légal FR en dur ».
 
 ### Périmètre — modèle & conditionnement ici ; statut réel des SCAFFOLDS
 
@@ -137,7 +139,7 @@ La **PORTE QA** (14/17) vérifie « pages légales **adaptées à la juridiction
 
 ## Règles
 - Le **master** relit ce fichier au démarrage pour **reprendre** où on en était (reprenabilité).
-- **`archetype` / `type` / `tenancy`** : 3 axes **orthogonaux**, champs de 1er rang définis en §Modèle à 3 axes ci-dessus (SOURCE UNIQUE) — captés à l'intake, invariants. `archetype` (web-saas|landing|automation) fixe la **forme technique** et **conditionne le socle de complétude (07)** ; `type` (public|interne|perso, orthogonal) route la cérémonie ; `tenancy` (single|multi-org, web-saas) active le substrat org. Les 6 livrables de la vision s'en **dérivent**. **Scaffold code : `web-saas` + `automation` LIVRÉS** (`_shared/blocks/web-saas/` et `_shared/blocks/automation/`) ; archétype `landing` + bloc org-tenancy encore = **Thème C**. Les autres surfaces (07/09/11/12/routing) y renvoient, aucune copie.
+- **`archetype` / `type` / `tenancy`** : 3 axes **orthogonaux**, champs de 1er rang définis en §Modèle à 3 axes ci-dessus (SOURCE UNIQUE) — captés à l'intake, invariants. `archetype` (web-saas|landing|automation|**ecommerce**) fixe la **forme technique** et **conditionne le socle de complétude (07)** ; `type` (public|interne|perso, orthogonal) route la cérémonie ; `tenancy` (single|multi-org, web-saas) active le substrat org. Les livrables de la vision s'en **dérivent**. **Scaffold code : `web-saas` + `automation` + `ecommerce` LIVRÉS** (`_shared/blocks/{web-saas,automation,ecommerce}/`) — pour `ecommerce`, le châssis livre la **logique commerce + le SQL + les pièges P1/P2/P3** (dependency-light, `verify:machine` 5 lints + tests `node:test` verts), et l'**UI/app** (vitrine/back-office/route webhook) se **dérive du châssis web-saas** en remplaçant `billing` par le checkout one-shot (cf. `_shared/blocks/ecommerce/BLOCKS.md`) ; archétype `landing` (assemblage) + bloc org-tenancy = **à assembler / Thème C**. Les autres surfaces (07/09/11/12/routing) y renvoient, aucune copie.
 - **`locale` / `dir` / `jurisdiction`** : champs de 1er rang définis en §Locale du livrable ci-dessus (SOURCE UNIQUE) — captés à l'intake, propagés à 08/12/14/16/17, invariants ; `locale` = langue du livrable, **distincte** du FR de travail interne. Les autres fichiers y renvoient, aucune copie.
 - **Un seul écrivain : l'orchestrateur.** `state.md` est mis à jour par le **master** ou l'**orchestrateur de phase**, jamais par les experts/sous-agents. Un sous-agent **produit son artefact** (`research/*`, `status/*`, `tech/*`…) et le **rapporte** à l'orchestrateur ; c'est l'orchestrateur qui écrit `state.md` **en sortie de chaque étape** (et à la porte). Cela évite les MAJ concurrentes ou incohérentes quand plusieurs sous-agents tournent en parallèle : l'artefact fait foi, `state.md` a un seul auteur.
 - **Aucun secret / clé** (cf. `safety-rails`). Les accès infra vivent dans `~/.saas-factory/`.
