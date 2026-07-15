@@ -30,7 +30,7 @@ Ambigu (« quelques amis testent un bout ») → retiens **pré-produit** et not
 ## §3 — Détection de l'archétype & de la tenancy (2 des 3 axes du cadrage)
 Le cadrage tient sur **3 axes orthogonaux** : **`type`** (§1), **`archetype`** (forme technique du livrable) et **`tenancy`** (mono/multi-org). **Modèle 3-axes + conditionnement du socle par archétype : SOURCE UNIQUE `_shared/state-schema.md`** — ici, tables de détection seulement. Défaut silencieux = **`web-saas` + `single`** ; **une question SEULEMENT si un signal `landing`/`automation`/`multi-org` reste ambigu**. Doute résiduel → défaut + note « à confirmer en Phase 3 ».
 
-**⚠️ On détecte/nomme l'axe AU MODÈLE ; le scaffold code (châssis `landing` & `automation`, bloc org-tenancy) est DÉFÉRÉ au Thème C** — le nommer ici ne prétend pas que c'est buildable aujourd'hui.
+**✅ On détecte/nomme l'axe — et tous les archétypes + le substrat org sont buildables** (`automation` + `ecommerce`-logique livrés ; `landing` = assemblage clé-en-main du sous-ensemble web-saas ; `org-tenancy` livré).
 
 ### Archétype — forme technique du livrable
 | Signaux dans l'entretien | Archétype |

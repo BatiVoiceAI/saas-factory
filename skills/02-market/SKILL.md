@@ -25,6 +25,7 @@ Le SKILL.md reste l'aperçu chef-d'orchestre. Le **détail actionnable** est dan
 | `references/checklists.md` | avant de clôturer | **§Quotas de preuve (source unique)** + definition-of-done + catalogue de cas limites + modes d'échec |
 
 > **Prérequis** : `research/idea-brief.md` existe (étape 1) et le `type` est **public**. Pour `interne` / `perso`, cette étape est **sautée** (cf. routage). **HARD GATE** : ici tu ne fais que la photo marché/concurrents — pas de positionnement (étape 3), pas de verdict de demande (étape 4), pas de décision (étape 5).
+> **Conditionnement `archetype=landing`** (généralement `public`) : **ALLÈGE** — juste de quoi **cadrer le message** de la landing (qui d'autre existe, quel angle net, la carte de langage), **PAS** le teardown 3-vagues complet ni les battle-cards détaillées. Fais tourner le moteur en tier **Light** (2-3 concurrents saillants + verbatims/langage), pas Deep. Une landing sonde une **hypothèse de message**, pas un marché à conquérir. Route : `skills/saas-factory/references/routing.md` §Archétype landing.
 
 ## Principe — exécuter, pas refaire
 `startup-competitors` est un pipeline éprouvé (3 vagues → synthèse → vérification adversariale). Le refaire à la main serait plus lent, moins répétable, et réintroduirait de l'impro. **Ta valeur = l'exécuter fidèlement, le calibrer, brancher ses sorties sur nos artefacts.**

@@ -2,6 +2,13 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.15.0] — 2026-07-15
+### Changé — couverture COMPLÈTE des archétypes : `landing` + substrat `org-tenancy` réconciliés « LIVRÉS »
+- **Constat (statut stale, même bug que l'ecommerce)** : le code **`landing`** (assemblage web-saas — `components/landing/*` + bloc `waitlist` + notifications + légal) **ET** le bloc **`org-tenancy`** (`0006_org_tenancy.sql` orgs/membres/invitations + RLS par org + helpers lesson #15, `lib/org/*`, `org-switcher`) **EXISTAIENT déjà** (campagne `level-up-web-saas-automation`, dans `main`) et sont **`tsc`-verts + `verify:machine` vert** — mais le statut affiché était encore « à bâtir / Thème C / déféré ». Réconcilié « à bâtir → LIVRÉ / couvert » partout : `state-schema` (×4), routing maître (×9), `phase-5-launch/routing` (×3), `CONTRIBUTING` (retitré), `01-discover` (×2), `07-completeness`, `12-integration-pass`.
+- **Calibration amont `landing` — IMPLÉMENTÉE** : `02-market` + `03-positioning` avaient **0 conscience** de `landing` (le routing la **déclarait** dans sa table, mais les skills ne l'**appliquaient** pas — la « divergence silencieuse 02/03/05 » que l'audit avait trouvée). Ajouté : conditionnement `archetype=landing` → **02** en tier **Light** (cadrer le message, pas le teardown 3-vagues), **03** = positionnement = **message de la landing** (1 angle net). **05** lite-mode déjà présent.
+- **`MOAT-STATUS.md`** (web-saas) : ajoute les blocs `waitlist` + `org-tenancy` (jamais listés) + migrations 0001→0006 + note `tsc`/`verify:machine`.
+> **Les 4 archétypes (`web-saas` · `automation` · `ecommerce` · `landing`) + le substrat `org-tenancy` sont désormais COUVERTS au châssis.** Aucun code de châssis n'a été écrit ici (il existait) : c'est une **réconciliation de statut** + la fermeture d'un vrai trou de calibration amont. Seul résidu **universel** : l'épreuve run (build SSR + E2E) à la 1re instanciation, comme tout web-saas. Évals 7/7.
+
 ## [0.14.0] — 2026-07-15
 ### Ajouté — E-commerce (4ᵉ archétype first-class + châssis livré) · design anti-convergence structurelle · intégration complète du moteur `startup`
 

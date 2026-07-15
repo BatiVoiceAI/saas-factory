@@ -5,7 +5,7 @@ projet. Ce document dit honnêtement ce qui est **livré**, ce qui a été
 **vérifié**, ce qui **reste** à câbler à la 1re instanciation, et les **limites**.
 
 > ✅ **Vérifié** : `npm install` (deps réelles résolues) **puis** `tsc --noEmit`
-> **passent — 0 erreur**. Revue adversariale de correction menée (RLS, signature
+> **passent — 0 erreur** (y compris les blocs `waitlist` + `org-tenancy`, re-vérifiés {2026-07-15}) + `verify:machine` (5 lints). Revue adversariale de correction menée (RLS, signature
 > webhook Stripe, API `@supabase/ssr` sur Next 15, flux auth, frontières
 > client/serveur) et findings corrigés. `npm run build` complet + tests E2E
 > restent à lancer sur un environnement avec Supabase/env réels (voir « Reste »).
@@ -24,6 +24,8 @@ projet. Ce document dit honnêtement ce qui est **livré**, ce qui a été
 | `billing` *(optionnel)* | Stripe checkout / portal / webhook routes, `stripe.ts` (singleton), `subscription.ts` (miroir via service role), migration `0003_billing.sql` | RLS : user lit sa ligne ; écriture réservée au service role ; webhook **anti-stale/dedup** ; `stripe.ts`+`subscription.ts` en `server-only` |
 | `repo-ci` | GitHub Actions (`ci.yml`, `lighthouse.yml`), e2e Playwright (`smoke.spec.ts`), Vitest + Unlighthouse configs | — |
 | `hosting` | Fourni au déploiement (Vercel / CF Pages / Coolify) — pas de config versionnée | — |
+| `waitlist` *(archétype **landing**)* | Table `leads` générique (`0005_waitlist.sql`, service-role, unique `lower(email)`), route `app/api/waitlist` (idempotent sur 23505 + **boucle fermée** e-mail via `notifications`), `lib/waitlist/confirmation-email.ts`, `components/waitlist/waitlist-form.tsx`, `lib/schemas/waitlist.ts` (zod). Réutilisé par l'assemblage **landing** (skeleton + waitlist + notifications + légal, **sans** auth/crud/dashboard) | RLS sans policy (service-role only) ; e-mail normalisé trim+minuscule |
+| `org-tenancy` *(si `tenancy = multi-org`)* | `0006_org_tenancy.sql` (`orgs` / `org_members` / `org_invitations` + helpers `security definer` `current_org_ids`/`is_org_member`/`is_org_admin` + trigger owner-membership ; **RLS PAR ORG** deny-by-default), `lib/org/{context,invitations,billing}.ts`, `components/org/org-switcher.tsx` | RLS par org (`org_id` dérivé de la session) ; helpers anti-récursion + **lesson #15** (`#variable_conflict use_column` + colonnes qualifiées) ; `org-billing` = extension **typée** de `billing` (stub documenté, ne réécrit pas le bloc) |
 
 ## Corrections appliquées (build + revue)
 **Cohérence (deps/env/imports/RLS)** — deps manquantes ajoutées (`@radix-ui/*`,
@@ -54,7 +56,7 @@ policies sur chaque table.
   `app/api/stripe/*`, `lib/billing/*`, `0003_billing.sql`, clés Stripe).
 - **Hosting** : choisir l'hébergeur + poser sa config ; renseigner `NEXT_PUBLIC_SITE_URL`.
 - **Tokens design** : mapper `DESIGN.md` → variables de `app/globals.css`.
-- **Migrations Supabase** : appliquer 0001→0003 sur le projet cible.
+- **Migrations Supabase** : appliquer les migrations des blocs sélectionnés sur le projet cible — `0001_auth` + `0002_items` + `0004_notifications` par défaut, `0003_billing` **si** le projet vend, `0005_waitlist` **si** `landing`, `0006_org_tenancy` **si** `tenancy=multi-org`.
 
 ## Limites honnêtes
 - Vérifié = `npm install` + **typecheck** (0 erreur) + revue adversariale. Le

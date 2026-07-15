@@ -67,7 +67,7 @@ Pour une **landing seule** (marketing + capture), le socle n'est **pas** S1-S8 :
 | LP3 | **Pages légales adaptées à la juridiction** | Idem S5 : jeu légal selon `jurisdiction` (cf. `_shared/state-schema.md` §Règle légale), liées au footer, zéro lien mort. |
 | LP4 | **Métadonnées & favicon & OG** | Idem S8 : `<title>` + meta description, favicon au thème, image Open Graph, `<html lang>` = `locale`. Une landing **vit** de son partage social. |
 
-🚨 Scaffold code de l'archétype `landing` = **Thème C** ; réutilise `components/landing/*` + brique waitlist existants (le modèle est posé ici, le build ne l'est pas encore).
+🚨 Scaffold code de l'archétype `landing` = **assemblage clé-en-main LIVRÉ** : sélection du sous-ensemble web-saas (`components/landing/*` + brique `waitlist` + notifications + légal, tous livrés `tsc`-verts) — pas de bloc séparé, par conception (`skills/11-project-setup/references/scaffold-procedure.md` §Sélection). Reste : calibration amont 02/03/05.
 
 ## Le socle **automation** (5 éléments AU1-AU5 — Must d'office pour l'archétype `automation`)
 Pour un livrable **headless** (worker / cron / bot / intégration), aucun socle UI produit : ni onboarding wizard, ni dashboard, ni entité cœur CRUD. Les éléments **de l'archétype** :
