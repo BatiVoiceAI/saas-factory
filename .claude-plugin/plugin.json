@@ -1,6 +1,6 @@
 {
   "name": "saas-factory",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "Transforme une idée en produit déployé et vérifié, de bout en bout, selon 4 archétypes (web-saas · landing · automation · ecommerce) + substrat multi-org : analyse concurrentielle approfondie + validation marché honnête, PRD PM-grade (fonctionnel + technique), design anti-AI-slop (porte distinctiveness), architecture, build multi-agents avec cascade de validation (Tech Lead → CTO → Designer → CEO), auth OTP → mot de passe, boucles fermées, QA faux-client, SEO, déploiement borné + recette live authentifiée, mesure & retro. Châssis de code livrés + testés : web-saas + automation + ecommerce (logique commerce + SQL + pièges survente/prix/idempotence, verify:machine + tests verts) ; landing = assemblage du sous-ensemble web-saas. Opus 4.8 (ultracode sur le code). 6 phases · 20 étapes · 14 agents · qualité avant vitesse.",
   "author": {
     "name": "Felix",

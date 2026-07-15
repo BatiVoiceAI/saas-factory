@@ -32,12 +32,16 @@ La profondeur vit ici — ouvre la bonne au bon moment, ne les précharge pas to
 - `references/routing.md` — la **matrice CANONIQUE** étape × type (public/interne/perso — la seule table de routage du plugin) + portes actives par type.
 - `references/gates.md` — la **gestion des portes** (ce que chaque 🚪 décide + le graphe des retours arrière).
 - `references/state-resume.md` — **état, reprise & discipline `_shared` une fois** (séquence de démarrage, mise à jour d'état, reprenabilité).
+- `references/welcome.md` — l'**accueil au 1er contact** : ce que l'utilisateur VOIT au lancement (gabarit non-technique dans sa langue + discipline « court, une fois »).
 
 ## Au démarrage (une fois) — détail dans `references/state-resume.md`
 1. **Lis les blocs partagés une seule fois** : `_shared/lessons.md`, `_shared/safety-rails.md`, `_shared/stack-defaults.md`, `_shared/blocks/README.md`, `_shared/validation-cascade.md`, `_shared/test-dossier.md`, **+ `~/.saas-factory/lessons-learned.md` s'il existe** (leçons capitalisées par tes projets précédents, écrites par `19-retro` — hors plugin, elles complètent `_shared/lessons.md`). Ils priment sur ton comportement par défaut. **Ne les fais pas relire par chaque phase.**
 2. **Résous `{PLUGIN_ROOT}` UNE fois** (`_shared/vendored-engine-protocol.md` §0 : ligne `[saas-factory]` du contexte de session, sinon échelle de fallback) et écris-le dans l'état (champ `plugin_root`, `_shared/state-schema.md` §Environnement). C'est LA clé d'accès aux moteurs vendorés (`vendor/`) : toute étape qui dit `{PLUGIN_ROOT}/…` lit ce champ, tout brief de sous-agent porte le chemin **absolu déjà résolu**. À chaque reprise, re-vérifie que le chemin existe encore.
 3. **Reprends l'état** : lis `.saas-factory/state.md` (format `_shared/state-schema.md`). S'il existe → reprends à la phase/étape courante (table de reprise dans `state-resume.md`). Sinon → crée-le (`git init` si besoin).
 4. **Setup infra ?** : si `~/.saas-factory/config.json` n'existe pas, suggère **une fois** `infra-setup` (débloque le provisioning auto des Phases 3/5). Optionnel — sinon mode local/fallback, jamais bloquant.
+
+## Accueil au 1er contact — ce que l'utilisateur VOIT (nouveau projet)
+Avant l'intake (étape 1), pour un **nouveau** projet (`state.md` absent), présente un **accueil COURT, non-technique, dans la langue de l'utilisateur** : (1) ce que je fais (idée → produit déployé, pas besoin d'être technique), (2) comment ça va se passer (les 6 étapes en clair), (3) ses **4 moments de décision** (questions de départ · note d'opportunité · fonctionnalités · feu vert publication — « le reste, je le gère »), (4) ce dont j'ai besoin (ses comptes, connectés une fois via `infra-setup`, clés chez lui), (5) mes règles (qualité > vitesse · autonomie bornée · **je ne bluffe jamais**) — **puis j'enchaîne sur la 1re question d'intake**. **En reprise** (`state.md` présent) : PAS d'accueil, juste un récap « où on en est ». Si l'utilisateur arrive avec une idée déjà claire et pressée : version 2 lignes, puis on démarre. Gabarit complet + discipline : `references/welcome.md`.
 
 ## Calibrer la cérémonie (dès le départ) — détail dans `references/routing.md`
 Le `type` capté à l'**étape 1** (public / interne / perso) **route** toute la suite. Propage-le dans l'état (`Type / route` + `Ambition`) dès la fin de P1 ; chaque phase l'applique ensuite.

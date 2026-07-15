@@ -2,6 +2,17 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.16.0] — 2026-07-15
+### Ajouté — accueil au lancement (onboarding utilisateur)
+- **Accueil au 1er contact** : au lancement d'un **nouveau** projet, l'orchestrateur maître présente désormais un **accueil court, non-technique, dans la langue de l'utilisateur** — ce que fait le plugin, les 6 étapes en clair, ses **4 moments de décision** (questions · note d'opportunité · fonctionnalités · feu vert publication), ce dont il a besoin (comptes via `infra-setup`, clés chez lui), et ses règles (qualité > vitesse · autonomie bornée · ne bluffe jamais) — **puis enchaîne sur l'intake**. Gabarit + discipline (« court · langue user · une fois · pas en reprise · version 2 lignes si pressé ») : `skills/saas-factory/references/welcome.md`.
+
+### Changé — vitrine & distribution publique
+- **README** réécrit : présentait encore le plugin comme un « **scaffold** inachevé » (sous-skills « 02→12 à construire ») → **vitrine exacte** (4 archétypes, install, démarrage, prérequis, garde-fous, statut v0.15.0).
+- **`plugin.json`** description à jour (4 archétypes · 20 étapes · 14 agents · 3 châssis + org).
+- **`LICENSE` MIT** ajoutée à la racine (elle manquait — le repo se déclarait MIT sans le fichier) + note des moteurs vendorés MIT/Apache-2.0.
+- **Marketplace renommé** `felix-saas-factory` → **`saas-factory`** (retire le préfixe hérité du dev local) → install cohérente : `/plugin install saas-factory@saas-factory`.
+> **Publié en public** : https://github.com/BatiVoiceAI/saas-factory
+
 ## [0.15.0] — 2026-07-15
 ### Changé — couverture COMPLÈTE des archétypes : `landing` + substrat `org-tenancy` réconciliés « LIVRÉS »
 - **Constat (statut stale, même bug que l'ecommerce)** : le code **`landing`** (assemblage web-saas — `components/landing/*` + bloc `waitlist` + notifications + légal) **ET** le bloc **`org-tenancy`** (`0006_org_tenancy.sql` orgs/membres/invitations + RLS par org + helpers lesson #15, `lib/org/*`, `org-switcher`) **EXISTAIENT déjà** (campagne `level-up-web-saas-automation`, dans `main`) et sont **`tsc`-verts + `verify:machine` vert** — mais le statut affiché était encore « à bâtir / Thème C / déféré ». Réconcilié « à bâtir → LIVRÉ / couvert » partout : `state-schema` (×4), routing maître (×9), `phase-5-launch/routing` (×3), `CONTRIBUTING` (retitré), `01-discover` (×2), `07-completeness`, `12-integration-pass`.
