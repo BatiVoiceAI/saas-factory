@@ -31,6 +31,7 @@ Sans cadre, le positionnement se bricole au feeling et finit générique. Le fra
 
 ## Principe : tu EXÉCUTES le moteur, tu ne refais pas la recherche
 Le moteur vendoré `startup-positioning` (Dunford + Moore + Neumeier/Onliness + JTBD + Ries & Trout) est **gelé en local**. Tu suis **sa** procédure. Ta valeur : **brancher nos artefacts** dessus, puis **calibrer** la sortie pour la Phase 1.
+> **Conditionnement `archetype=landing`** : le positionnement **EST le message de la landing** — vise **1 angle net** (Onliness léger + la catégorie), **pas** un edge formalisé lourd ni les 5 livrables complets. Produis `positioning.md` centré sur le **message + la catégorie** (ce que le hero de la landing dira), calibré landing ; le reste de Dunford reste facultatif. Route : `skills/saas-factory/references/routing.md` §Archétype landing.
 
 ## Procédure normée
 > Vue d'ensemble ci-dessous ; sous-procédures exhaustives (ordre, critères de passage, micro-exemples, modes d'échec) dans `references/procedure-detaillee.md`.
