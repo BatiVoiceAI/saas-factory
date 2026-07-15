@@ -2,6 +2,25 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.14.0] — 2026-07-15
+### Ajouté — E-commerce (4ᵉ archétype first-class + châssis livré) · design anti-convergence structurelle · intégration complète du moteur `startup`
+
+**#1 Design — anti-convergence STRUCTURELLE** (au-delà de la peau) :
+- `_shared/landing-playbook.md` : **menu d'archétypes structurels** (Conversion-dense / Éditorial / Product-led / Trust local / Marketplace / Statement) au lieu d'un ordre imposé + invariant minimum — la **silhouette** de page fait partie de la distinctiveness.
+- `skills/08-design-system/references/structural-sourcing.md` : **sourcing de STRUCTURE** via l'écosystème de registres shadcn (MCP shadcn / `npx shadcn add`, porte licence MIT/Apache). Porte distinctiveness étendue à la **convergence structurelle** (marqueur 21) — deux métiers → deux structures, plus « une des 5 recettes ».
+
+**#2 E-commerce — archétype de PREMIÈRE CLASSE, de bout en bout + châssis LIVRÉ** :
+- **Modèle** : détection (01), socle **EC1-EC5** (07), patterns **09 §Variante ECOMMERCE**, routing maître + phase-5, conditionnement **12/13/14/17/18/19** + `validation-spec` (edges CEO-persona) + provisioning + enums SKILL + audit de couverture (parité ecommerce). **Stripe ONE-SHOT** (`mode:payment`, jamais `subscription`), **checkout invité** par défaut. 3 pièges DURS (portes 13/14/17b) : **P1** survente → décrément atomique, **P2** intégrité prix → recalcul serveur, **P3** idempotence webhook → `unique(stripe_session_id)`.
+- **Châssis `_shared/blocks/ecommerce/` LIVRÉ** (bâti via **ultracode** — Workflow 6 agents — PUIS vérifié) : logique commerce **dependency-light** (`lib/pricing` P2 · `lib/inventory` P1 · `lib/cart`/`lib/orders` · `webhook` P3) + migrations (RLS + **RPC `fulfill_paid_order`** réunissant P1+P2+P3 en **une transaction**, `SECURITY DEFINER` + lesson #15) + **`verify:machine` 5 lints** + **`tsc` vert** + **23 tests `node:test` verts**. L'**UI se dérive du châssis `web-saas`** (remplace `billing` abonnement par le checkout one-shot ; documentée dans `BLOCKS.md`, pas compilée).
+
+**Intégration moteur `startup-skill`** (4 sous-skills vendorés MIT, gelés) — **complétée** :
+- 3 trous de complétude fermés : **`startup-pitch`** câblé (optionnel, opt-in) · **Brand Ph5 → 08-design** (tone-of-voice + brand-personality nourrissent la direction + la voix, sans casser l'anti-convergence) · **Validation Ph8 kill-criteria → 05 + 19** (grille pré-enregistrée mesurable).
+- Carte globale `_shared/startup-engine-map.md` (pilotage étape × tranche × sortie → aval). ⚠️ Vendor **GELÉ** — ne pas re-synchroniser (l'upstream récent a supprimé `verification-agent.md` dont 04-demand-edge dépend).
+
+### Changé
+- **Doctrine modèle explicitée** : **Opus 4.8 effort MAX partout ; phases de CODE = ultracode** (`saas-factory/SKILL.md` + `12-build/org-hierarchy §ULTRACODE`) — les **14/14 agents** portent `model: opus` + `effort: max`, jamais de routage économique par défaut.
+- **Évals : 7/7** (ajout du plancher `verify:machine` du châssis ecommerce + check châssis `web-saas`+`automation`+`ecommerce` dans l'audit de couverture).
+
 ## [0.13.0] — 2026-07-14
 ### Ajouté — Campagne « plugin killer », Thème 3 : autonomie & accessibilité (clôt la campagne)
 - **T3.1 — plafond DUR de 7 prompts à l'intake** (exigence fondateur « 0-7 questions, jamais plus », qui n'était pas encodée) : `01-discover` SKILL (5ᵉ règle des questions) + `interview-procedure.md` (conduite transverse) — le budget de 7 couvre TOUT (contenu + reformulation + archétype/tenancy/locale + KILL + confirmation) ; déduire le dérivable en silence ; à 7 atteint, arrêter et déduire.
