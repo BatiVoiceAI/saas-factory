@@ -4,7 +4,7 @@
     "name": "Felix",
     "email": "flixlpinoy@gmail.com"
   },
-  "homepage": "https://github.com/felix/saas-factory",
+  "homepage": "https://github.com/BatiVoiceAI/saas-factory",
   "plugins": [
     {
       "name": "saas-factory",

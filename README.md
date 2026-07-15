@@ -1,41 +1,60 @@
 # SaaS Factory — plugin Claude Code
 
-Transforme une **idée** en **SaaS déployé**, de bout en bout, avec une méthode spec-driven multi-agents éprouvée (bativoice, speechtoflow, evalprof, cartedespintes). Gratuit, auto-suffisant, pensé pour tous les utilisateurs de Claude Code.
+Transforme une **idée** en **produit déployé et vérifié**, de bout en bout : recherche marché honnête → PRD PM-grade → design anti-slop → architecture → build multi-agents → QA faux-client → déploiement borné → mesure. Une méthode **spec-driven** avec cascade de validation adversariale — **pas un générateur d'app de plus**.
 
-## Ce que ça fait
+**Gratuit · MIT · auto-suffisant · qualité avant vitesse.**
 
-Un skill orchestrateur déroule un pipeline en phases — idéation → recherche marché honnête → positionnement → spec produit → design → architecture → setup → build parallèle → vérification → revue client → SEO → déploiement borné — en déléguant à des sous-skills (les « personas » : CEO, PM, CTO, Tech Lead, Designer, QA) et à des subagents pour le build en parallèle.
+## Ce que ça fabrique — 4 archétypes
 
-**Ce n'est pas un générateur d'app de plus.** Sa valeur est la couche méthode que les builders génériques zappent : validation marché avec vérification adversariale, spec-driven, QA éval-driven, portes de décision, et autonomie **bornée** sur l'infra.
+| Archétype | Livrable |
+|---|---|
+| **web-saas** | app complète : auth (OTP → mot de passe), dashboard, BDD, boucles fermées, billing optionnel |
+| **automation** | worker / cron / bot **headless** : idempotent, boucle fermée propriétaire, dependency-light |
+| **landing** | page marketing + waitlist, prête pour un go-test de marché |
+| **ecommerce** | boutique : catalogue, panier, checkout Stripe **one-shot**, commandes, stock (anti-survente) |
+
+\+ substrat **multi-org** (B2B vendu à N entreprises : Org, membres, invitations, RLS par org).
+
+## Comment ça marche
+
+Un **orchestrateur maître** déroule **6 phases · 20 étapes** (idéation → marché → positionnement → PRD → design → architecture → setup → build parallèle → revue en cascade → QA → SEO → déploiement + recette live authentifiée → mesure → retro). Il délègue à des **personas** (CEO, PM, CTO, Tech Lead, Designer, QA) et à des **subagents** pour le build parallèle (1 feature = 1 worktree = 1 agent). Tout tourne sur **Opus 4.8** (ultracode sur les phases de code).
+
+La valeur = la **couche méthode** que les builders génériques zappent : validation marché **adversariale**, spec-driven, QA **éval-driven**, **portes de décision** humaines, plancher **mécanique** (hooks + `verify:machine`), et autonomie **bornée** sur l'infra.
 
 ## Installation
 
 ```bash
-/plugin marketplace add https://github.com/felix/saas-factory
-/plugin install saas-factory@felix/felix-saas-factory
+/plugin marketplace add BatiVoiceAI/saas-factory
+/plugin install saas-factory@felix-saas-factory
 ```
 
-Pour un test local avant publication : `/plugin marketplace add /chemin/vers/saas-factory` (le repo est à la fois le plugin et le marketplace).
+Test local : `/plugin marketplace add /chemin/vers/saas-factory` (le repo est à la fois le plugin et son marketplace).
 
-## Lancement
+## Démarrage
 
-```
-/saas-factory
-```
-…ou simplement : « je veux créer un SaaS qui … ».
+1. **Une seule fois** — connecte tes outils : `/saas-factory:infra-setup` (GitHub, Supabase, Cloudflare/DNS, hébergement, Resend, Stripe optionnel, clé LLM). Ensuite chaque projet se provisionne **tout seul**.
+2. **Lance** : `/saas-factory` — ou décris simplement ton idée dans ta langue (« je veux créer un SaaS qui… »). L'orchestrateur détecte ta langue et conduit **tout** le dialogue dedans.
 
-## Prérequis (comptes de l'utilisateur, jamais stockés par le plugin)
+Tes points de contact humains : `0-7 questions` d'intake → valider la **note d'opportunité** → valider/modifier les **fonctionnalités** → portes design / revue / publication. Le reste est automatique.
 
-Selon l'archétype : un compte **Cloudflare** (deploy/DNS), **Supabase** (BDD/auth), **Stripe** (paiement), et une **clé LLM** (provider au choix). Le plugin détecte ce qui manque et fournit un **guide pas-à-pas** pour chaque clé. Les secrets restent dans **tes** variables d'environnement.
+## Prérequis (tes comptes — jamais stockés par le plugin)
 
-## Garde-fous (important)
+Selon l'archétype : **Supabase** (BDD/auth), **Cloudflare** (DNS/deploy), **Stripe** (paiement, optionnel), **Resend** (emails), une **clé LLM**. Le plugin détecte ce qui manque et te guide pas à pas. **Tes secrets restent dans TES variables d'environnement** (`~/.saas-factory/`), hors du plugin.
 
-Le plugin agit avec une **autonomie bornée** (`_shared/safety-rails.md`) : tout ce qui **dépense de l'argent, publie, ou touche DNS/BDD/clés** passe par un *plan → validation → exécution*. Il opère dans un espace **sandbox** et ne touche jamais une prod existante. S'il ne peut pas faire quelque chose (KYC paiement, review store…), il s'arrête et t'explique — il ne simule pas.
+## Garde-fous
 
-## État de ce squelette
+Autonomie **bornée** (`_shared/safety-rails.md`) : tout ce qui **dépense, publie, ou touche DNS/BDD/clés** passe par *plan → validation → exécution*. Sandbox, jamais une prod existante. S'il ne peut pas (KYC paiement, review store…), il **s'arrête et l'explique** — il ne simule jamais. Auth **toujours** OTP/mot de passe (zéro magic link), boucles fermées universelles, design **anti-AI-slop** (porte distinctiveness), honnêteté radicale (il ne bluffe pas sur ce qu'il n'a pas fait).
 
-Ceci est un **scaffold**. Sont fournis en exemplaires complets : l'orchestrateur (`skills/saas-factory`), `00-discover-idea`, `01-market-research`, les agents `feature-dev` / `verifier`, et la couche `_shared` (safety-rails, lessons). Les sous-skills `02`→`12` sont **entièrement spécifiés** dans `SKILL-BLUEPRINT-SAAS-FACTORY.md` et se construisent palier par palier (voir §13 du blueprint). Construis le chemin critique d'idéation d'abord, ship, itère.
+## Sous le capot
+
+- **3 châssis de code livrés + testés** : `web-saas` (Next.js 15 + Supabase + Stripe), `automation` (worker dependency-light), `ecommerce` (logique commerce + SQL + pièges survente/prix/idempotence — `verify:machine` + 23 tests `node:test` verts). `landing` s'assemble du sous-ensemble web-saas.
+- **Moteurs vendorés** (MIT/Apache, attribution préservée dans `vendor/*/PROVENANCE.md`) : recherche stratégique startup, revue de sécurité, revue d'accessibilité, superpowers (TDD/subagents/worktrees).
+- **Évals mécaniques** : `bash evals/run.sh` (hooks + lints + planchers des châssis).
+
+## Statut
+
+**v0.15.0** — les **4 archétypes + le substrat org** sont couverts au châssis ; méthode complète (**6 phases · 20 étapes · 14 agents**). Éprouvé sur des projets réels. Résidu honnête, signalé au run : l'**épreuve bout-en-bout** (build SSR + E2E + déploiement sur backend réel) se fait à la **1re instanciation** de chaque projet. *Qualité avant vitesse ; on ne bâcle pas, on ne bluffe pas.*
 
 ## Licence
 
-MIT.
+MIT — voir [`LICENSE`](LICENSE). Inclut des moteurs tiers vendorés sous MIT / Apache-2.0 (chacun avec son `LICENSE` + `PROVENANCE.md` sous `vendor/`).
