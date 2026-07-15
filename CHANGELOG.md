@@ -2,6 +2,11 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.16.2] — 2026-07-15
+### Corrigé — `infra-setup` sautait Cloudflare (DNS/domaine) quand le MCP n'était pas connecté
+- **Bug** (remonté en run réel) : Cloudflare — comme Vercel et Stripe — était routé **par défaut via un connecteur MCP OAuth**, et le fallback « token API » n'était qu'une *« variante possible »* mentionnée en passant. Résultat : **sans MCP Cloudflare connecté, l'agent SAUTAIT Cloudflare** (le run connectait Supabase/Resend/Gemini/GitHub mais **jamais le DNS**). Conséquence sérieuse : **aucun domaine custom possible** pour les projets (viole la règle « au deploy, toujours brancher le domaine via Cloudflare »).
+- **Fix** : le **token API scopé déposé en `.env` devient un FALLBACK OBLIGATOIRE** (plus une variante) — Cloudflare (socle) **n'est jamais sauté** faute de MCP. Token `CLOUDFLARE_API_TOKEN` (permissions **Zone→DNS→Edit** + **Zone→Zone→Read**), appel **API directe**, même discipline que GitHub/Supabase. Même principe généralisé à Vercel/Stripe (bascule token si le MCP hébergé est absent). Aligné sur le constat de run réel : « provisioning en session non-interactive = direct-API avec .env tokens, pas MCP ». (`skills/infra-setup/SKILL.md` + `references/connection-procedure.md §3`)
+
 ## [0.16.1] — 2026-07-15
 ### Amélioré — accueil du 1er lancement (le setup expliqué en clair)
 - L'accueil distingue désormais **3 cas** : **(1) tout premier lancement** (`~/.saas-factory/config.json` absent) → l'accueil **explique le setup une fois** en langage simple — ce qu'on paramètre (base de données, hébergement + domaine, e-mail, GitHub, clé IA, Stripe si le produit vend), la commande à taper (**`/saas-factory:infra-setup`**, le seul « tape ça » du plugin), « **tes clés restent chez toi** », et « **après, c'est réglé pour toujours** » (chaque futur produit se provisionne seul) ; **(2)** nouveau projet, infra déjà connectée → accueil standard sans le setup ; **(3)** reprise → récap seul. Tout **dans la langue de l'utilisateur**. Détail : `skills/saas-factory/references/welcome.md`.
