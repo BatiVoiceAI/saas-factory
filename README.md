@@ -25,7 +25,7 @@ La valeur = la **couche méthode** que les builders génériques zappent : valid
 
 ```bash
 /plugin marketplace add BatiVoiceAI/saas-factory
-/plugin install saas-factory@felix-saas-factory
+/plugin install saas-factory@saas-factory
 ```
 
 Test local : `/plugin marketplace add /chemin/vers/saas-factory` (le repo est à la fois le plugin et son marketplace).

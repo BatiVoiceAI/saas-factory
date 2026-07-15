@@ -3,9 +3,9 @@
 > Ce fichier est **dev-facing** (hors runtime utilisateur). Il grave la discipline qui empêche le plugin de régresser. Le plugin **est le livrable** : chaque changement se traite avec le même soin qu'un produit livré.
 
 ## Le plugin tourne depuis un SNAPSHOT (cache)
-La copie exécutée par Claude Code vit dans `~/.claude/plugins/cache/felix-saas-factory/saas-factory/<version>/` — un **snapshot** du working tree au moment de l'install, PAS un lien vers ce dépôt. **Après toute modif destinée à être testée** :
+La copie exécutée par Claude Code vit dans `~/.claude/plugins/cache/saas-factory/saas-factory/<version>/` — un **snapshot** du working tree au moment de l'install, PAS un lien vers ce dépôt. **Après toute modif destinée à être testée** :
 ```bash
-claude plugin marketplace update felix-saas-factory && claude plugin update saas-factory
+claude plugin marketplace update saas-factory && claude plugin update saas-factory
 ```
 Sans ça, on teste l'ancienne version. On **édite ce dépôt** (`plugin/saas-factory/`), jamais le cache.
 
