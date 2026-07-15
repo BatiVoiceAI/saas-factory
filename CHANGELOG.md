@@ -2,6 +2,10 @@
 
 Toutes les évolutions notables du plugin. Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.16.1] — 2026-07-15
+### Amélioré — accueil du 1er lancement (le setup expliqué en clair)
+- L'accueil distingue désormais **3 cas** : **(1) tout premier lancement** (`~/.saas-factory/config.json` absent) → l'accueil **explique le setup une fois** en langage simple — ce qu'on paramètre (base de données, hébergement + domaine, e-mail, GitHub, clé IA, Stripe si le produit vend), la commande à taper (**`/saas-factory:infra-setup`**, le seul « tape ça » du plugin), « **tes clés restent chez toi** », et « **après, c'est réglé pour toujours** » (chaque futur produit se provisionne seul) ; **(2)** nouveau projet, infra déjà connectée → accueil standard sans le setup ; **(3)** reprise → récap seul. Tout **dans la langue de l'utilisateur**. Détail : `skills/saas-factory/references/welcome.md`.
+
 ## [0.16.0] — 2026-07-15
 ### Ajouté — accueil au lancement (onboarding utilisateur)
 - **Accueil au 1er contact** : au lancement d'un **nouveau** projet, l'orchestrateur maître présente désormais un **accueil court, non-technique, dans la langue de l'utilisateur** — ce que fait le plugin, les 6 étapes en clair, ses **4 moments de décision** (questions · note d'opportunité · fonctionnalités · feu vert publication), ce dont il a besoin (comptes via `infra-setup`, clés chez lui), et ses règles (qualité > vitesse · autonomie bornée · ne bluffe jamais) — **puis enchaîne sur l'intake**. Gabarit + discipline (« court · langue user · une fois · pas en reprise · version 2 lignes si pressé ») : `skills/saas-factory/references/welcome.md`.
