@@ -23,14 +23,16 @@ La valeur = la **couche méthode** que les builders génériques zappent : valid
 
 ## Installation
 
-Dans un **terminal** (commandes `claude plugin …`) :
+Dans un **terminal**, en **2 étapes** (ajouter le marketplace, puis installer le plugin) :
 
 ```bash
-claude plugin marketplace add BatiVoiceAI/saas-factory
+claude plugin marketplace add https://github.com/BatiVoiceAI/saas-factory.git
 claude plugin install saas-factory@saas-factory
 ```
 
-> Ce sont des **commandes terminal**, pas des slash-commandes. Dans l'app Claude Code, la slash-commande `/plugin` ouvre un **gestionnaire interactif** (ajoute le marketplace puis installe depuis là) — elle ne prend pas les arguments en ligne. Il n'y a pas de « `/install github` » : c'est `marketplace add <owner>/<repo>` qui gère GitHub, puis `install <plugin>@<marketplace>`.
+> **⚠️ Utilise bien l'URL HTTPS `https://github.com/…​.git`**, PAS le raccourci `BatiVoiceAI/saas-factory` : ce dernier clone en **SSH** et **échoue** si tu n'as pas de clé SSH configurée avec GitHub. L'URL HTTPS marche pour tout le monde (le repo est public).
+>
+> Ce sont des **commandes terminal**, pas des slash-commandes. Dans l'app Claude Code, la slash-commande `/plugin` ouvre un **gestionnaire interactif** (elle ne prend pas d'arguments en ligne). Il faut **d'abord** `marketplace add`, **ensuite** `install` — l'install seul échoue si le marketplace n'est pas ajouté.
 
 Test local : `claude plugin marketplace add /chemin/vers/saas-factory` (le repo est à la fois le plugin et son marketplace).
 
